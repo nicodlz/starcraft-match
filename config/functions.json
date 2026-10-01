@@ -39,5 +39,236 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00488780",
+    "size": 6,
+    "name": "sub_00488780",
+    "proposed_names": [
+      {
+        "name": "isGamePaused",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D974E",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Manually inspected pinned PE, community map entry/size agree; final ret at 0x00488785, followed by int3 padding. Listed direct callers checked.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no arguments; DWORD result in EAX",
+    "prototype": "unsigned int sub_00488780(void)",
+    "candidate_source": "src/game/sub_00488780.c",
+    "candidate_symbol": "_sub_00488780",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/global_addresses.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006509C4",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C candidate; no inline assembly or embedded original machine code. Absolute global addresses require the original preferred image layout."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00496FF0",
+    "size": 11,
+    "name": "sub_00496FF0",
+    "proposed_names": [
+      {
+        "name": "EnableVisibilityHashUpdate",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D964B",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Manually inspected pinned PE, community map entry/size agree; final ret at 0x00496FFA, followed by int3 padding. Listed direct callers checked.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no arguments; no result",
+    "prototype": "void sub_00496FF0(void)",
+    "candidate_source": "src/game/sub_00496FF0.c",
+    "candidate_symbol": "_sub_00496FF0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/global_addresses.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x00629D90",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C candidate; no inline assembly or embedded original machine code. Absolute global addresses require the original preferred image layout."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CE6B0",
+    "size": 8,
+    "name": "sub_004CE6B0",
+    "proposed_names": [
+      {
+        "name": "SetMapStartStatus",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D99D9",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Manually inspected pinned PE, community map entry/size agree; final ret at 0x004CE6B7, followed by int3 padding. Listed direct callers checked.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no arguments; no result",
+    "prototype": "void sub_004CE6B0(void)",
+    "candidate_source": "src/map/sub_004CE6B0.c",
+    "candidate_symbol": "_sub_004CE6B0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/global_addresses.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006D121C",
+        "width_bits": 8
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C candidate; no inline assembly or embedded original machine code. Absolute global addresses require the original preferred image layout."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DC540",
+    "size": 12,
+    "name": "sub_004DC540",
+    "proposed_names": [
+      {
+        "name": "SetInGameLoop",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D94B8",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      },
+      {
+        "address": "0x004D951B",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      },
+      {
+        "address": "0x004D9785",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      },
+      {
+        "address": "0x004D979F",
+        "type": "direct_call",
+        "provenance": "Pinned PE disassembly"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Manually inspected pinned PE, community map entry/size agree; final ret at 0x004DC54B, followed by int3 padding. Listed direct callers checked.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "ECX DWORD argument; EAX previous DWORD result; plain ret",
+    "prototype": "unsigned int sub_004DC540(unsigned int next /* ECX */)",
+    "candidate_source": "src/game/sub_004DC540.c",
+    "candidate_symbol": "@sub_004DC540@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/global_addresses.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006D11C8",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C candidate; no inline assembly or embedded original machine code. Absolute global addresses require the original preferred image layout."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

@@ -120,6 +120,25 @@ def match(args):
     print(json.dumps({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match',
                                            'instruction_similarity', 'cfg_similarity', 'abi_compatible')}, indent=2))
     print(f'Disassembly and differences: {out.relative_to(ROOT)}')
+    if getattr(args, 'require_exact', False) and not (result['exact_byte_match'] and result['abi_compatible']):
+        raise ValueError(f'{r["address"]}: required exact match failed')
+    return result
+
+
+def verify_matches(args):
+    summary_path = private(ROOT/'analysis/proof-of-concept.json')
+    # Remove an earlier success before verification, so failures cannot leave a stale proof.
+    summary_path.unlink(missing_ok=True)
+    proof = [r for r in read(ROOT/'config/functions.json') if r.get('match_expectation') == 'exact']
+    if not proof:
+        raise ValueError('No exact-match expectations in the reviewed catalog')
+    summary = []
+    for r in proof:
+        result = match(argparse.Namespace(address=r['address'], binary=args.binary, require_exact=True))
+        summary.append({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match', 'abi_compatible', 'original_region_sha256')})
+    write(summary_path, dict(schema_version=1,
+          binary_sha256=summary and proof[0]['binary_sha256'], verified_exact_functions=len(summary), functions=summary))
+    print(f'Verified {len(summary)} exact C-derived matches against the pinned executable')
 
 
 def status():
@@ -171,6 +190,8 @@ def main():
         a = s.add_parser(cmd); a.add_argument('address')
         if cmd in ('match', 'task'): a.add_argument('--binary', default='original/StarCraft.exe')
         if cmd == 'task': a.add_argument('--out', default='analysis/task.json')
+        if cmd == 'match': a.add_argument('--require-exact', action='store_true')
+    a = s.add_parser('verify-matches'); a.add_argument('--binary', default='original/StarCraft.exe')
     s.add_parser('status'); s.add_parser('next')
     args = p.parse_args()
     try:
@@ -178,6 +199,7 @@ def main():
         elif args.command == 'show': print(json.dumps(function(args.address), indent=2))
         elif args.command == 'build': print(f'Compiled {len(build(function(args.address))[0])} bytes')
         elif args.command == 'match': match(args)
+        elif args.command == 'verify-matches': verify_matches(args)
         elif args.command == 'task': task(args)
         elif args.command == 'status': status()
         elif args.command == 'next':

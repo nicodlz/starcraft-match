@@ -16,6 +16,7 @@ Working commands:
 ./tools/decomp build 0x004020B0
 ./tools/decomp match 0x004020B0
 ./tools/decomp status
+./tools/decomp verify-matches  # Rebuild and enforce the exact proof set
 ```
 
 A task export adds original assembly, candidate text, structures, calls, prototype,
@@ -61,3 +62,13 @@ A future scheduler can add immutable task revisions, function ownership, queue
 priorities, compiler artifact hashes, reviewer decisions and SQLite storage once
 10–100 real functions demonstrate useful iteration. No autonomous scheduler,
 external agent upload, modernization branch or full-game build exists yet.
+
+
+The four proof functions have `match_expectation: "exact"`. This is a regression
+expectation, not a cached result: `verify-matches` compiles and compares every one
+against the pinned PE each time, and fails on byte inequality or incompatible ABI.
+It removes an earlier aggregate success before starting, so a failed run cannot
+leave an old successful proof file behind. `match ADDRESS --require-exact` provides
+the same gate for a single task. Ordinary exploratory `match` still returns a useful
+diff without treating expected non-equality as a command error. Exact status counters
+use fresh local reports, not merely the catalog's recorded historical status.

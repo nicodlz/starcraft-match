@@ -7,9 +7,10 @@ original is the authority. This is not a playable engine or an OpenBW replacemen
 No modernization is underway; bugs, limits and original behavior must be preserved.
 
 The first milestone is a working original-region → candidate C → x86 compile →
-automatic comparison loop. That loop now works on one real function. **No function
-has achieved an exact match yet.** Next milestones are 10, then 100 well-evidenced
-functions before large-scale automation is evaluated.
+automatic comparison loop. **Four real game-state functions now match exactly,
+byte for byte, from independently compiled C.** A fifth candidate compiles but
+still differs. Next milestones are 10, then 100 well-evidenced functions before
+large-scale automation is evaluated.
 
 ## Target and proprietary data policy
 
@@ -48,7 +49,7 @@ This guard supplements review; Git ignores and hooks are not a legal/provenance 
 
 Required: Python 3.10+, Clang with i686 Windows code generation, GNU objdump. GCC is
 used for optional native semantic tests. No Python packages, Windows SDK, game assets,
-Wine or historic compiler are needed for this isolated candidate. The initial host
+Wine or historic compiler are needed for these isolated candidates. The initial host
 has Python 3.12, Clang 18, GCC 13 and objdump 2.42; see [environment](docs/environment.md).
 
 ```sh
@@ -61,6 +62,7 @@ python3 -m unittest discover -s tests -v
 # Requires the supported original/StarCraft.exe
 ./tools/decomp analyze
 ./tools/match function 0x004020B0
+make proof                 # Recompile and require all four exact matches
 ./tools/decomp task 0x004020B0 --out analysis/tasks/004020B0.json
 
 ./tools/decomp status
@@ -78,7 +80,7 @@ Analysis outputs: `binary.json`, `imports.json`, `sections.json`, `strings.json`
 linker fields and import ordinals. String scanning finds printable ASCII/UTF-16LE
 runs, including possible false positives; references are not inferred by this scanner.
 Without Ghidra, function discovery seeds only entry/export addresses plus the reviewed
-catalog. Sizes and boundaries are left unknown for unreviewed seeds. **Two function
+catalog. Sizes and boundaries are left unknown for unreviewed seeds. **Six function
 records are not a census of the executable.** Stripped symbols stay unknown.
 
 Optional Ghidra integration:
@@ -93,11 +95,29 @@ is supplied but unvalidated. See [Ghidra instructions](tools/ghidra/README.md).
 
 ## Current result and limitations
 
-First function: [`sub_004020B0`](docs/functions/004020B0.md), a short unit-state
-predicate. Original: **50 bytes**. Clang candidate: **48 bytes**. Exact byte match:
-**false**. EAX input/full EAX Boolean result are represented with i386 `regparm(1)`.
-Eight pipeline tests pass, including a 16-case candidate truth table. No original
-execution/differential testing has been performed.
+The proof of concept now contains four exact matches:
+
+| Address | Community annotation | Original / candidate size | Exact bytes |
+| --- | --- | --- | --- |
+| [0x00488780](docs/functions/00488780.md) | isGamePaused | 6 / 6 | true |
+| [0x00496FF0](docs/functions/00496FF0.md) | EnableVisibilityHashUpdate | 11 / 11 | true |
+| [0x004CE6B0](docs/functions/004CE6B0.md) | SetMapStartStatus (clears a byte) | 8 / 8 | true |
+| [0x004DC540](docs/functions/004DC540.md) | SetInGameLoop (returns old DWORD) | 12 / 12 | true |
+
+These are deliberately tiny non-library state routines: **37 original bytes total**.
+Each boundary and relevant direct caller was checked against the pinned executable,
+and BWAPI's public map agrees on entries and sizes. `make proof` recompiles them,
+requires literal equality and compatible ABI, and writes a private aggregate report
+at `analysis/proof-of-concept.json`. It fails if any expected exact match regresses.
+The sources contain no inline assembly, embedded original bytes or post-processing.
+Their absolute global addresses rely on the original preferred image layout.
+
+The initial [`sub_004020B0`](docs/functions/004020B0.md) unit-state predicate remains
+**50 original bytes / 48 compiled bytes, not exact**. It is retained as an exploratory
+candidate rather than counted as matched. Nine tests pass with the local executable,
+including a deliberate source regression that the proof command rejects. Without
+the executable, eight portable tests pass and the real-binary regression is skipped.
+No original execution/differential testing has been performed.
 
 The match command writes `analysis/matches/0x004020B0.json`, including original and
 candidate disassembly, literal differences and compile provenance. Instruction
@@ -107,7 +127,8 @@ Unresolved relocations are rejected. Whole-program linking is not implemented.
 The strongest original-toolchain hypothesis is **MSVC 7.1 / Visual Studio .NET 2003**,
 supported by linker 7.10 and a Blizzard engineer's public account. Exact compiler
 build and optimization switches remain unknown. Clang supplies a useful scaffold;
-its different instruction selection/register allocation prevents the current match.
+its different instruction selection/register allocation prevents the frozen-state
+match. Simple exact matches with Clang do not establish historical compiler equivalence.
 See [toolchain evidence](docs/toolchain.md) and [public references](docs/prior-art.md).
 
 ## Repository and function workflow
@@ -115,7 +136,9 @@ See [toolchain evidence](docs/toolchain.md) and [public references](docs/prior-a
 ```text
 config/                  target hashes, compiler profiles, function catalog/schema
 include/reverse/         minimal observed layout with compile-time offset checks
-src/units/               one independently compilable candidate C function
+src/units/               exploratory unit-state candidate
+src/game/                three exact game-state routines
+src/map/                 one exact map-state routine
 tools/                  decomp CLI, matching wrapper, publication check
 tools/analysis/          bounds-checked PE metadata reader
 tools/matching/          isolated COFF extraction and literal/disassembly diff
@@ -144,6 +167,6 @@ The later `starcraft-modern` fork is out of scope until faithful reconstruction 
 1. Validate headless Ghidra exports with a pinned official release; audit incoming
    callers for `0x004020B0` and rank small non-library function candidates.
 2. Obtain a lawful VS 2003 toolchain, pin compiler provenance, explore source/flags
-   and ABI adapters for the first exact C-derived match; add relocation support as needed.
+   and ABI adapters for less trivial C-derived matches; add relocation support as needed.
 3. Reach 10 documented, compiling and automatically compared real functions, then
    100, measuring agent iteration success before adding a scheduler or simulation tests.

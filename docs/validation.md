@@ -8,6 +8,11 @@ and CFG metrics remain null. Future work: linked address placement, relocation-a
 comparison, instruction normalization, block boundaries and graph comparisons. A
 normalized score is supporting evidence, not an exact-byte claim.
 
+The initial exact proof set has four functions / 37 bytes. `make proof` verifies
+all four, and an optional real-binary regression test changes a candidate in a
+private source-only checkout to ensure the gate rejects it. The proprietary input
+is read in place and never bundled with that checkout.
+
 **B — differential function testing.** Future controlled execution of original and
 candidate in a compatible 32-bit environment, including ABI, memory reads/writes,
 register preservation and edge cases. Current native truth-table tests validate only

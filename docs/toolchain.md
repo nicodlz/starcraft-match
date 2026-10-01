@@ -49,3 +49,19 @@ register ABIs may require a compiler-specific adapter or a separate assembly ABI
 shim; do not count a handwritten copy of original instructions as C decompilation.
 Compare relocated final machine code, not unresolved object placeholders. The phase-1
 extractor rejects candidate sections with relocations until this is supported.
+
+
+## Exact matches obtained with the modern scaffold
+
+Four short game-state leaves (0x00488780, 0x00496FF0, 0x004CE6B0, 0x004DC540)
+compile to literally identical bytes using the recorded Clang 18.1.3 profile.
+They consist of one or two fixed-address loads/stores followed by ret, totaling
+37 original bytes. The last takes ECX and returns the prior DWORD in EAX;
+one-argument i386 fastcall reproduces that contract without an assembly shim.
+These results are measured exceptions to the general difficulty of reproducing
+historical code with a different compiler, not evidence that Clang can match the
+original program broadly. The compiler-family hypothesis remains MSVC 7.1.
+
+An attempted unsigned-byte getter at 0x004CE6C0 remains outside the reviewed
+candidate catalog: original uses an AL-only load, whereas Clang emits a full EAX
+zero-extension. Even equally simple adjacent routines need ABI/source-shape care.

@@ -17,6 +17,7 @@
     "status": {"enum": ["unknown", "identified", "prototype_known", "source_reconstructed", "compiling", "semantic_match", "assembly_partial_match", "exact_match"]},
     "boundary_verified": {"type": "boolean"},
     "provenance": {"type": "string"},
+    "match_expectation": {"enum": ["exact", "exploratory"]},
     "candidate_source": {"type": ["string", "null"]},
     "calling_convention": {"type": ["string", "null"]},
     "prototype": {"type": ["string", "null"]},
