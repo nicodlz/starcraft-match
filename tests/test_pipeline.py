@@ -44,6 +44,7 @@ def fixture(path):
 
 class PipelineTests(unittest.TestCase):
     def setUp(self):
+        (ROOT/'.local').mkdir(exist_ok=True)
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.p = Path(self.tmp.name)/'fixture.exe'
