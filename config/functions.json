@@ -1,0 +1,43 @@
+[
+  {
+    "schema_version": 1,
+    "address": "0x004020B0",
+    "size": 50,
+    "name": "sub_004020B0",
+    "proposed_names": [
+      {
+        "name": "unit_is_frozen",
+        "source": "GPTP CUnit::isFrozen",
+        "confidence": 0.9
+      }
+    ],
+    "confidence": 0.95,
+    "references": [],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Manually inspected pinned PE: two returns at 0x004020DB/0x004020E1, padding begins 0x004020E2. Community entry corroborates start. Incoming references not yet audited.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "custom: unit in EAX; result EAX 0 or 1",
+    "prototype": "int sub_004020B0(const UnitView *unit /* EAX */)",
+    "candidate_source": "src/units/sub_004020B0.c",
+    "candidate_symbol": "_sub_004020B0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/unit_view.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "notes": [
+      "EAX input via i386 regparm(1); return int EAX. No null check in original. Caller audit and original differential testing remain pending."
+    ],
+    "match": {
+      "exact": null,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  }
+]

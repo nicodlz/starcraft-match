@@ -1,0 +1,7 @@
+{
+  "clang-i686-scaffold": {
+    "executable": "clang",
+    "flags": ["--target=i686-pc-windows-msvc", "-std=c11", "-O2", "-ffreestanding", "-fno-stack-protector", "-fno-ident", "-ffunction-sections", "-Iinclude"],
+    "purpose": "Modern COFF semantic scaffold, not historical matching compiler"
+  }
+}

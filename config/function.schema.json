@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:starcraft-match:function:v1",
+  "title": "Function record and agent task",
+  "type": "object",
+  "required": ["schema_version", "address", "size", "name", "confidence", "references", "calls", "strings", "status", "boundary_verified", "binary_sha256"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "address": {"type": "string", "pattern": "^0x[0-9A-F]{8}$"},
+    "binary_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "size": {"type": ["integer", "null"], "minimum": 1},
+    "name": {"type": ["string", "null"]},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "references": {"type": "array"},
+    "calls": {"type": "array"},
+    "strings": {"type": "array"},
+    "status": {"enum": ["unknown", "identified", "prototype_known", "source_reconstructed", "compiling", "semantic_match", "assembly_partial_match", "exact_match"]},
+    "boundary_verified": {"type": "boolean"},
+    "provenance": {"type": "string"},
+    "candidate_source": {"type": ["string", "null"]},
+    "calling_convention": {"type": ["string", "null"]},
+    "prototype": {"type": ["string", "null"]},
+    "dependencies": {"type": "array"},
+    "match": {
+      "type": "object",
+      "properties": {
+        "exact": {"type": ["boolean", "null"]},
+        "score": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "semantic": {"type": ["boolean", "null"]},
+        "cfg": {"type": ["number", "null"]}
+      }
+    },
+    "decompiler_output": {"type": ["string", "null"]},
+    "original_asm": {"type": ["array", "string", "null"]},
+    "known_structures": {"type": "array"},
+    "known_calls": {"type": "array"},
+    "notes": {"type": "array"}
+  },
+  "additionalProperties": true
+}

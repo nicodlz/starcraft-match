@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "game": "StarCraft: Brood War",
+  "version": "1.16.1",
+  "platform": "Windows x86 PE32",
+  "supported_binaries": [{
+    "sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "file_size": 1220608,
+    "file_version": "1.16.1.1",
+    "provenance": "https://davechurchill.ca/starcraft/files/Starcraft_1161.zip",
+    "verification": "Observed PE32 i386, VERSIONINFO fixed signature reports 1.16.1.1; community address 0x004020B0 corroborated by disassembly. Not authenticated by Blizzard signature."
+  }]
+}

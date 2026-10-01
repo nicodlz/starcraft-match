@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Automation primitive: pin, analyze, compile, compare, and export one task."""
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'tools'))
+from analysis.pe import PE, hx
+from matching.compare import coff_function, compare
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def write(path, obj):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=2, sort_keys=True) + '\n')
+
+
+def private(path):
+    p = Path(path).resolve()
+    if not any(p.is_relative_to(ROOT / d) for d in ('analysis', 'build', '.local')):
+        raise ValueError('Generated artifacts must stay under analysis/, build/, or .local/ (gitignored)')
+    return p
+
+
+def binary(path, allow=False):
+    pe = PE(path)
+    supported = read(ROOT/'config/target.json')['supported_binaries']
+    pe.metadata['target_supported'] = any(x['sha256'] == pe.metadata['sha256'] for x in supported)
+    pe.metadata['version_verified'] = pe.metadata['target_supported']
+    if not allow and not pe.metadata['target_supported']:
+        raise ValueError('Unsupported SHA-256: inspect with analyze --allow-unverified; do not use for target matching')
+    return pe
+
+
+def records():
+    catalog = {r['address']: r for r in read(ROOT/'config/functions.json')}
+    discovered = ROOT/'analysis/functions.json'
+    if discovered.exists():
+        supported = {b['sha256'] for b in read(ROOT/'config/target.json')['supported_binaries']}
+        for r in read(discovered):
+            if r.get('binary_sha256') in supported:
+                catalog.setdefault(r['address'], r)
+    return sorted(catalog.values(), key=lambda r: r['address'])
+
+
+def function(address):
+    key = hx(int(address, 0))
+    for r in records():
+        if r['address'] == key:
+            return r
+    raise ValueError(f'Unknown function {key}')
+
+
+def analyze(args):
+    pe = binary(args.binary, args.allow_unverified)
+    out = private(args.out)
+    funcs = []
+    seeds = [(pe.metadata['entry_point'], 'PE entry point')]
+    symbols = pe.exports()
+    seeds += [(s['address'], 'PE export') for s in symbols if s['address']]
+    for addr, source in sorted(set(seeds)):
+        funcs.append(dict(schema_version=1, address=addr, size=None, name=None, confidence=0.2,
+                          references=[], calls=[], strings=[], status='unknown',
+                          boundary_verified=False, provenance=source, binary_sha256=pe.metadata['sha256']))
+    if pe.metadata['target_supported']:
+        catalog = read(ROOT/'config/functions.json')
+        funcs = [f for f in funcs if f['address'] not in {c['address'] for c in catalog}] + catalog
+    for filename, data in [('binary', pe.metadata), ('imports', pe.imports()), ('sections', pe.sections),
+                           ('strings', pe.strings()), ('functions', sorted(funcs, key=lambda f: f['address'])),
+                           ('symbols', symbols)]:
+        write(out/f'{filename}.json', data)
+    print(f'Analyzed {pe.metadata["sha256"]}; {len(funcs)} function records (not a total function census)')
+
+
+def build(r):
+    if not r.get('candidate_source'):
+        raise ValueError('No candidate source')
+    profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
+    out = private(ROOT/'build'/r['address'])
+    out.mkdir(parents=True, exist_ok=True)
+    obj = out/'candidate.obj'
+    cmd = [profile['executable'], *profile['flags'], '-c', r['candidate_source'], '-o', str(obj)]
+    env = dict(os.environ, SOURCE_DATE_EPOCH='0')
+    subprocess.run(cmd, cwd=ROOT, env=env, check=True)
+    data = coff_function(obj, r['candidate_symbol'])
+    (out/'candidate.bin').write_bytes(data)
+    manifest = dict(command=cmd, compiler_version=subprocess.check_output([profile['executable'], '--version'], text=True),
+                    source_sha256=hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest(),
+                    headers_sha256={h: hashlib.sha256((ROOT/h).read_bytes()).hexdigest() for h in r.get('known_structures', [])},
+                    candidate_sha256=hashlib.sha256(data).hexdigest(), profile=r['compiler_profile'],
+                    source_date_epoch='0', candidate_abi_compatible=r.get('candidate_abi_compatible', False),
+                    compiler_profile_config=profile,
+                    compiler_sha256=hashlib.sha256(Path(shutil.which(profile['executable'])).read_bytes()).hexdigest(),
+                    function_record_sha256=hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
+    write(out/'build.json', manifest)
+    return data, manifest
+
+
+def match(args):
+    r = function(args.address)
+    pe = binary(args.binary)
+    if r.get('binary_sha256') != pe.metadata['sha256'] or not r.get('boundary_verified') or not r.get('size'):
+        raise ValueError('Matching requires reviewed boundaries tied to this binary hash')
+    data, manifest = build(r)
+    result = compare(pe.region(int(r['address'], 0), r['size']), data, int(r['address'], 0))
+    result.update(address=r['address'], binary_sha256=pe.metadata['sha256'], build=manifest,
+                  abi_compatible=r.get('candidate_abi_compatible', False),
+                  original_region_sha256=hashlib.sha256(pe.region(int(r['address'], 0), r['size'])).hexdigest())
+    out = private(ROOT/'analysis/matches'/f'{r["address"]}.json')
+    write(out, result)
+    print(json.dumps({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match',
+                                           'instruction_similarity', 'cfg_similarity', 'abi_compatible')}, indent=2))
+    print(f'Disassembly and differences: {out.relative_to(ROOT)}')
+
+
+def status():
+    rs = records()
+    counts = dict(total_candidate_functions=len(rs), total_program_functions=None,
+                  identified=sum(r.get('confidence', 0) >= .8 for r in rs),
+                  named=sum(bool(r.get('name')) and not r['name'].startswith('sub_') for r in rs),
+                  prototype_known=sum(bool(r.get('prototype')) for r in rs),
+                  source_reconstructed=sum(bool(r.get('candidate_source')) for r in rs),
+                  compiling=0, semantic_match=0, assembly_partial_match=None, exact_match=0)
+    for r in rs:
+        p = ROOT/'analysis/matches'/f'{r["address"]}.json'
+        if p.exists():
+            m = read(p)
+            # Ignore stale reports after source/header/profile changes.
+            b = m['build']
+            fresh = (r.get('binary_sha256') == m['binary_sha256'] and r.get('candidate_source')
+                     and b['source_sha256'] == hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest()
+                     and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
+                     and b.get('compiler_profile_config') == read(ROOT/'config/compilers.json')[r['compiler_profile']]
+                     and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
+            if fresh:
+                counts['compiling'] += 1
+                counts['exact_match'] += int(m['exact_byte_match'] and m['abi_compatible'])
+    print(json.dumps(counts, indent=2))
+
+
+def task(args):
+    r = function(args.address).copy()
+    pe = binary(args.binary)
+    if r.get('binary_sha256') != pe.metadata['sha256'] or not r.get('boundary_verified'):
+        raise ValueError('Task requires reviewed region from pinned executable')
+    from matching.compare import disassemble
+    r['original_asm'] = disassemble(pe.region(int(r['address'], 0), r['size']), int(r['address'], 0))
+    r['decompiler_output'] = None
+    r['candidate_source_text'] = (ROOT/r['candidate_source']).read_text() if r.get('candidate_source') else None
+    mp = ROOT/'analysis/matches'/f'{r["address"]}.json'
+    r['match_report'] = read(mp) if mp.exists() else None
+    write(private(args.out), r)
+    print(args.out)
+
+
+def main():
+    os.chdir(ROOT)
+    p = argparse.ArgumentParser(description=__doc__)
+    s = p.add_subparsers(dest='command', required=True)
+    a = s.add_parser('analyze'); a.add_argument('--binary', default='original/StarCraft.exe'); a.add_argument('--out', default='analysis'); a.add_argument('--allow-unverified', action='store_true')
+    for cmd in ('show', 'build', 'match', 'task'):
+        a = s.add_parser(cmd); a.add_argument('address')
+        if cmd in ('match', 'task'): a.add_argument('--binary', default='original/StarCraft.exe')
+        if cmd == 'task': a.add_argument('--out', default='analysis/task.json')
+    s.add_parser('status'); s.add_parser('next')
+    args = p.parse_args()
+    try:
+        if args.command == 'analyze': analyze(args)
+        elif args.command == 'show': print(json.dumps(function(args.address), indent=2))
+        elif args.command == 'build': print(f'Compiled {len(build(function(args.address))[0])} bytes')
+        elif args.command == 'match': match(args)
+        elif args.command == 'task': task(args)
+        elif args.command == 'status': status()
+        elif args.command == 'next':
+            pending = [r for r in records() if r.get('status') != 'exact_match']
+            print(json.dumps(pending[0] if pending else None, indent=2))
+    except (ValueError, OSError, KeyError, subprocess.CalledProcessError) as e:
+        p.exit(1, f'error: {e}\n')
+
+if __name__ == '__main__': main()

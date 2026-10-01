@@ -1,0 +1,14 @@
+/original/
+/downloads/
+/analysis/
+/build/
+/.local/
+*.exe
+*.dll
+*.mpq
+*.zip
+*.o
+*.obj
+*.bin
+*.sqlite*
+__pycache__/

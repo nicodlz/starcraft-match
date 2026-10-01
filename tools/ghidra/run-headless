@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Headless import and private export; requires Ghidra and its supported JDK."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+p = argparse.ArgumentParser(description=__doc__)
+p.add_argument('--binary', default='original/StarCraft.exe')
+p.add_argument('--ghidra-home', default=os.environ.get('GHIDRA_HOME'))
+a = p.parse_args()
+if not a.ghidra_home:
+    p.exit(1, 'error: set GHIDRA_HOME or --ghidra-home to an installed Ghidra directory\n')
+exe = (ROOT/a.binary).resolve()
+try:
+    digest = hashlib.sha256(exe.read_bytes()).hexdigest()
+except OSError as e:
+    p.exit(1, f'error: {e}\n')
+if digest not in {b['sha256'] for b in json.loads((ROOT/'config/target.json').read_text())['supported_binaries']}:
+    p.exit(1, 'error: unsupported executable hash\n')
+headless = Path(a.ghidra_home)/'support/analyzeHeadless'
+if not headless.is_file():
+    p.exit(1, f'error: missing {headless}\n')
+projects = ROOT/'.local/ghidra/projects'
+exports = ROOT/'analysis/ghidra'/digest
+projects.mkdir(parents=True, exist_ok=True)
+exports.mkdir(parents=True, exist_ok=True)
+# Fresh transient project avoids accumulating different analysis states.
+cmd = [str(headless), str(projects), 'sc_'+digest[:16], '-import', str(exe), '-overwrite',
+       '-scriptPath', str(ROOT/'tools/ghidra'), '-postScript', 'ExportResearch.java', str(exports), digest,
+       '-deleteProject']
+result = subprocess.run(cmd, cwd=ROOT)
+sys.exit(result.returncode)
