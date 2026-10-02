@@ -1,0 +1,175 @@
+#!/usr/bin/env python3
+"""Compile C via locally supplied MSVC 7.1 and wibo; never supplies tool binaries."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+EX_UNAVAILABLE = 69
+EX_CONFIG = 78
+COMPONENTS = ('cl.exe', 'c1.dll', 'c1xx.dll', 'c2.dll', 'msobj71.dll',
+              'mspdb71.dll', 'msvcr71.dll', 'msvcp71.dll', 'dbghelp.dll')
+
+
+def project_root():
+    for p in Path(__file__).resolve().parents:
+        if (p / 'config/target.json').is_file():
+            return p
+    raise ValueError('driver must reside inside the project')
+
+
+def digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def compiler_env():
+    env = dict(os.environ)
+    # CL and _CL_ inject unrecorded options, including include paths and outputs.
+    env.pop('CL', None)
+    env.pop('_CL_', None)
+    env.pop('INCLUDE', None)
+    env.pop('LIB', None)
+    return env
+
+
+def toolchain():
+    root = project_root()
+    bin_dir = Path(os.environ.get('SC_MSVC71_BIN', str(root / '.local/toolchains/msvc71/bin'))).expanduser().resolve()
+    runner = Path(os.environ.get('SC_WIBO', str(root / '.local/toolchains/wibo/wibo-i686'))).expanduser().resolve()
+    missing = [str(bin_dir / n) for n in COMPONENTS if not (bin_dir / n).is_file()]
+    if not runner.is_file():
+        missing.append(str(runner))
+    explicit = 'SC_MSVC71_BIN' in os.environ or 'SC_WIBO' in os.environ
+    if missing:
+        partial_compiler = any((bin_dir / n).is_file() for n in COMPONENTS) and any(
+            not (bin_dir / n).is_file() for n in COMPONENTS)
+        status = 'misconfigured' if explicit or partial_compiler else 'unavailable'
+        return {'schema_version': 1, 'status': status,
+                'reason': 'required toolchain files missing', 'missing': missing}, None
+    if not os.access(runner, os.X_OK):
+        return {'schema_version': 1, 'status': 'misconfigured', 'reason': 'wibo is not executable'}, None
+    try:
+        proc = subprocess.run([str(runner), str(bin_dir / 'cl.exe')],
+                              env=compiler_env(), capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        return {'schema_version': 1, 'status': 'misconfigured', 'reason': str(error)}, None
+    banner = proc.stdout + proc.stderr
+    if proc.returncode != 0 or 'Version 13.10.3077 for 80x86' not in banner:
+        return {'schema_version': 1, 'status': 'misconfigured', 'reason': 'CL 13.10.3077 banner verification failed',
+                'returncode': proc.returncode, 'diagnostics': banner}, None
+    files = {name: digest(bin_dir / name) for name in COMPONENTS}
+    files['wibo'] = digest(runner)
+    files['driver'] = digest(__file__)
+    identity = {'schema_version': 1, 'status': 'available', 'compiler': 'MSVC',
+                'version': '13.10.3077', 'target': 'Windows i386', 'component_sha256': files}
+    identity['identity_sha256'] = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+    return identity, [str(runner), str(bin_dir / 'cl.exe')]
+
+
+def windows_path(runner, path):
+    proc = subprocess.run([runner, 'path', '-w', str(path)],
+                          env=compiler_env(), capture_output=True, text=True)
+    if proc.returncode or not proc.stdout.strip():
+        raise ValueError('wibo path conversion failed: ' + proc.stderr)
+    return proc.stdout.rstrip('\r\n')
+
+
+def parse_compile(args):
+    source = None
+    output = None
+    flags = []
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        if arg in ('-c', '-o', '-I', '-D', '-U'):
+            if i + 1 == len(args):
+                raise ValueError('missing value for ' + arg)
+            value = args[i + 1]
+            i += 2
+            if arg == '-c':
+                if source is not None:
+                    raise ValueError('exactly one -c source is required')
+                source = Path(value).resolve()
+            elif arg == '-o':
+                if output is not None:
+                    raise ValueError('exactly one -o output is required')
+                output = Path(value).resolve()
+            elif arg == '-I':
+                flags.append('/I' + str(Path(value).resolve()))
+            else:
+                flags.append('/' + arg[1:] + value)
+            continue
+        if arg.startswith('-I') and len(arg) > 2:
+            flags.append('/I' + str(Path(arg[2:]).resolve()))
+        elif arg.startswith(('-D', '-U')) and len(arg) > 2:
+            flags.append('/' + arg[1:])
+        elif arg.startswith('/') and len(arg) > 1:
+            if arg.lower().startswith(('/fo', '/fe', '/fa', '/link')) or arg.lower() in ('/c', '/tc', '/tp'):
+                raise ValueError('driver owns source/output language options: ' + arg)
+            if arg.upper() == '/GS-':
+                raise ValueError('CL 13.10.3077 does not support /GS-; omit /GS to retain its default-disabled checks')
+            flags.append(arg)
+        else:
+            raise ValueError('unsupported driver argument: ' + arg)
+        i += 1
+    if source is None or output is None:
+        raise ValueError('expected -c SOURCE -o OBJECT')
+    if source.suffix.lower() != '.c' or not source.is_file():
+        raise ValueError('source must be an existing C translation unit')
+    if source == output:
+        raise ValueError('source and output must differ')
+    return source, output, flags
+
+
+def main(args):
+    identity_only = args in (['--identity-json'], ['--identityJSON'])
+    version_only = args == ['--version']
+    if not identity_only and not version_only:
+        try:
+            source, output, flags = parse_compile(args)
+        except ValueError as error:
+            print('msvc71-driver: ' + str(error), file=sys.stderr)
+            return EX_CONFIG
+    identity, command = toolchain()
+    if identity_only:
+        print(json.dumps(identity, sort_keys=True))
+    elif identity['status'] != 'available':
+        print(json.dumps(identity, sort_keys=True), file=sys.stderr)
+    if identity['status'] != 'available':
+        return EX_UNAVAILABLE if identity['status'] == 'unavailable' else EX_CONFIG
+    if identity_only:
+        return 0
+    if version_only:
+        print('Microsoft C/C++ 13.10.3077 for 80x86 (local wibo driver)')
+        return 0
+    output.parent.mkdir(parents=True, exist_ok=True)
+    # Publish only a successful compiler-produced object; no bytes are changed.
+    with tempfile.TemporaryDirectory(prefix='msvc71-', dir=str(output.parent)) as temp:
+        obj = Path(temp) / 'candidate.obj'
+        guest_flags = [('/I' + windows_path(command[0], f[2:])) if f[:2].upper() == '/I' else f for f in flags]
+        proc = subprocess.run([*command, *guest_flags, '/TC', '/c', windows_path(command[0], source), '/Fo' + windows_path(command[0], obj)],
+                              env=compiler_env(), capture_output=True, text=True)
+        sys.stdout.write(proc.stdout)
+        sys.stderr.write(proc.stderr)
+        if proc.returncode:
+            return proc.returncode if 0 < proc.returncode < 126 else 1
+        if re.search(r'\bD(?:4002|9002)\b', proc.stdout + proc.stderr):
+            print('msvc71-driver: ignored compiler option rejected', file=sys.stderr)
+            return EX_CONFIG
+        if not obj.is_file():
+            print('msvc71-driver: successful compiler did not create object', file=sys.stderr)
+            return 1
+        os.replace(obj, output)
+    return 0
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except (OSError, ValueError) as error:
+        print('msvc71-driver: ' + str(error), file=sys.stderr)
+        sys.exit(EX_CONFIG)

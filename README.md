@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![110 exact functions](https://img.shields.io/badge/verified-110%20exact%20functions-287d67)
+![134 exact functions](https://img.shields.io/badge/verified-134%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**110 whole functions match exactly, totaling 1,444 original bytes.** The independent
+**134 whole functions match exactly, totaling 1,924 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -37,8 +37,11 @@ their destination semantics remain unknown. The numeric milestone does not estab
 100 representative gameplay routines or a representative whole-game match rate.
 A subsequent [continuous research lot](docs/continuous-2026-10-02.md) promoted
 one previously unmatched 20-byte game leaf without changing its C source.
+The [first historical-compiler lot](docs/historical-2026-10-02.md) adds 24 game
+functions / 480 bytes, including list traversals, counting loops and score calculations.
 
-The table lists the 34 other reviewed functions. The 76 initializer entries, their
+The table lists the 34 earlier non-initializer functions; the 24 historical-toolchain
+additions are listed in the report linked above. The 76 initializer entries, their
 destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
@@ -90,8 +93,8 @@ measured compiler/ABI differences are documented in the catalog and function not
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 110 matches are
-about **2.62% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 134 matches are
+about **3.19% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -102,6 +105,10 @@ On Linux, the portable workflow needs **Python 3.10+**, **Clang**, **GNU objdump
 dependencies, and these isolated candidates require no Windows SDK or CRT.
 The measured profiles use **Clang 18.1.3**, generating i686 Windows COFF with `-O2`
 or `-Oz`; a separate narrow-register profile disables one LLVM widening pass.
+Historical profiles additionally require locally supplied Microsoft C 13.10.3077
+and wibo 1.2.0. Their binaries are not bundled. `make` can compile these sources
+with an explicit Clang fallback when the default historical toolchain is absent;
+exact matching and `make proof` require the recorded compiler.
 See [environment](docs/environment.md) and [toolchain evidence](docs/toolchain.md).
 
 ```sh
@@ -137,7 +144,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 110 exact matches
+make proof                    # Recompile and require all 134 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
@@ -145,8 +152,8 @@ make proof                    # Recompile and require all 110 exact matches
 `make proof` fails on a regression and writes a private aggregate report to
 `analysis/proof-of-concept.json`. A real-binary test deliberately changes a candidate
 in a private source-only checkout to confirm that the failure gate works.
-Nine tests pass on the initial host with the executable; without it, eight pass
-and the real-binary test is skipped.
+Twenty tests pass with the executable and required local compiler profiles; a
+source-only checkout passes nineteen and skips the real-binary test.
 
 Install the local commit guard in a fresh clone:
 
@@ -237,8 +244,8 @@ Documentation: [Prior art](docs/prior-art.md) · [Toolchain](docs/toolchain.md) 
 1. The **100 exact-function numeric milestone** is reached. Grow to **100
    representative functions** beyond repeated static initializers, measuring time,
    dependencies, exact-match rate and human review needed per function.
-2. Validate headless Ghidra and investigate a legally obtained historic toolchain,
-   linked placement and relocation-aware comparisons for harder routines.
+2. Extend the validated local historical compiler experiments to harder routines,
+   linked placement and relocation-aware comparisons; validate headless Ghidra.
 3. Evaluate larger-scale agent scheduling only after those measurements. Original
    differential execution, deterministic simulation and replay synchronization
    remain later validation levels; modernization remains out of scope.

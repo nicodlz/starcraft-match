@@ -119,3 +119,35 @@ original compiler build. [Research notes](continuous-2026-10-02.md) distinguish
 container integrity, historical signing evidence and current certificate trust.
 CL SHA-256: `2ecf86a3edfd3deae498e08298e210e984537ce9e11759930561e43f40bd2515`.
 Compiler, DLLs and runner remain private; no proprietary compiler binaries are bundled.
+
+## Recorded historical matching profiles
+
+The [first historical matching lot](historical-2026-10-02.md) adds 24 exact game
+functions / 480 bytes. `msvc71-o2` uses `/nologo /O2 /Oy /Gy /Zl /G6`;
+`msvc71-o2-frame` instead ends with `/Oy-` to retain the observed EBP frame.
+This establishes measured local profiles, not the original program's complete
+compiler build or switches. `/GS-` is unsupported by this compiler and rejected.
+
+The source adapter `tools/compilers/msvc71` expects a locally supplied compiler
+and its DLLs under `.local/toolchains/msvc71/bin`, and wibo under
+`.local/toolchains/wibo/wibo-i686`. Explicit paths can be supplied:
+
+```sh
+export SC_MSVC71_BIN=/absolute/local/path/to/msvc71/bin
+export SC_WIBO=/absolute/local/path/to/wibo-i686
+./tools/compilers/msvc71 --identity-json
+make proof
+```
+
+No compiler or runner binaries are distributed. The adapter verifies version
+13.10.3077, records component/runner hashes, converts Windows paths, rejects
+ignored options, clears ambient CL/_CL_/INCLUDE/LIB inputs and publishes only
+successful unchanged compiler output. The existing strict COFF extractor rejects
+relocations and compares the complete function section.
+
+An absent default optional toolchain permits only `build-all` to use a marked
+Clang source-compilation fallback. Explicit bad paths or incomplete installations
+fail. Individual builds, matching and proof remain strict; portable fallback
+manifests cannot satisfy historical match freshness. Compiler DLL or runner
+changes invalidate historical evidence even when the adapter/source are unchanged.
+The eleven portable adapter tests use synthetic Python runners and text fixtures.

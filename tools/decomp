@@ -90,6 +90,31 @@ def compiler_digest(executable):
     return hashlib.sha256(Path(resolved).read_bytes()).hexdigest()
 
 
+
+class OptionalCompilerUnavailable(OSError):
+    """Only absent default optional toolchains qualify for build-all fallback."""
+
+
+def compiler_identity(profile):
+    arguments = profile.get('identity_arguments')
+    if arguments is None:
+        return None
+    if not isinstance(arguments, list) or not all(isinstance(a, str) for a in arguments):
+        raise ValueError('identity_arguments must be an argument list')
+    proc = subprocess.run([profile['executable'], *arguments], capture_output=True, text=True)
+    try:
+        identity = json.loads(proc.stdout)
+    except (ValueError, TypeError) as error:
+        raise OSError('Compiler identity was not valid JSON: ' + proc.stderr) from error
+    if not isinstance(identity, dict):
+        raise OSError('Compiler identity must be an object')
+    if identity.get('status') == 'unavailable' and proc.returncode == 69:
+        raise OptionalCompilerUnavailable(identity.get('reason', 'Optional compiler unavailable'))
+    if proc.returncode or identity.get('status') != 'available':
+        raise OSError('Compiler identity failed: ' + json.dumps(identity, sort_keys=True))
+    return identity
+
+
 def report_is_fresh(r, report):
     try:
         b = report['build']
@@ -99,6 +124,7 @@ def report_is_fresh(r, report):
             and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
             and b.get('compiler_profile_config') == profile
             and b.get('compiler_sha256') == compiler_digest(profile['executable'])
+            and b.get('compiler_identity') == compiler_identity(profile)
             and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
     except (OSError, KeyError, ValueError):
         return False
@@ -108,6 +134,7 @@ def build(r):
     if not r.get('candidate_source'):
         raise ValueError('No candidate source')
     profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
+    identity = compiler_identity(profile)
     out = private(ROOT/'build'/r['address'])
     out.mkdir(parents=True, exist_ok=True)
     obj = out/'candidate.obj'
@@ -123,6 +150,8 @@ def build(r):
                     source_date_epoch='0', candidate_abi_compatible=r.get('candidate_abi_compatible', False),
                     compiler_profile_config=profile,
                     compiler_sha256=compiler_digest(profile['executable']),
+                    compiler_identity=identity,
+                    source_only_fallback_for=r.get('source_only_fallback_for'),
                     function_record_sha256=hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
     write(out/'build.json', manifest)
     return data, manifest
@@ -131,8 +160,19 @@ def build(r):
 def build_all():
     candidates = [r for r in read(ROOT/'config/functions.json') if r.get('candidate_source')]
     for r in candidates:
-        data, _ = build(r)
-        print(f'{r["address"]}: compiled {len(data)} bytes')
+        try:
+            data, _ = build(r)
+            print(f'{r["address"]}: compiled {len(data)} bytes')
+        except OptionalCompilerUnavailable:
+            profiles = read(ROOT/'config/compilers.json')
+            fallback = profiles[r['compiler_profile']].get('optional_portable_profile')
+            if not isinstance(fallback, str) or fallback not in profiles or fallback == r['compiler_profile']:
+                raise
+            portable = dict(r, compiler_profile=fallback,
+                            source_only_fallback_for=r['compiler_profile'], match_expectation='exploratory')
+            data, _ = build(portable)
+            print(f'{r["address"]}: compiled {len(data)} bytes '
+                  f'(source-only fallback {fallback}; optional {r["compiler_profile"]} unavailable)')
     print(f'Compiled {len(candidates)} reviewed candidates')
 
 

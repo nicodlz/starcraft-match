@@ -60,5 +60,37 @@
       "-disable-block-placement"
     ],
     "purpose": "Modern Clang scaffold preserving narrow instructions and disabling late block-placement; strict whole-function evidence required, not an original compiler claim"
+  },
+  "msvc71-o2": {
+    "executable": "./tools/compilers/msvc71",
+    "flags": [
+      "/nologo",
+      "/O2",
+      "/Oy",
+      "/Gy",
+      "/Zl",
+      "/G6"
+    ],
+    "identity_arguments": [
+      "--identity-json"
+    ],
+    "optional_portable_profile": "clang-i686-scaffold",
+    "purpose": "Locally supplied historical CL 13.10.3077 under pinned wibo; absent default toolchain permits only explicit source-compilation fallback in build-all. /GS not enabled (default off); /GS- unsupported and rejected."
+  },
+  "msvc71-o2-frame": {
+    "executable": "./tools/compilers/msvc71",
+    "flags": [
+      "/nologo",
+      "/O2",
+      "/Gy",
+      "/Zl",
+      "/G6",
+      "/Oy-"
+    ],
+    "identity_arguments": [
+      "--identity-json"
+    ],
+    "optional_portable_profile": "clang-i686-scaffold",
+    "purpose": "Local historical CL 13.10.3077 with frame-pointer omission disabled; strict full-function match only. Missing default compiler permits source-only build-all fallback."
   }
 }
