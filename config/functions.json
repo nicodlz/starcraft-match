@@ -24620,5 +24620,489 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041EE50",
+    "name": "sub_0041EE50",
+    "size": 166,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0041EE50.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0041EE50",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_p_enter": {
+          "address": 5234980,
+          "kind": "data",
+          "evidence": [
+            "PEIAT EnterCriticalSection; CALL[4FE124], onearg cleanup4."
+          ]
+        },
+        "_p_leave": {
+          "address": 5235112,
+          "kind": "data",
+          "evidence": [
+            "PEIAT LeaveCriticalSection; CALL[4FE1A8], onearg cleanup4."
+          ]
+        },
+        "_p_seek": {
+          "address": 5235108,
+          "kind": "data",
+          "evidence": [
+            "PEIAT SetFilePointer; 4pushes stdcall16."
+          ]
+        },
+        "_p_write": {
+          "address": 5235256,
+          "kind": "data",
+          "evidence": [
+            "PEIAT WriteFile;5pushes stdcall20; localwritten pointer."
+          ]
+        },
+        "_p_close": {
+          "address": 5234968,
+          "kind": "data",
+          "evidence": [
+            "PEIAT CloseHandle; onearg stdcall4."
+          ]
+        },
+        "_sub_0041ECB0": {
+          "address": 4320432,
+          "kind": "code",
+          "evidence": [
+            "Whole412bytehelper noincomingargs/plainRET/EAXhandle; returnswithoutmeaningfulregisterinputs."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004DA86D",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004E041F",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004E052E",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x00421578",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004214EF",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x0041EF5C",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004E0AA3",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004DAA43",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      },
+      {
+        "address": "0x004D10EC",
+        "type": "direct_call",
+        "provenance": "TrueE8call, completeoriginalcaller reviewed; setup/cleanup/consumption corroborateABI."
+      }
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "cdecl oneDWORDcloseflag stack, plainRET/callercleanup4, returnnotconsumed; allnonvolatiles preserved. ExternalhelperECB0 noargs/plainRET/EAXhandle; 5indirectKernel32functionsstdcall4/16/20 asPEIAT.",
+    "prototype": "void sub_0041EE50(U32 close_flag)",
+    "provenance": "Pinned complete function 0x0041EE50..0x0041EEF6 (exclusive), entry corroborated by independently reviewed caller; whole boundary, ABI and external binding audit reviewed by coordinator.",
+    "calls": [],
+    "strings": [],
+    "known_calls": [],
+    "known_structures": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "notes": [
+      "The one-DWORD close flag is cdecl with caller cleanup4; all nonvolatile registers preserved and result ignored. Nine complete callers, 412-byte no-input helper and 107/191-byte dependencies are independently reviewed. Invalid-handle creation failure clears pending bytes and returns without LeaveCriticalSection, preserving the original lock leak. WriteFile failure or partial write still clears pending; written output is never read. Seek and CloseHandle results are ignored. Five PE IAT data slots identify Kernel32 APIs; their implementations and deeper CRT behavior remain external. Valid critical object and readable pending-byte buffer are required; no concurrency execution is claimed."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00483D20",
+    "name": "sub_00483D20",
+    "size": 171,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00483D20.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_00483D20",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0042BC30": {
+          "address": 4373552,
+          "kind": "code",
+          "evidence": [
+            "Complete1060-bytecallee initializesregisters fromglobaldata, receivesnoarguments, preservesEBX/ESI/EDI/EBP, returnsEAX memory and plainRET. Returnignoredbywrapper."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_hypothetical_context",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "confidence": 0.95,
+    "calling_convention": "EAX sourceDWORDpointer, preserves EBX/ESI/EDI/EBP; plain RET, resultignored.",
+    "references": [
+      {
+        "address": "0x004842E4",
+        "type": "direct_call",
+        "provenance": "Whole177-bytecaller receivesinputstackDWORD pointer and movesEAX beforecall."
+      }
+    ],
+    "notes": [
+      "Fourth C variant, complete171-byte standard external-linked exact.",
+      "Callee0042BC30 full1060 bytes, transitive0042B620 full307 bytes independentlyreviewed; bothconsume no arguments and preservecallee-savedregisters. Discoverytruncated their tails.",
+      "Global WORD dimensions read afterhelper, sourceDWORD reads and destinationWORD writes, 512-byte destination rowstride retained.",
+      "No bounds/null guards or semanticsrepair; memoryobject validity and target32bitmapping explicit.",
+      "Actual EAX source pointer is captured before the no-input external call; width and height WORD globals are read afterward. Complete177-byte caller and dependencies1060/307 bytes include final epilogues truncated by discovery; no hidden ESI/EDI input survives their setup. Output WORD pitch is512 bytes, including negative row adjustment for width>256 and no stores on zero-width rows. Masks410000 and6010000 retain original category values. Accessible aligned typed source/destination objects must cover all pointer increments, row adjustments and final cursors; overlapping differently typed objects and corrupt pointers are not certified. No bounds or allocation guard is added."
+    ],
+    "calls": [],
+    "strings": [],
+    "known_calls": [],
+    "known_structures": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "provenance": "Pinned complete function 0x00483D20..0x00483DCB (exclusive), entry corroborated by independently reviewed caller; whole boundary, ABI and external binding audit reviewed by coordinator.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00468970",
+    "name": "sub_00468970",
+    "size": 172,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00468970.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_00468970",
+    "references": [
+      {
+        "address": "0x00468F20",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x00468E66",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x00468EB4",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004698F8",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00474400",
+        "type": "direct_call"
+      }
+    ],
+    "known_structures": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [
+        {
+          "symbol": "_context",
+          "section": ".scctx"
+        }
+      ],
+      "bindings": {
+        "@dependency_00474400@8": {
+          "address": 4670464,
+          "kind": "code",
+          "evidence": [
+            "Whole189byte dependency ECXunit/DLorder, no stackargs plainRET; complete body no other calls."
+          ]
+        }
+      }
+    },
+    "confidence": 0.95,
+    "calling_convention": "EBX owner, no stack inputs; EAX last eligible detached unit orNULL; preserves ESI/EBX, plainRET. Dependency fastcall ECXunit/DLorder59, no stackinputs/RET.",
+    "notes": [
+      "Full172byte candidate boundary, adjacentRET/padding and four full caller bodies including discontiguous ranges reviewed (55,75,101,437bytes); callers setEBXowner and testreturnedEAX.",
+      "Complete dependency00474400 executablebody189bytes in two ranges plus3bytepadding gap reviewed; consumesECXunit/DLorder, no transitive calls or hidden nonvolatile inputs; plainRET, preservesEBX/ESI.",
+      "Loop chooses LAST unit matching conditions: flagsDC bit400 absent, bytes117/119/124 zero, order4D52or56. Traversal nextD8 untilNULL.",
+      "Unlinks selectedunit via prevD4/nextD8 preserving rereads after writes; ownerheadD4 updated ifprevNULL; zeros selectedD4/D8/D0 then invokes dependency(order59), returnsselected pointer.",
+      "Domain finite acyclic valid list, owner readable/writableheadD4; unitstorage coversoffset124 and all DWORDlinkfields, previous/next reciprocal links valid where dereferenced. Signed/member names are hypotheses; only offsets/accesswidths and conditions are observed.",
+      "Pure independentC static noinline context naturally selectsEBXowner, ESIselected. Entire172byte .scmatch with oneexternalREL32; .scctx explicitlyexcluded; no normalization/ASM/patch/trim/rebinding.",
+      "First candidate exact; final fresh --require-exact required after final metadata. Clangsource-only does not prove privateMSVC ABI; full repo checks owned by coordinator.",
+      "Private EBX owner input returns EAX last eligible node or null, no stack input/plainRET. Unlink order and reloads preserve possible owner/neighbor aliases; clearDWORD fields D4,D8,D0 before calling dependency. The fastcall dependency consumes ECX unit and DL order59 only; its full physical192-byte span contains189 code bytes and3 internal padding bytes. Likewise caller468EF0 spans104 bytes,101 code and3 internal padding. Accessible raw Win32 storage and finite list are required; no strict ISO-C effective-type or universal malformed-list guarantee is claimed."
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "provenance": "Pinned complete function 0x00468970..0x00468A1C (exclusive), entry corroborated by independently reviewed caller; whole boundary, ABI and external binding audit reviewed by coordinator.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004BDFA0",
+    "name": "sub_004BDFA0",
+    "size": 184,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004BDFA0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "@sub_004BDFA0@16",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_00597394": {
+          "address": 5862292,
+          "kind": "data",
+          "evidence": [
+            "Complete184-bytepinnedtarget provesaddress/accesswidth; globalsreferencedwithoutdefinitions."
+          ]
+        },
+        "_data_00597390": {
+          "address": 5862288,
+          "kind": "data",
+          "evidence": [
+            "Complete184-bytepinnedtarget provesaddress/accesswidth; globalsreferencedwithoutdefinitions."
+          ]
+        },
+        "_data_006CEF52": {
+          "address": 7139154,
+          "kind": "data",
+          "evidence": [
+            "Complete184-bytepinnedtarget provesaddress/accesswidth; globalsreferencedwithoutdefinitions."
+          ]
+        },
+        "_data_006CEF54": {
+          "address": 7139156,
+          "kind": "data",
+          "evidence": [
+            "Complete184-bytepinnedtarget provesaddress/accesswidth; globalsreferencedwithoutdefinitions."
+          ]
+        },
+        "_data_006CF4A8": {
+          "address": 7140520,
+          "kind": "data",
+          "evidence": [
+            "Complete184-bytepinnedtarget provesaddress/accesswidth; globalsreferencedwithoutdefinitions."
+          ]
+        },
+        "@sub_0040ABBE@20": {
+          "address": 4238270,
+          "kind": "code",
+          "evidence": [
+            "Complete326bytecallee ECXx/EDXy, threeDWORDstackframe/clip/ignored,RET12; finalstackslot+10 neverread, provenfullbody. No calls or externaljumps; all accesses/global dependencies reviewed."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "calling_convention": "Ordinary fastcall CX signed16 inputX and DX signed16 inputY plus two DWORD ignored stackslots; RET8, EAXresult ignored. EBX/ESI/EDI/EBP preserved. Source decoration@16 represents fourroundedargument slots.",
+    "notes": [
+      "PackedFrame8-byte model BYTEwidth+2/BYTEheight+3/DWORDdata+4; packedSurface signedWORDwidth+0,height+2,pixelpointerDWORD+4.",
+      "Complete56-byte caller proves twoignoredDWORDstackslots and forwardsincomingCX/DX; complete326-byte callee ordinaryfastcall ECX/EDX+3DWORDstack RET12, thirdstackslot ignored. No transitiveCALL or externalJMP in renderer.",
+      "Nullpayload skipped; zero framecount DIV fault and negative clipped extents preserved; no addedemptyguard or boundsmodernization.",
+      "Actual signed16 CX/DX inputs plus two ignored stackDWORDs use RET8; complete56-byte caller proves this contract. Packed8-byte Frame retains BYTE dimensions and DWORD payload; packedSurface uses signed WORD dimensions. Unsigned modulo by WORD frame count retains original zero-divisor hazard; no guard is added. Clipping ADD precedes NEG, preserving observed layout and original negative sizes. Complete326-byte external helper uses fastcall ECX/EDX plus three stackDWORDs RET12; its final stack slot is proved unused. Blob/frame/surface extents and accessible mapped objects are required; no pixel bounds or null repair is added."
+    ],
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004BE1C8",
+        "type": "direct_call",
+        "provenance": "Complete original caller independently reviewed, corroborating entry and observed private ABI."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "known_calls": [],
+    "known_structures": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "provenance": "Pinned complete function 0x004BDFA0..0x004BE058 (exclusive), entry corroborated by independently reviewed caller; whole boundary, ABI and external binding audit reviewed by coordinator.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041EAB0",
+    "name": "sub_0041EAB0",
+    "size": 194,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0041EAB0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0041EAB0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041008E@12": {
+          "address": 4259982,
+          "kind": "code",
+          "evidence": [
+            "Whole6-byte JMP IAT004FE550; original pushes destination/source/capacity; DWORD resultEAX, dependencycleanup12 required by savedregister stack. ImportedStorm501, implementation unavailable."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_hypothetical_context",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "calling_convention": "EDI path, no stackargs, plainRET, EAX0/1 returned; EDI untouched, EBX/ESI/EBP saved/restored; imported standardstdcall helpers.",
+    "references": [
+      {
+        "address": "0x0041ECA0",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004DEFBF",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004A88DD",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004CF2D3",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x0045A307",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004CF869",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004AEA96",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      },
+      {
+        "address": "0x004DF120",
+        "type": "direct_call",
+        "provenance": "Complete pinned caller independently reviewed for actual argument registers, stack cleanup and result use."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0041008E",
+        "type": "direct_call"
+      },
+      {
+        "address": "0x004FE1B8",
+        "type": "iat_indirect_call"
+      },
+      {
+        "address": "0x004FE214",
+        "type": "iat_cached_indirect_call"
+      },
+      {
+        "address": "0x004FE120",
+        "type": "iat_indirect_call"
+      }
+    ],
+    "notes": [
+      "Whole194byte body plus eight complete callers reviewed; static C context independently emits EDI incoming convention.",
+      "External-standard-linked-C contribution only; imported implementations not reconstructed; no filesystem/original-process execution.",
+      "Actual EDI borrowed path input has no stack slots/plainRET and EAX0/1 return. Eight complete callers and six-byte Storm501 thunk are independently reviewed; cleanup12 is corroborated by caller stack balance, module internals unavailable. The 264-byte buffer, unsigned min(delta+2,261), return>=260 rejection and accepted CreateDirectory errors183/5 with directory-attribute check are retained. Crucially accepted failure at the final NUL advances and reads beyond it. A merely NUL-terminated array is insufficient: all post-NUL reads and subsequent scans must remain within the same live array, with signed32-representable differences and valid imported capacity contracts. Out-of-array fault behavior is measured in bytes but not proved defined-C equivalent. No path repair is added."
+    ],
+    "confidence": 0.95,
+    "strings": [],
+    "known_calls": [],
+    "known_structures": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "provenance": "Pinned complete function 0x0041EAB0..0x0041EB72 (exclusive), entry corroborated by independently reviewed caller; whole boundary, ABI and external binding audit reviewed by coordinator.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
