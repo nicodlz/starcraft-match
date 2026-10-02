@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![273 exact functions](https://img.shields.io/badge/verified-273%20exact%20functions-287d67)
+![288 exact functions](https://img.shields.io/badge/verified-288%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**273 whole functions match exactly, totaling 12,204 original bytes.** The independent
+**288 whole functions match exactly, totaling 13,604 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -54,6 +54,8 @@ Four reviewed source candidates remain non-exact.
 The [fifth historical lot](docs/historical-fifth-2026-10-02.md) adds 14 functions /
 1,277 bytes, including grid writes, two-stage searches, image-list updates and a
 map-format callback.
+
+The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
 
 The [second third-session lot](docs/parallel-third-second-2026-10-02.md) adds another 25 reviewed C functions / 2,784 bytes.
 
@@ -112,8 +114,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 273 matches are
-about **6.50% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 288 matches are
+about **6.86% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -163,7 +165,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 273 exact matches
+make proof                    # Recompile and require all 288 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```

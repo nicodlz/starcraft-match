@@ -14972,5 +14972,917 @@
       "No original differential execution, complete linking or CFG/similarity score. Coordinator independent rebuild still required.",
       "Coordinator reviewed complete boundary, ABI audit and independently authored C; fresh final public-path compilation and strict complete zero-relocation section comparison. Compiler contexts are hypothetical and uncounted. No original-process execution."
     ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00402B10",
+    "size": 143,
+    "name": "sub_00402B10",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "getDoubleUnitBoundingBoxMashup",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "references": [
+      {
+        "address": "0x0046ABDA",
+        "type": "direct_call",
+        "provenance": "Caller prepares ECX/EDX object pointers, EAX output, DI x, pushes y WORD in DWORD slot; reads resulting bounds."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent full143bytebody00402B10\u201300402B9E, RET4B9C\u20139E; priorRETB0D andINT3B0E\u20130F; paddingB9F, successorBA0. Map corroborative only; caller reviewed.",
+    "calling_convention": "custom ECX first object, EDX second object, EAX output short[4], DI x coordinate, signed WORD y in one DWORD stack slot; RET4, preserves EBP/EBX/ESI/EDI",
+    "prototype": "void sub_00402B10(const unsigned char *first, const unsigned char *second, short *output, short x, short y) /* observed custom ABI */",
+    "candidate_source": "src/game/sub_00402B10.c",
+    "candidate_symbol": "@sub_00402B10@20",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Full143/143 zero relocation, finalsource fresh strict rebuild; portable Clang compile only.",
+      "Static ordinaryC fastcallfive formalparameters with noncounted hypothetical context induces actual three pointer registers, DI and one stackarg; decorated20bytes does not describe actual optimizedABI.",
+      "Signed short output/layout selects sign-extended ORimm8 for scratch-1, preserving original accesswidths/aliasing rereads and modulo16 results.",
+      "No original differentialexecution or callable fullgame build.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004049A0",
+    "size": 48,
+    "name": "sub_004049A0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x004F0571",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004F071B",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "private EAX object pointer / EDX table pointer; plainRET; preserves EAX/EBX/ESI/EDI/EBP; modifies ECX/EDX",
+    "prototype": "static void sub_004049A0(unsigned char *object, unsigned char *table)",
+    "candidate_source": "src/game/sub_004049A0.c",
+    "candidate_symbol": "_sub_004049A0",
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "provenance": "Independent C; full pinned PE region and two direct callers reviewed; community name unknown",
+    "notes": [
+      "BYTE object+6 unbounded table index; BYTE object+7 captured once, low2 and next2bits index WORD entries at table+30.",
+      "Adds into WORD object+0/+2/+4, truncating modulo65536; alias/access order preserved.",
+      "Static noinline context automatically selects EAX/EDX; helper unmatched/uncounted.",
+      "Fresh final48-byte zero-relocation equality; source portableClang compilation only.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "candidate_abi_compatible": true
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404BC0",
+    "size": 24,
+    "name": "sub_00404BC0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004135E8",
+        "type": "direct_call",
+        "provenance": "Fresh aligned original caller: EAX node remains live, PUSH EDI fallback at004135E7, thenCALLentry; full EAX tested and loop continued, no caller cleanup."
+      },
+      {
+        "address": "0x0045A038",
+        "type": "direct_call",
+        "provenance": "Fresh aligned original caller: EAX node live; PUSH0051A304 fallback then CALLentry. TESTfullEAX and signedJG at0045A03F consume return; no caller cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned PE complete24-byte region and both original direct callers independently reviewed. PriorRET00404BBF immediately beforeentryBC0; twoRET4 instructionsBCB andBD5, last endsBD7; nextentryBD8 with no padding. No map entry found; original direct calls independently corroborate entry. Pure C source; coordinator public rebuild/review pending.",
+    "calling_convention": "Custom EAX nullable node pointer, one fallback pointer stack DWORD at entryESP+4; full DWORD EAX result; RET4, EBP preserved and other nonvolatile registers unchanged. Nominal static stdcall@8 symbol is not ordinary stack8 ABI.",
+    "prototype": "static unsigned int sub_00404BC0(const unsigned int *node, const unsigned int *volatile fallback)",
+    "candidate_source": "src/game/sub_00404BC0.c",
+    "candidate_symbol": "_sub_00404BC0@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Nonnull EAX input returns DWORD at node+4 without reading fallback. Null EAX input loads stack fallback and returns DWORD fallback+8, with no fallback null guard. No memory writes.",
+      "Ordinary C static noinline context selects EAX node; volatile fallback parameter retains sole stack input. Hypothetical context is separate relocated section, not reconstructed or counted.",
+      "Fresh final source compile strict isolated24-byte zero-relocation COFF section equals complete pinned original24 bytes. Clang Windowsi686 source-only compile passed. No original differential execution.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404810",
+    "size": 148,
+    "name": "sub_00404810",
+    "proposed_names": [
+      {
+        "name": "getDoubleUnitBoundingBoxMashup_0",
+        "source": "private reviewed Broodwar.map community annotation",
+        "confidence": 0.8
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004F22DF",
+        "type": "direct_call",
+        "provenance": "Two direct calls004F22DF and004F23CA independently set EAX local8bytes output, ECX first unit, EDX second. Caller then consumes written WORDs. Full148bytes ending RET004048A3; following INT3 padding excluded; all branches nonexistent and complete body reviewed. Community map getDoubleUnitBoundingBoxMashup_0 agrees148 but is not an original symbol."
+      },
+      {
+        "address": "0x004F23CA",
+        "type": "direct_call",
+        "provenance": "Two direct calls004F22DF and004F23CA independently set EAX local8bytes output, ECX first unit, EDX second. Caller then consumes written WORDs. Full148bytes ending RET004048A3; following INT3 padding excluded; all branches nonexistent and complete body reviewed. Community map getDoubleUnitBoundingBoxMashup_0 agrees148 but is not an original symbol."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independently authored C; fresh binary boundary/caller audit and strict complete zero-relocation extraction equality. Private proposal requires coordinator verification.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00404810.c",
+    "candidate_symbol": "@sub_00404810@12",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Custom ECX unit1, EDX unit2, EAX output pointer; plain RET. Preserves EBX/ESI/EDI; ECX/EDX scratch. Static noinline fastcall ordinary C optimizer context selects actual three register arguments, despite symbol @sub_00404810@12; context is separately relocated and noncounted.",
+    "prototype": "static void __fastcall sub_00404810(const struct Unit00404810 *, const struct Unit00404810 *, struct Bounds00404810 *) /* ECX, EDX, EAX */",
+    "candidate_abi_compatible": true,
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Reads sprite DWORD unit1+0xC, signed WORD sprite y+0x16 then x+0x14; unsigned WORD id unit1+0x64 indexes 8-byte signed16 bounds at 0x6617C8. Writes output top(y-top), bottom(y+bottom), left(x-left), right(x+right), then expands left by -1-unit2.right, right by unit2.left+1, top by -1-unit2.bottom, bottom by unit2.top+1. Each unit2 unsigned16 ID is reread after prior output writes, preserving alias effects. Stores are WORD with i386 low16 truncation, no clamp/null guard.",
+      "Two direct calls004F22DF and004F23CA independently set EAX local8bytes output, ECX first unit, EDX second. Caller then consumes written WORDs. Full148bytes ending RET004048A3; following INT3 padding excluded; all branches nonexistent and complete body reviewed. Community map getDoubleUnitBoundingBoxMashup_0 agrees148 but is not an original symbol.",
+      "Custom ECX unit1, EDX unit2, EAX output pointer; plain RET. Preserves EBX/ESI/EDI; ECX/EDX scratch. Static noinline fastcall ordinary C optimizer context selects actual three register arguments, despite symbol @sub_00404810@12; context is separately relocated and noncounted.",
+      "Six meaningful variants; V06 signed16 views selected original sign-extended8 OR immediate forms. Initial unsigned16 scaffold150bytes produced same instruction text but unequal encodings; equality never normalized.",
+      "Clang portable compile succeeds. No original differential execution. Context cannot be counted separately.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "measurement": {
+      "original_size": 148,
+      "recompiled_size": 148,
+      "source_sha256": "7d43ea2a4bbc2e077133fa64ab6986d40a95ae339723ce220a07467341ae65d5",
+      "object_sha256": "04a9de2cd8409925ec796f1c5e35eff1a6319cc18f06e3d097d76949ef9298fb",
+      "compiler_identity_sha256": "7d956ff2372f600b24fe66e86e5291541d125fb2d49d4e9bea0fa585f989c95b",
+      "report": ".local/parallel20-third/00404810/final-report.json"
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00413AA0",
+    "size": 49,
+    "name": "sub_00413AA0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x0047E26C",
+        "type": "callback-address-immediate"
+      },
+      {
+        "from": "0x00414614",
+        "type": "callback-address-immediate"
+      },
+      {
+        "from": "0x00413FF6",
+        "type": "indirect-dispatch",
+        "provenance": "Both address-immediate registration sites pass callback as3rd argument to00413FA0; dispatch loads[EBP+10]."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "stdcall fiveDWORD stack slots; fullEAX boolean; RET20; preserves EBX/ESI/EDI/EBP",
+    "prototype": "int __stdcall sub_00413AA0(unsigned short *source, unsigned char *unused_byte, unsigned int *changed, unsigned short *output, unsigned int unused_value)",
+    "candidate_source": "src/game/sub_00413AA0.c",
+    "candidate_symbol": "_sub_00413AA0@20",
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "provenance": "Independent pureC; complete pinned body/neighbor review plus two callback-address producers and concrete five-argument dispatch reviewed; community annotation unavailable.",
+    "notes": [
+      "Not promoted from padding: callback identity proven by two PUSH413AA0 feeding dispatcher413FA0 argument3; dispatch at413FF6 supplies five slots and testsEAX.",
+      "Reads WORD source. Zero returns0 with no other access; nonzero writes WORD output, clears WORD source, writes DWORD1 changed, returns1. Width/order/alias effects preserved.",
+      "Unused2nd/5th slots consumed by RET20 despite never read.",
+      "Fresh final49-byte literal equality strict zero relocations; portableClang source compile only.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "candidate_abi_compatible": true
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403130",
+    "size": 241,
+    "name": "sub_00403130",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "resetAIThreadData",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "references": [
+      {
+        "address": "0x0045B75D",
+        "type": "direct_call",
+        "provenance": "MOV EDX,0068ACA8 at0045B752 before directE8call. No stackargs/cleanup or resultuse. Afterreturn caller publishes0068ACA8 to0068C0FC."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Full pinned241-byte body and sole RET, neighbors, aligned directcaller and matching independentcommunitymap entry/size manuallyreviewed. Independentlywritten C, entire isolatedzero-relocation equality. This is a game-pool reset routine, not CRT/thunk/static initializer.",
+    "calling_convention": "EDX Pool pointer input, incomingECX ignored/overwritten zero, no stackargs, plainRET, void result; EDX remains Pool, EBX/ESI/EDI preserved. Sourcefastcall uses ignoredfirstECX parameter to represent observedEDX input; unusedparameterhasno semanticclaim.",
+    "prototype": "void __fastcall sub_00403130(unsigned unused, Pool *pool)",
+    "candidate_source": "src/game/sub_00403130.c",
+    "candidate_symbol": "@sub_00403130@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Replacement modeling only: entire final241-byte isolatedsection freshly matches MSVC13.10.3077 /O2 /Oy /Gy /Zl /G6 withzero relocations. ClangWindowsi686 sourcecompilation passes. Originalsource unchanged.",
+      "Cursor is an unsigned32bit integer address; all offsets/advances use defined modulo32 integer arithmetic. Dword memory accesses use local volatileU32* conversions at in-pool locations. Last cursoradvance beyondPool ends as integer only, never out-of-object pointer.",
+      "Entry next/previous andPool cursor model observed links asU32 values. This avoids writing U32 via pointers to C pointertypedobjects while retaining exact52byteEntry/5204bytePool and all access widths/order. first/second Entry*pointers are formed only for in-pool entry addresses.",
+      "Pointer/integer conversion and dereference follow supportedWindowsi386 address model, implementation-defined rather than hostportable ISO semantic claim. No originaldifferential execution; coordinator independent rebuild remains required.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00402180",
+    "size": 129,
+    "name": "sub_00402180",
+    "confidence": 0.99,
+    "proposed_names": [],
+    "references": [
+      {
+        "address": "0x00495E0B",
+        "type": "direct_tail_jump",
+        "provenance": "Fresh pinned bytes show JMP, not Ghidra CALL annotation; EAXobject/EDXdelta explicitlyprepared."
+      },
+      {
+        "address": "0x00495E5F",
+        "type": "direct_tail_jump",
+        "provenance": "Fresh pinned bytes show JMP, not Ghidra CALL annotation; EAXobject/EDXdelta explicitlyprepared."
+      },
+      {
+        "address": "0x00495E6B",
+        "type": "direct_tail_jump",
+        "provenance": "Fresh pinned bytes show JMP, not Ghidra CALL annotation; EAXobject/EDXdelta explicitlyprepared."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh contiguous129-byte region, three tailcall sites, priorreturns/padding and successorpadding reviewed. Coordinator acceptance pending.",
+    "calling_convention": "custom EAX object, EDX signed delta; no stackarguments/plainRET; EAX preserved, ECX/EDX/flags clobbered, nonvolatile registers preserved",
+    "prototype": "void sub_00402180(State *state /* EAX */, int delta /* EDX */)",
+    "candidate_source": "src/game/sub_00402180.c",
+    "candidate_symbol": "_sub_00402180",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Volatile current retains observed DWORD rereads; ordinary C static noinline leaf plus noncounted context selects EAX/EDX. This is a compiler-shape hypothesis.",
+      "Upper-clamp priority is preserved even for a negative maximum. Unsigned wrap followed by signed SAR preserves the observed low-32-bit arithmetic.",
+      "Fresh bytes correct the three Ghidra CALL annotations to tail JMPs. No original differential execution.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401FA0",
+    "size": 124,
+    "name": "sub_00401FA0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x0049FFEB",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004EB2BC",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004EBA0A",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004EB871",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004EBAFA",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004E8CD7",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004E8D47",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004F2E47",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0049A5AF",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0047C4CF",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0045DE39",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0045D965",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0045D96F",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x00465132",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x00464F4C",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x0047C280",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x00465DC4",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x00467CD1",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x00467D31",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004F49F6",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004F48BC",
+        "type": "UNCONDITIONAL_CALL"
+      },
+      {
+        "from": "0x004F6B0C",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00401FA0.c",
+    "candidate_symbol": "@sub_00401FA0@12",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "AX unsigned16 table index, EDX pointer to two signed16 coordinates. ECX unused on entry. Plain RET; no return consumed. EBX/ESI/EDI preserved.",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Pure independent C static noinline hypothetical context; context never counted. No original execution.",
+      "Final fresh exact full section",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00414230",
+    "size": 84,
+    "name": "sub_00414230",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0041448E",
+        "type": "code_address_immediate",
+        "provenance": "Fresh MOV EBX,00414230 then CALL413B30 at414493; dispatcher CALL EBX413B7C verified"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE full region/neighbors; independent callback immediate-reference and five-stack-argument dispatcher review, strict whole isolated zero-relocation equality. Private coordinator rebuild pending.",
+    "calling_convention": "Standard stdcall five32-bit stackargs(direction,unused tilepointer,X,Y,resultBYTEpointer); RET20, always fullEAX1, EBP preserved.",
+    "prototype": "int STDCALL sub_00414230(unsigned direction,unsigned short *unused,int x,int y,unsigned char *bits)",
+    "candidate_source": "src/game/sub_00414230.c",
+    "candidate_symbol": "_sub_00414230@20",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Ghidra DATA reference actually code-address immediate; full dispatch ABI reviewed, not a guessed table entry.",
+      "WORDfallback mask and BYTEresult OR retained; secondstackargument unused, return1 unconditional.",
+      "Final strict84/84 exact and Clang sourcecompile passed; no original differential execution.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution.",
+      "Reviewed dispatcher00413B30 supplies direction0..8, verified CMP9/JB loop; unmasked C shift is valid on this observed domain. Invocation with direction>=32 is not source-level equivalence evidence."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D1120",
+    "size": 23,
+    "name": "sub_004D1120",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004FC215",
+        "type": "direct_call",
+        "provenance": "Pinned initializer4FC210 pushesDWORD6D5F00 then CALL4D1120; no caller cleanup. Result ignored."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent C; fresh full region/neighbors/import/direct caller and handler pointer review; strict zero-relocation whole23-byte equality. Coordinator independent verification pending.",
+    "calling_convention": "stdcall oneDWORDstack input returned unchanged in EAX,RET4; no callee-saved registers touched. Calls fixedIATstdcall callback-installer with oneDWORD argument.",
+    "prototype": "u32 STDCALL sub_004D1120(u32 argument)",
+    "candidate_source": "src/game/sub_004D1120.c",
+    "candidate_symbol": "_sub_004D1120@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "23/23 whole isolated COFF section, zero relocations; single variant. Clang i686 source compilation passed. No original-process execution.",
+      "Application exception-registration wrapper called from static initialization, not gameplay. Installs local callback4D0F70 through KERNEL32 SetUnhandledExceptionFilterIAT4FE158, stores prior filterDWORD596B78.",
+      "Independent handler review shows register/stack diagnostic logging and forwarding priorfilter596B78; supports application-specific infrastructure rather than stockCRT leaf. Authenticated source provenance of handler unknown; handler not reconstructed or counted.",
+      "Caller4FC210 static initializer is not counted; address6D5F00 forwarded unchanged but not written through by this body.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution.",
+      "Process exception-filter infrastructure reached from a static initializer, counted separately from data-copy initializers. Application versus embedded-library provenance is unestablished; no gameplay subsystem identity asserted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404920",
+    "size": 124,
+    "name": "sub_00404920",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004E1F7B",
+        "type": "direct_call",
+        "provenance": "Pinned caller MOV EAX,1 at004E1F6E and MOV ECX,006CAD98 at004E1F73; direct E8call, no stack arguments/cleanup or result consumption."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned full contiguous body, all three exits and adjacent previous RET4 manually reviewed; independent real caller corroborates entry/privateABI; community map entry and size0x7C support boundary. Independently authored pure C and strict whole zero-relocation equality.",
+    "calling_convention": "Custom EAX signed index, ECX Heap pointer; void result, no stack args, plainRET; EBP/EBX/ESI/EDI preserved, EAX/EDX scratch, ECX remains heap pointer.",
+    "prototype": "static void sub_00404920(int index, Heap *heap)",
+    "candidate_source": "src/game/sub_00404920.c",
+    "candidate_symbol": "_sub_00404920",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "pathcalc_downHeap",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "notes": [
+      "Final fresh124/124 isolated zero-relocation COFF, MSVC13.10.3077 /nologo /O2 /Gy /Zl /G6 /Oy-. Static ordinary C context selects custom EAX/ECX contract; helper hypothetical/nonmatching/not counted. Clang Windows-i686 source compile passes, no Clang exact claim.",
+      "Heap count DWORD+1F8 signed, node key DWORD+14 signed. Signed count/2 truncates towardzero. Child index2*index, selects right only if within count and rightkeystrictlysmaller; savedkey<=childkey stops. Reloads heapcount after promotion and savedkeyeachiteration; no bounds or malformed heap checks added. Source signedoverflow/pointer invalidinput behavior not separately proven atC-languagelevel; emittedpinnedinstructions match originalhardware behavior.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DC6D0",
+    "size": 68,
+    "name": "sub_004DC6D0",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004D18AC",
+        "type": "callback_registration",
+        "provenance": "Fresh pinned callsite pushes callback address then invokes EnumWindows IAT004FE32C with process-ID LPARAM."
+      },
+      {
+        "address": "0x004841D9",
+        "type": "callback_registration",
+        "provenance": "Fresh pinned callsite pushes callback address then invokes EnumWindows IAT004FE32C with process-ID LPARAM."
+      },
+      {
+        "address": "0x004DCBE9",
+        "type": "callback_registration",
+        "provenance": "Fresh pinned callsite pushes callback address then invokes EnumWindows IAT004FE32C with process-ID LPARAM."
+      },
+      {
+        "address": "0x004DCC72",
+        "type": "callback_registration",
+        "provenance": "Fresh pinned callsite pushes callback address then invokes EnumWindows IAT004FE32C with process-ID LPARAM."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent C and pinned complete-body/import/callback-registration review; fresh strict whole zero-relocation equality; private proposal pending coordinator rebuild.",
+    "candidate_source": "src/game/sub_004DC6D0.c",
+    "candidate_symbol": "_sub_004DC6D0@8",
+    "compiler_profile": "msvc71-o2-frame",
+    "calling_convention": "Win32 enumeration callback stdcall: DWORD HWND and DWORD LPARAM process ID on stack, RET8; full EAX1 result, EBP/ESI preserved.",
+    "prototype": "int __stdcall sub_004DC6D0(unsigned int window, unsigned int process)",
+    "candidate_abi_compatible": true,
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Four registration sites confirm callback passed to imported EnumWindows, rather than merely uncorroborated data references. No separate code dispatcher/table lies in reviewed function.",
+      "GetParent gate; imported GetWindowThreadProcessId writes original stack parameter window after handle saved in ESI; compares resulting process with LPARAM then excludes HWND0051BFB0. Posts message16 with zero WPARAM/LPARAM; always returns fullDWORD1.",
+      "Failure handling intentionally absent. If GetWindowThreadProcessId does not write output, original window DWORD remains there; source preserves existing parameter rather than zeroing local.",
+      "Portable Clang i686 compile succeeds, source-only; strict MSVC final 68/68 bytes. No original-process execution.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "measurement": {
+      "original_size": 68,
+      "recompiled_size": 68,
+      "source_sha256": "76da63e1b847dbd67310405334060ba3d6599de8753ad67d2bf254c11302c8cc",
+      "object_sha256": "9f69da864a828db75adeab61b59839dab9d03737aeef4677eb4a9902381cd932",
+      "compiler_identity_sha256": "7d956ff2372f600b24fe66e86e5291541d125fb2d49d4e9bea0fa585f989c95b",
+      "report": ".local/parallel20-third/004DC6D0/final-report.json"
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044A5D0",
+    "size": 28,
+    "name": "sub_0044A5D0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x0044B2FD",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B32F",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B361",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B393",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B3C5",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B3F7",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B429",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B458",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B54E",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B580",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B5B2",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B5E4",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B616",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B648",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B67A",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B6AC",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B6D8",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B2F1",
+        "type": "DATA"
+      },
+      {
+        "from": "0x0044B542",
+        "type": "DATA"
+      },
+      {
+        "address": "0x004A7A5A",
+        "type": "indirect_dispatch",
+        "provenance": "Record at006D5A8C has callback+4 populated by reviewed registration; three DWORD stdcall args."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004FE380",
+        "type": "absolute_iat_indirect",
+        "provenance": "Pinned PE import USER32.dll!ShowWindow"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned full28-byte body, dynamic record registration and full dispatcher independent review; exact final strict build; coordinator rebuild pending.",
+    "calling_convention": "stdcall three DWORD arguments(index ignored,HWND,showDWORD); RET12; EAX full BOOL API result forwarded; EBP preserved",
+    "prototype": "int __stdcall sub_0044A5D0(unsigned int ignored, void *window, unsigned int show)",
+    "candidate_source": "src/game/sub_0044A5D0.c",
+    "proposed_public_note": "docs/functions/0044A5D0.md",
+    "candidate_symbol": "_sub_0044A5D0@12",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [
+      "USER32.dll!ShowWindow(HWND,show?5:0) via fixed IAT004FE380"
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "original_size": 28,
+    "recompiled_size": 28,
+    "measured_report": ".local/parallel20-third/0044A5D0/candidate-report.json",
+    "notes": [
+      "# 0x0044A5D0 private handoff\n\n28/28 bytes match exactly after strict whole isolated COFF extraction, zero unresolved relocations. Final candidate.c rebuilt after width assertion/comment, symbol _sub_0044A5D0@12, msvc71-o2-frame; candidate-report.json contains source/compiler/object hashes and full flags. One source exploration then final build. Portable Clang Windows i686 compilation succeeds (portable-check.json); no original execution or semantic-test claim.\n\nPinned specimen SHA-256 ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46. Complete28-byte body0044A5D0..0044A5EC exclusive; entry EBP prologue, RET12 at0044A5E9, adjacent regions/padding reviewed. Function takes three DWORD stdcall arguments: ignored index, HWND pointer, fullDWORD show predicate. Third argument nonzero (including sign-bit values) selects literal5; zero selects0. Machine pushes selected flag first, then HWND, yielding ShowWindow(HWND,flag). USER32.dll ShowWindow import DWORD IAT004FE380 independently verified. Its stdcall cleanup8 and this callback cleanup12 coexist; EAX full BOOL API return forwarded, EBP restored, no original data validation or custom save registers. Third argument tested full32bits, not lowBYTE.\n\nEntry and ABI independently corroborated beyond discovery DATA references. Full constructor0044B2C0 (477 bytes) creates12-byte heap records with updater0044AB40 at+0, callback0044A5D0 at+4, HWND payload at+8; records published at006D5A7C and sibling global slots. Constructor0044B4A0 reviewed completely toRET0044B7D0,817 bytes: Ghidra discovery size808 truncates CALL0044B7C6 and epilogue, corrected only in private evidence. Its analogous records store same callback at+4 and HWND at+8.\n\nFull dispatcher004A79D0 (604 bytes throughRET004A7C2B, with observed external tail paths preserved in evidence) reads these global records. At004A7A5A and004A7A7B invokes record+4 with pushes boolean0/1, payloadDWORD+8, index6. Third dispatch004A7A8F similarly pushes boolean, payload,index9 for record006D5A90. No caller stack adjustment follows; RET12 is required. Return value ignored at those observed dispatches. Data registration proves exact entry address; whole-body and dispatcher inspection establish calling contract. No function-boundary inference from padding alone.\n\nSource independently authored from argument widths/order and imported API; no third-party code, assembly, original bytes, postbuild edits, trimming or normalization. Coordinator owns independent rebuild/review/integration. Missing instruction/CFG/differential metrics remain null.\n",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00487A90",
+    "size": 110,
+    "name": "sub_00487A90",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00455F5A",
+        "type": "callback_argument",
+        "provenance": "Reviewed MOV EBX immediate487A90 then direct CALL4E8280 at455F7B; globals6509CC/CE set as WORD before dispatcher"
+      },
+      {
+        "address": "0x00487FFD",
+        "type": "callback_argument",
+        "provenance": "Reviewed MOV EBX immediate487A90 then direct CALL4E8280 at48800D; one stack DWORD arg supplied to dispatcher"
+      },
+      {
+        "address": "0x004E82A5",
+        "type": "indirect_call",
+        "provenance": "Entire84-byte dispatcher reviewed: MOV EDX,[EBP+8]; MOV ECX,ESI; CALL EBX; TEST full EAX"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Full contiguous pinned-PE region/returns/neighbor padding and both pointer references reviewed; complete callback dispatcher independently audited. Pure independently authored C union dimensions scaffold; no community name authentication.",
+    "calling_convention": "fastcall ECX object pointer, low DX ushort wanted kind, EAX full32 boolean0/1, no stack args, RET0; ESI/EDI/EBP preserved",
+    "prototype": "int __fastcall sub_00487A90(unsigned char *object, unsigned short kind)",
+    "candidate_source": "src/game/sub_00487A90.c",
+    "candidate_symbol": "@sub_00487A90@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "WORD object+64 ID indexes DWORD table662860 unconditionally, including ID mismatch; no index guard added.",
+      "Packed dimensions split into signed low/high WORD; signed division by2 truncates toward zero; comparisons use unsigned32 offsets and unsigned sign-extended dimension values.",
+      "Sprite pointer DWORD object+C; signed WORD sprite+14/+16 and signed WORD globals6509CC/6509CE. X evaluated before Y; matching right/bottom edge excluded. Negative dimensions preserve original unsigned-bound behavior.",
+      "Normal4-byte union temporary reproduces stack spill. Volatile Y/screenY reads are compiler/source-shape hypotheses for measured scheduling, not original qualifier claims.",
+      "110/110 isolated zero-relocation whole-section equality under msvc71-o2-frame; final source compiled MSVC and Clang i686 source-only. No original differential execution, asm/bytes/patches/trimming/normalization.",
+      "Private provisional record; coordinator and separate auditor must independently rebuild before publication.",
+      "Coordinator independently reviewed C and boundary/ABI audits, then freshly compiled the final public source path and compared the complete zero-relocation function section; hypothetical contexts excluded, no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00453680",
+    "size": 57,
+    "name": "sub_00453680",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00453A7D",
+        "type": "data_reference",
+        "provenance": "MOV EAX,00453680 followed by PUSH EAX at00453A82; caller004538B0 passes count8/element-size8/base0068C308 to0040CFF0."
+      },
+      {
+        "address": "0x0040CFA2",
+        "type": "indirect_dispatch",
+        "provenance": "Actual count8 small-array route via0040CF80 pushes second and first pointers, calls callback, cleans8 stackbytes and tests full signedEAX."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned complete57-byte body and preceding/following function boundaries manually reviewed; callback registration and complete caller/table/actual dispatch corroborate entry and ABI independently of Ghidra. Independently authored pure C; strict isolated zero-relocation equality. No community map symbol found.",
+    "calling_convention": "cdecl; two stack pointers to8-byte records; full signedEAX comparison result -1/0/1; plainRET, caller cleans8 argumentbytes; preservesEBP/ESI.",
+    "prototype": "int sub_00453680(const Pair *first, const Pair *second)",
+    "candidate_source": "src/game/sub_00453680.c",
+    "candidate_symbol": "_sub_00453680",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "notes": [
+      "Final fresh57/57 zero-relocation COFF with MSVC13.10.3077 /nologo /O2 /Gy /Zl /G6 /Oy-. Nine variants. PairSize8 asserted; Clang Windows-i686 C11 compilation passes, no Clang exact claim.",
+      "Both records are read as two DWORDs before branches. Marker-1 sorts after valid markers; both invalid returns0. Valid keys compare unsigned. Aggregate copies preserve all four observed loads.",
+      "Registration game-specific global array8*8bytes0068C308..0068C347; byte-selector switch and12-entry jump table entirely reviewed. Sort dispatcher0040CFF0 is library-shaped; it and helper0040CF80 are not reconstructed/countable candidates here. Ghidra helper size106 omits common3-byte tail; reviewed actual helper109bytes through0040CFEC. No direct call required for independently corroborated callback entry.",
+      "Coordinator independently reviewed source and independent boundary/ABI audit, freshly rebuilt final public source and strictly compared whole zero-relocation section. No original-process execution."
+    ]
   }
 ]
