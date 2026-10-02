@@ -2214,6 +2214,71 @@
   },
   {
     "schema_version": 1,
+    "name": "sub_0042B620",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0042BC79",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x0041006A"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "cdecl, no arguments; EAX allocation pointer returned; plain RET; EBP/EBX/ESI/EDI preserved.",
+    "prototype": "unsigned int *sub_0042B620(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x0041006A"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Immediately preceding independently decoded RET 0042B61D plus two INT3; final RET 0042B752, thirteen INT3 then next entry0042B760.",
+      "Reads WORD count at005998E0 before allocation(count*16) and again afterward. Reads DWORD source pointer005993D0. Each32-byte input record supplies four groups with BYTE fields at0/2/4 and WORD at6. Packing, low-bit masks, XOR0xFF010101 and shifts use DWORD modular arithmetic; writes four DWORD outputs.",
+      "Allocator thunk0041006A resolves to Storm ordinal 401 through IAT004FE568. Four DWORD pushes and exit stack balance corroborate stdcall16, but DLL body, clobbers, allocation/alignment and semantics are inferred because the DLL was not inspected. Count changes across the call, null allocation and missing bounds checks remain original behavior.",
+      "Coordinator fresh public-source native full 307/307literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 306-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x0042B620",
+    "size": 307,
+    "candidate_source": "src/game/sub_0042B620.c",
+    "candidate_symbol": "_sub_0042B620",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": [
+        {
+          "symbol": "_data_005998E0",
+          "address": 5871840
+        },
+        {
+          "symbol": "_data_005993D0",
+          "address": 5870544
+        },
+        {
+          "symbol": "_sub_0041006A@16",
+          "address": 4259946
+        }
+      ]
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
+  },
+  {
+    "schema_version": 1,
     "address": "0x0042B850",
     "size": 65,
     "name": "sub_0042B850",
@@ -6093,6 +6158,58 @@
   },
   {
     "schema_version": 1,
+    "name": "sub_00482D30",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00482DEA",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x00482D30"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "fastcall: ECX map, EDX region, full DWORD group stack argument; RET4; no consumed result; EBP/EBX/ESI/EDI preserved.",
+    "prototype": "void __fastcall sub_00482D30(unsigned char *map, unsigned char *region, unsigned int group)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x00482D30"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Previous RET 00482D20 followed by padding; final RET 4 starts00482D9D and ends00482DA0; next separate frame00482DA0.",
+      "Stores only the low WORD of group at region+2 while forwarding the full DWORD recursively. Region kind0x1FFD uses signed difference of zero-extended BYTE+7 and BYTE+6; ordinary count is BYTE+6. WORD edge indices address64-byte records at map+0x449FC; unmarked neighbors recurse.",
+      "The only relocation is a real self-call. No group-zero, cyclic-graph, invalid-edge or recursion-depth guard was introduced. BYTE subtraction is signed bounded arithmetic, not unsigned underflow. Invalid pointers/out-of-object edges have no general portable-C guarantee.",
+      "Coordinator fresh public-source native full 112/112literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 126-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x00482D30",
+    "size": 112,
+    "candidate_source": "src/game/sub_00482D30.c",
+    "candidate_symbol": "@sub_00482D30@12",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": []
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
+  },
+  {
+    "schema_version": 1,
     "address": "0x00482E10",
     "size": 530,
     "name": "sub_00482E10",
@@ -7860,6 +7977,75 @@
   },
   {
     "schema_version": 1,
+    "name": "sub_0049E790",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0049E96E",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x0041006A",
+      "0x00410070",
+      "0x004C3280"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "stdcall: DWORD stream and unsigned DWORD count stack arguments; RET8; full EAX boolean0/1; EBP/EBX/ESI/EDI preserved.",
+    "prototype": "int __stdcall sub_0049E790(void *stream, unsigned int count)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x0041006A",
+      "0x00410070",
+      "0x004C3280"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Complete region ends0049E898; padding through0049E89F; immediately following nonmapped routine starts0049E8A0, not0049E910.",
+      "Allocation size is count*324 modulo32 bits. Clears the buffer, calls stdcall3 reader004C3280, then uses each leading DWORD index*336+0059CCA8 to copy292 bytes and28 bytes at destination+308. BYTE property at00664080+WORDtype*4 controls BYTE substitutions24->44 and46->61. Source now explicitly reads BYTE property, preserving the original width.",
+      "The complete 455-byte local reader balances RET 12 exits. Storm401/403 thunks and caller stack usage are observed; actual DLL cleanup/clobbers/allocation semantics remain inferred. C constant _MSC_VER==1310 selects MSVC intrinsics; other compilers use independent volatile DWORD loops. All counts, indices, allocation failure, aliasing and valid-object assumptions remain unchecked; no arbitrary-input portable equivalence is claimed.",
+      "Coordinator fresh public-source native full 264/264literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 499-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x0049E790",
+    "size": 264,
+    "candidate_source": "src/game/sub_0049E790.c",
+    "candidate_symbol": "_sub_0049E790@8",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": [
+        {
+          "symbol": "_sub_0041006A@16",
+          "address": 4259946
+        },
+        {
+          "symbol": "_sub_00410070@16",
+          "address": 4259952
+        },
+        {
+          "symbol": "_sub_004C3280@12",
+          "address": 4993664
+        }
+      ]
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
+  },
+  {
+    "schema_version": 1,
     "address": "0x004A6660",
     "size": 87,
     "name": "sub_004A6660",
@@ -8387,6 +8573,144 @@
   },
   {
     "schema_version": 1,
+    "name": "sub_004BC110",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004846FC",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x004BBF50"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "cdecl, no arguments; plain RET; result unused; nonvolatile registers preserved.",
+    "prototype": "void sub_004BC110(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x004BBF50"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Previous tail jump004BC105 ends004BC10A followed by padding; final RET 004BC170, next entry004BC180.",
+      "Updates fixed DWORD state, obtains a signed scale through DWORD table access, computes signed quotient of the wrapped32-bit product by100, and performs unsigned DWORD subtraction. The historical compiler lowers the signed division to multiplication/shifts; the original does not contain a literal IDIV here. Calls no-argument004BBF50.",
+      "The123-byte local callee saves nonvolatile registers and prepares its nested custom-register input internally. Table bounds and object extents remain unknown. Unsigned wrapping and implementation-defined conversion to signed int are recorded; arbitrary out-of-range indices have no portable-C guarantee.",
+      "Coordinator fresh public-source native full 97/97literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 94-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x004BC110",
+    "size": 97,
+    "candidate_source": "src/game/sub_004BC110.c",
+    "candidate_symbol": "_sub_004BC110",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": [
+        {
+          "symbol": "_data_006D59F4",
+          "address": 7166452
+        },
+        {
+          "symbol": "_data_006CDFE4",
+          "address": 7135204
+        },
+        {
+          "symbol": "_data_005998E8",
+          "address": 5871848
+        },
+        {
+          "symbol": "_data_005008F0",
+          "address": 5245168
+        },
+        {
+          "symbol": "_data_006D5A0C",
+          "address": 7166476
+        },
+        {
+          "symbol": "_data_006D5E3C",
+          "address": 7167548
+        },
+        {
+          "symbol": "_sub_004BBF50",
+          "address": 4964176
+        }
+      ]
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
+  },
+  {
+    "schema_version": 1,
+    "name": "sub_004BCDC0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004BD5E6",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x0040C2BD"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "cdecl, no arguments; plain RET; no consumed result; EBP/EBX/ESI/EDI preserved.",
+    "prototype": "void sub_004BCDC0(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x0040C2BD"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Previous RET 004BCDB2 with padding to004BCDC0; final RET 004BCE9C, next frame004BCEA0.",
+      "Initial position is unsigned wrap(y*672+x)%301056. Scans25 rows and40 columns of BYTE cache data, forms runs with the original reread of the current byte, wraps position and calls0040C2BD using ECX row, EDX column*16 and two DWORD stack arguments.",
+      "The complete 67-byte wrapper at0040C2BD, entered immediately after another return, consumes its two register inputs and two stack inputs with RET 8; nested custom inputs are prepared within the wrapper. The current-byte reread quirk remains: a one byte followed by zero can produce a32-wide run. Valid cache/map memory and the reviewed i386 layout are assumed.",
+      "Coordinator fresh public-source native full 221/221literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 270-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x004BCDC0",
+    "size": 221,
+    "candidate_source": "src/game/sub_004BCDC0.c",
+    "candidate_symbol": "_sub_004BCDC0",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": [
+        {
+          "symbol": "@sub_0040C2BD@16",
+          "address": 4244157
+        }
+      ]
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
+  },
+  {
+    "schema_version": 1,
     "address": "0x004BD0C0",
     "size": 43,
     "name": "sub_004BD0C0",
@@ -8485,6 +8809,63 @@
     "calling_convention": "Compiler-selected static C ABI: unsigned count in EAX; unit pointer at entry ESP+4 and mutable DWORD candidate array pointer at ESP+8. Result pointer bits in EAX; ECX/EDX scratch, EBX/ESI/EDI/EBP preserved. RET 8 on both paths. Source uses static noinline __stdcall with three parameters; actual promoted first parameter differs from the decorated source symbol _sub_004BFA80@12. Ordinary context caller is not counted.",
     "prototype": "unsigned int sub_004BFA80(unsigned int count, unsigned char *unit, unsigned int *items) /* EAX count, two stack args, RET 8 */",
     "provenance": "Coordinator-reviewed complete pinned region, neighboring boundaries and independently corroborating original entry references; final public pure C candidate independently rebuilt with recorded compiler profile."
+  },
+  {
+    "schema_version": 1,
+    "name": "sub_004BFCD0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00486C59",
+        "type": "direct_call",
+        "provenance": "Fresh aligned call in independently reviewed complete original caller; corroborates entry separately from padding."
+      }
+    ],
+    "calls": [
+      "0x0049A850"
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "provenance": "Coordinator-reviewed whole pinned region, neighboring boundaries, entry/callee ABI and independently corroborating caller; final public standalone C independently compiled and genuinely linked.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "cdecl, no arguments; plain RET; no caller-consumed result; nonvolatile registers preserved.",
+    "prototype": "void sub_004BFCD0(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x0049A850"
+    ],
+    "category": "game_routine",
+    "notes": [
+      "Previous RET 004BFCC8, INT3 through004BFCCF; final RET 004BFD2B, next separate frame004BFD30.",
+      "Clears BYTE 006284B6; repeatedly calls the no-argument iterator0049A850. For WORD types1/16/100/99/104, follows DWORD link+0x80 and clears both DWORD links when the linked WORD type is14. No additional type, null-allocation or iterator guard was introduced.",
+      "The entire84-byte iterator initializes its own hidden nested-call registers and preserves the standard nonvolatile interface. Pointer-field reads followed by DWORD stores preserve emitted i386 access widths; portable effective-type/aliasing equivalence for arbitrary typed objects is not established.",
+      "Coordinator fresh public-source native full 92/92literal equality with complete code and admitted metadata retained. No raw unresolved-object match, assembly copy, trimming, byte insertion or post-build patch.",
+      "Same-source portable complete 121-byte real link is source-only, ABI/proof qualification false; no original differential execution."
+    ],
+    "address": "0x004BFCD0",
+    "size": 92,
+    "candidate_source": "src/game/sub_004BFCD0.c",
+    "candidate_symbol": "_sub_004BFCD0",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "linkage": {
+      "method": "coff-ld-i386-v1",
+      "bindings": [
+        {
+          "symbol": "_sub_0049A850",
+          "address": 4827216
+        }
+      ]
+    },
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46"
   },
   {
     "schema_version": 1,
