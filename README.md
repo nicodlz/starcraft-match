@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![405 exact functions](https://img.shields.io/badge/verified-405%20exact%20functions-287d67)
+![418 exact functions](https://img.shields.io/badge/verified-418%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,10 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**405 whole functions match exactly, totaling 23,724 original bytes.** The independent
+The [fourth-session linked continuation](docs/parallel-fourth-linked-2026-10-02.md)
+adds two reviewed C contributions / 86 bytes using the shared external-only linker.
+
+**418 whole functions match exactly, totaling 24,638 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -64,9 +67,11 @@ functions / 5,911 bytes, independently rebuilt by the coordinator.
 The [bounded continuation](docs/parallel-fourth-continuation-2026-10-02.md) adds
 nine further functions / 776 bytes after fresh independent validation.
 
+The [third-session third linked lot](docs/parallel-third-linked-third-2026-10-02.md) adds 11 reviewed C functions / 828 bytes while preserving the concurrent main-branch continuation.
+
 The [third-session second linked lot](docs/parallel-third-linked-second-2026-10-02.md) adds 15 reviewed whole C functions / 979 bytes, after the independently validated main-branch merge.
 
-The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 38 standard-linked matches / 2,005 bytes.
+The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 51 standard-linked matches / 2,919 bytes.
 
 The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
 
@@ -127,8 +132,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 405 matches are
-about **9.64% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 418 matches are
+about **9.95% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -178,7 +183,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 405 exact matches
+make proof                    # Recompile and require all 418 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
