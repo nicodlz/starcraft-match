@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![11 exact functions](https://img.shields.io/badge/verified-11%20exact%20functions-287d67)
+![13 exact functions](https://img.shields.io/badge/verified-13%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**11 whole functions match exactly, totaling 158 original bytes.** The independent
+**13 whole functions match exactly, totaling 185 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate and a conditional image-state update.
@@ -43,19 +43,24 @@ an indexed unit-property predicate and a conditional image-state update.
 | [0x004C50C0](docs/functions/004C50C0.md) | Trigger: unpause timer | 16 / 16 | Exact |
 | [0x004CE6B0](docs/functions/004CE6B0.md) | SetMapStartStatus | 8 / 8 | Exact |
 | [0x004CE6C0](docs/functions/004CE6C0.md) | getMapStartStatus | 6 / 6 | Exact |
+| [0x004D0910](docs/functions/004D0910.md) | Unnamed DWORD getter | 6 / 6 | Exact |
+| [0x004D5900](docs/functions/004D5900.md) | Unnamed conditional byte-state update | 21 / 21 | Exact |
 | [0x004DC540](docs/functions/004DC540.md) | SetInGameLoop | 12 / 12 | Exact |
 
 Names are community annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Two reviewed functions remain unmatched: the initial unit-state predicate
-[`0x004020B0`](docs/functions/004020B0.md) (50 / 48 bytes) and
-[`0x004C50D0`](docs/functions/004C50D0.md) (11 / 16 bytes). Three further regions compile
+Twenty reviewed functions remain unmatched, including the initial unit-state predicate
+[`0x004020B0`](docs/functions/004020B0.md) (50 / 48 bytes),
+[`0x004C50D0`](docs/functions/004C50D0.md) (11 / 16 bytes), and eighteen candidates
+from the [20-worker batch](docs/batch-2026-10-02.md). Their complete regions and
+measured compiler/ABI differences are documented in the catalog and function notes.
+Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 11 matches are
-about **0.26% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 13 matches are
+about **0.31% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -100,7 +105,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 11 exact matches
+make proof                    # Recompile and require all 13 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```

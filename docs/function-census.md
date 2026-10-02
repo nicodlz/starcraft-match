@@ -13,9 +13,9 @@ The map count must not be labeled a verified total number of functions in the ga
 A Ghidra census with reviewed split/merged boundaries and library classification
 remains outstanding.
 
-**11 verified exact functions / 4, 201 community entries ≈ 0.26% by listed-function
+**13 verified exact functions / 4, 201 community entries ≈ 0.31% by listed-function
 count.** This is not a code-size, effort or completion percentage. The matches total
-158 original bytes and were deliberately selected for low complexity. More complex
+185 original bytes and were deliberately selected for low complexity. More complex
 routines, dependencies and linking will have very different costs.
 
 Reproduce the community count without storing the map in the public repository:
@@ -30,5 +30,5 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4, 201 external
-map entries. There are currently 16 source candidates: 11 confirmed exact, 2 reviewed
+map entries. There are currently 36 source candidates: 13 confirmed exact, 20 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.

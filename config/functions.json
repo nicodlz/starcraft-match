@@ -1,6 +1,432 @@
 [
   {
     "schema_version": 1,
+    "address": "0x00401120",
+    "size": 23,
+    "name": "sub_00401120",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004D7DBF",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE disassembly; ECX copied from ESI before call, no stack cleanup, EAX overwritten at continuation 0x004D7500"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Manually inspected fresh pinned PE: direct call corroborates entry; sole ret at 0x00401136; padding begins 0x00401137; prior ret 0x0040111A and intervening padding inspected. Independent pure C reconstruction.",
+    "calling_convention": "ECX object pointer; EAX zero-extended observed word result, discarded by inspected caller; plain ret",
+    "prototype": "unsigned int __fastcall sub_00401120(StateWordView00401120 *state)",
+    "candidate_source": "src/game/sub_00401120.c",
+    "candidate_symbol": "@sub_00401120@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Original 23 bytes, final candidate 19 bytes in both -O2 and -Oz; zero relocations; original uses xor EAX + word AX load and a longer AND immediate. Word at offset 0x0C conditionally clears 0x40 and sets 0x01. Semantic field meaning and meaningful return contract remain unknown.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 23 original / 19 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004011F0",
+    "size": 25,
+    "name": "sub_004011F0",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004D789C",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE disassembly: EAX object loaded from a pointer field, saved at EBP-0x14, call followed by full EAX test."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: preceding function RET at 0x004011E8 and INT3 to 0x004011EF; direct call targets 0x004011F0; complete predicate has RET at 0x00401202 and 0x00401208; INT3 begins 0x00401209. Independently authored C.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_004011F0.c",
+    "candidate_symbol": "_sub_004011F0",
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "custom EAX object pointer; full EAX result 0 or 1; plain RET",
+    "prototype": "unsigned int sub_004011F0(const struct Sub004011F0View *object /* EAX */)",
+    "candidate_abi_compatible": false,
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Only reads WORD at object+0x64. Returns 1 iff equal to 3 or 17; otherwise 0. No null guard.",
+      "One direct caller independently audited. Candidate regparm(1) represents EAX input and EAX result; original changes only EAX, candidate also changes CL. Audited caller overwrites ECX before further use; no indirect caller preservation contract established.",
+      "Whole-region comparison: original 25 bytes, candidate 24 bytes under both recorded profiles. Candidate zero extends the WORD load and replaces branches with SETE/OR. No relocations. No exact claim or original differential execution.",
+      "Coordinator review: candidate additionally clobbers registers preserved by original; compatibility is not established despite inspected caller discarding those values.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 24 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401430",
+    "size": 25,
+    "name": "sub_00401430",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004C877F",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller extraction: EAX receives EDI at 0x004C877D; full EAX tested at 0x004C8784"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE extraction: entry independently corroborated by direct call 0x004C877F; returns 0x00401445 and 0x00401448; padding begins 0x00401449.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00401430.c",
+    "candidate_symbol": "_sub_00401430",
+    "compiler_profile": "clang-i686-scaffold",
+    "candidate_abi_compatible": false,
+    "calling_convention": "custom: pointer input EAX; full DWORD 0/1 result EAX; other general-purpose registers untouched; plain ret",
+    "prototype": "unsigned int sub_00401430(const Sub00401430View *object /* EAX */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "proposed_names": [],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Original 25 bytes versus candidate 20 bytes under both existing profiles; Clang folds two branches into range arithmetic and SETB.",
+      "Candidate additionally clobbers ECX, whereas original preserves it; full ABI equivalence is not established.",
+      "Single unsigned 16-bit read; inclusive interval 0xCB through 0xD5; no null check.",
+      "Private proposed record; coordinator must independently review and recompile before catalog integration.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 20 candidate bytes; literal equality false. No original differential execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401450",
+    "size": 25,
+    "name": "sub_00401450",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0049359D",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller window: pointer in EAX before call; full EAX tested after call"
+      },
+      {
+        "address": "0x004C76A7",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller window: pointer in EAX before call; full EAX tested after call"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed pinned PE 0x00401450\u20130x00401468, returns 0x00401462/0x00401468; adjacent padding reviewed and entry independently corroborated by two direct callers.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00401450.c",
+    "candidate_symbol": "_sub_00401450",
+    "compiler_profile": "clang-i686-scaffold",
+    "candidate_abi_compatible": false,
+    "calling_convention": "custom: EAX pointer; EAX 0/1; plain ret; original preserves all other general registers",
+    "prototype": "int sub_00401450(const Sub00401450View *object /* EAX */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Original single WORD read at +0x64 tests equality with 0x49 or 0x55. No null check.",
+      "Both Clang profiles produce 24 relocation-free bytes against original 25; candidate clobbers ECX while original preserves it. Full ABI compatibility is not established.",
+      "Four additional source forms did not match. Coordinator independent rebuild required.",
+      "Local candidate layout: local Sub00401450View: unsigned short at +0x64",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 24 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401470",
+    "size": 25,
+    "name": "sub_00401470",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00431A98",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      },
+      {
+        "address": "0x0046E440",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      },
+      {
+        "address": "0x004767C0",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      },
+      {
+        "address": "0x00477A16",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      },
+      {
+        "address": "0x004785D0",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      },
+      {
+        "address": "0x0048B05B",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller-window disassembly; EAX setup and EAX result test inspected"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete leaf at 0x00401470 through final ret at 0x00401488; padding starts 0x00401489. Independent direct callers corroborate entry and register ABI. Independently authored C.",
+    "calling_convention": "custom: EAX pointer; full EAX result 0 or 1; plain ret; all other general-purpose registers preserved",
+    "prototype": "int sub_00401470(const Sub00401470View *object /* EAX */)",
+    "candidate_source": "src/game/sub_00401470.c",
+    "candidate_symbol": "_sub_00401470",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Observed WORD read at offset 0x64; comparisons to 0x48 and 0x52. No null check or stores.",
+      "regparm(1) models EAX input; no_caller_saved_registers prevents ECX clobber introduced by Clang boolean materialization.",
+      "Fresh comparison: original 25 bytes, compiled 26 bytes, no relocations, not exact. Both existing profiles yield 26 bytes. No original-process execution.",
+      "Local candidate layout: candidate-local opaque view with WORD field at 0x64",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 26 candidate bytes; literal equality false. No original differential execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401490",
+    "size": 25,
+    "name": "sub_00401490",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x00431AA7",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x0046E45E",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x004767CB",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x00477A25",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x00477DD5",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x004785DF",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      },
+      {
+        "address": "0x0048B06A",
+        "type": "direct_call",
+        "provenance": "Fresh inspected pinned-PE caller window; EAX pointer setup and full EAX result test"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "compiling",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned-PE full 25-byte leaf reviewed; returns 0x004014A2/0x004014A8, padding begins 0x004014A9. Seven direct calls independently corroborate entry. Independently authored C; no machine byte insertion or assembly.",
+    "calling_convention": "custom: pointer EAX; full Boolean EAX; plain ret; original preserves ECX and EDX",
+    "prototype": "unsigned int sub_00401490(const Sub00401490View *value /* EAX */)",
+    "candidate_source": "src/game/sub_00401490.c",
+    "candidate_symbol": "_sub_00401490",
+    "candidate_abi_compatible": false,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Strict whole-section comparison: original 25 bytes, candidate 17 bytes, no relocations. -O2 and -Oz yield the same mismatch.",
+      "Compiler merges equalities into masked comparison and sete and clobbers ECX. Original preserves ECX; all callers have not been audited for tolerance.",
+      "WORD +0x64 equals 0x53 or 0x51; one read, no writes or null check. No gameplay name asserted.",
+      "No original-process execution or differential semantics testing. Coordinator review and rebuild required.",
+      "Local candidate layout: Sub00401490View local to candidate: WORD +0x64",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 17 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004014E0",
+    "size": 24,
+    "name": "sub_004014E0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0045E1FD",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly; EAX pointer input and full EAX result audited"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: returns 0x004014F4 and 0x004014F7; following padding starts 0x004014F8. Direct call at 0x0045E1FD independently corroborates entry. Independently authored C.",
+    "calling_convention": "custom: pointer input EAX, pointer result EAX; ECX clobbered; plain ret",
+    "prototype": "Sub004014E0View *sub_004014E0(const Sub004014E0View *object /* EAX */)",
+    "candidate_source": "src/game/sub_004014E0.c",
+    "candidate_symbol": "_sub_004014E0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Original and candidate both 24 bytes; 23 literal bytes equal. Alternate XOR EAX,EAX opcode at 0x004014F5 differs (original 33, compiled 31); textual diff empty, literal comparison false.",
+      "Reads WORD +0x64, then BYTE at 0x00664080 plus four-byte-stride index. Bit 0x08 permits DWORD pointer read +0xC0; no checks.",
+      "Both recorded clang-i686-scaffold and clang-i686-size profiles measured; no original differential execution. Caller uses returned pointer fields +0xD0/+0xD2. Branch likelihood hint only controls code layout.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 24 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "worker_measurement": {
+      "original_size": 24,
+      "recompiled_size": 24,
+      "equal_byte_count": 23,
+      "source_sha256": "a7d2e548a75ce18caa1df30dc7f0c04c0113aca818310c27832af0b614cf51c2",
+      "profiles_measured": [
+        "clang-i686-scaffold",
+        "clang-i686-size"
+      ]
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00401D40",
+    "size": 27,
+    "name": "sub_00401D40",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x00431A8B",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE extraction and manually inspected caller window"
+      },
+      {
+        "address": "0x00476EAB",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE extraction and manually inspected caller window"
+      },
+      {
+        "address": "0x0049AC80",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE extraction and manually inspected caller window"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE review: body [0x00401D40,0x00401D5B), returns at 0x00401D57 and 0x00401D5A; preceding return 0x00401D3C and excluded CC padding. Three direct callers corroborate EAX pointer argument and full EAX result. Independently authored pure C.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00401D40.c",
+    "candidate_symbol": "_sub_00401D40",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "custom: pointer in EAX, DWORD boolean result EAX, plain ret, EAX and flags modified",
+    "prototype": "unsigned int sub_00401D40(const Sub00401D40View *object /* EAX */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Null pointer returns 0; unsigned WORD index at +0x64; BYTE test at 0x00664080 + index * 4 using mask 0x10; no index bounds check.",
+      "Both existing profiles compile 26 bytes versus 27 original bytes. Byte equality false: Clang load/shift/mask replaces original test/branch/constant-one return. No original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 26 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
     "address": "0x004020B0",
     "size": 50,
     "name": "sub_004020B0",
@@ -35,6 +461,273 @@
     ],
     "match": {
       "exact": null,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00402310",
+    "size": 20,
+    "name": "sub_00402310",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0043F6B4",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly: EAX is copied from EBX immediately before call; full EAX tested and stored after return."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "compiling",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: entry at 0x00402310 independently corroborated by direct call 0x0043F6B4; returns at 0x0040231D and 0x00402323; excluded INT3 padding begins 0x00402324, next routine starts 0x00402330.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00402310.c",
+    "candidate_symbol": "_sub_00402310",
+    "candidate_abi_compatible": true,
+    "calling_convention": "custom: object pointer in EAX; full EAX Boolean result; ECX clobbered; plain RET, no stack arguments",
+    "prototype": "int sub_00402310(const Sub00402310View *object /* EAX */)",
+    "compiler_profile": "clang-i686-scaffold",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Reads one DWORD at object+0xDC, no null check. Returns 1 iff mask 0x3000 is nonzero, otherwise 0. Field semantics remain unknown.",
+      "Both existing compiler profiles measured 18 compiled bytes versus 20 original bytes. Original loads ECX then tests CH with branched full-EAX results; Clang emits a DWORD memory test and setne. Strict COFF extraction accepted no relocations.",
+      "Two compiler profile variants tested. No source-level or original differential execution performed. Coordinator must independently rebuild.",
+      "Local candidate layout: Sub00402310View: independently declared DWORD at offset 0xDC",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 20 original / 18 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00402A70",
+    "size": 24,
+    "name": "sub_00402A70",
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0046F1EA",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller window: ESI copied to EAX before call; full EAX tested immediately afterward"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: entry direct-call corroborated; complete contiguous body ending with returns at 0x00402A84 and 0x00402A87; INT3 padding starts 0x00402A88. Independent C reconstruction.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00402A70.c",
+    "candidate_symbol": "_sub_00402A70",
+    "candidate_abi_compatible": false,
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "Custom EAX pointer input; EAX 0/1 result; plain ret, no stack arguments. Original body modifies only EAX and flags.",
+    "prototype": "unsigned int sub_00402A70(const struct Sub00402A70View *object /* EAX */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "proposed_names": [],
+    "notes": [
+      "Candidate uses regparm(1) for EAX input and a volatile unsigned DWORD access to retain the observed access width.",
+      "Original tests bit 0x800 set and bit 0x10 clear in the loaded DWORD at object +0xDC. Pointer must be valid; no null check.",
+      "Whole-region comparison: 24 original bytes versus 22 compiled bytes, not exact; candidate additionally uses ECX and EDX, so full register equivalence is not claimed. Inspected caller does not rely on their post-call contents, but other caller contracts are not proven.",
+      "Eight bounded source/profile experiments; no exact result. No original-process or differential execution performed.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 22 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00402C40",
+    "size": 20,
+    "name": "sub_00402C40",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x00466834",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE region extraction and caller inspection"
+      },
+      {
+        "address": "0x004684A5",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE region extraction and caller inspection"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete body 0x00402C40..0x00402C53; single ret at 0x00402C53, preceding ret/padding and following padding inspected; two independent direct calls corroborate entry.",
+    "calling_convention": "Custom: pointer EAX; DWORD result EAX (reviewed callers consume AX); plain ret; other GPRs preserved",
+    "prototype": "unsigned int sub_00402C40(const Sub00402C40View *object /* EAX */)",
+    "candidate_source": "src/game/sub_00402C40.c",
+    "candidate_symbol": "_sub_00402C40",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Byte global at 0x006D5A6C is read/tested before zero-extending WORD +0xA8; bit 1 selects unsigned left shift by 4; no null check or stores.",
+      "Final whole isolated COFF section 21 bytes versus original 20: reversed branch layout and duplicated return; no relocations.",
+      "Branch likelihood hint is a compiler experiment, not measured frequency or recovered source. Original-process execution and differential semantics were not performed.",
+      "Local candidate layout: Local Sub00402C40View: WORD at +0xA8",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 20 original / 21 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00432180",
+    "size": 27,
+    "name": "sub_00432180",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004E2D6F",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller extraction: ECX loaded from [EDI], EAX ORed into ESI after call."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh PE extraction reviewed entry, two returns at 0x00432186/0x0043219A, following trap padding 0x0043219B..0x0043219F and direct caller at 0x004E2D6F. Independently authored pure C.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_00432180.c",
+    "candidate_symbol": "@sub_00432180@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "ECX 32-bit input; EAX 32-bit result; plain ret; EAX/ECX/EDX caller-saved",
+    "prototype": "unsigned int sub_00432180(unsigned int value /* ECX */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "27 original bytes versus 29 recompiled bytes; strict isolated COFF extraction rejects relocations, candidate has none. Full byte comparison is false.",
+      "Observed null case and unsigned wrapped subtraction/division by 44/add-one. Index semantics and record identity remain hypotheses.",
+      "Four private source variants and size profile tested without equality. No original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 29 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00432430",
+    "size": 27,
+    "name": "sub_00432430",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004684F5",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly: EAX pointer, ECX zero-extended object byte at +0xA4; no consumed result."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed entry, full body, return at 0x0043244A, adjacent padding and independent direct caller in pinned PE.",
+    "candidate_source": "src/game/sub_00432430.c",
+    "candidate_symbol": "___regcall3__sub_00432430",
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "custom EAX object pointer; ECX index; plain ret; EAX loaded pointer and EDX zero on return, ignored by inspected caller",
+    "prototype": "void sub_00432430(unsigned char *object /* EAX */, unsigned int index /* ECX */)",
+    "candidate_abi_compatible": false,
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "O2 isolated relocation-free COFF 30 bytes versus original 27; pointer-test and immediate-zero-store lowering mismatch.",
+      "regcall represents EAX/ECX inputs, but does not promise the original incidental EDX-zero output; other callers/register liveness not audited.",
+      "Oz produced 27 bytes but a DWORD read-modify-write instead of write-only store; profile not selected.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 30 candidate bytes; literal equality false. No original differential execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00446D40",
+    "size": 25,
+    "name": "sub_00446D40",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0045BE6E",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly: CL assigned from AL at 0x0045BE69 and EAX loaded from [ESI+0x10] at 0x0045BE6B; no stack arguments or result consumption"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: complete body 0x00446D40..0x00446D58, returns at 0x00446D54 and 0x00446D58; INT3 padding 0x00446D59..0x00446D5F; entry independently corroborated by direct caller 0x0045BE6E.",
+    "calling_convention": "custom: EAX index, CL selector, no stack arguments, plain RET; no consumed result",
+    "prototype": "void sub_00446D40(unsigned int index /* EAX */, unsigned int unused_edx /* ignored */, unsigned int selector /* low byte CL */)",
+    "candidate_source": "src/game/sub_00446D40.c",
+    "candidate_symbol": "_sub_00446D40",
+    "candidate_abi_compatible": false,
+    "compiler_profile": "clang-i686-size",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "regparm(3) places an unused carrier in EDX to express EAX and ECX inputs; selector is explicitly masked to eight bits because caller only initializes CL.",
+      "One byte read/write at address 0x00690100 + index * 0x4E8 (32-bit wrapping arithmetic), bit 7 set when CL equals 4 and cleared otherwise; other bits retained. No bounds checks.",
+      "12 source/profile variants measured. Final whole-region comparison is 25 original / 33 compiled bytes, not exact, no relocations; Clang folds the original two memory-RMW branches into one load/store sequence.",
+      "No original differential execution; semantics/CFG/instruction similarity remain unmeasured.",
+      "Coordinator review: candidate additionally clobbers registers preserved by original; compatibility is not established despite inspected caller discarding those values.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 33 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -83,6 +776,53 @@
     ],
     "match": {
       "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0047B210",
+    "size": 25,
+    "name": "sub_0047B210",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0049E9F4",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly: DWORD EAX load and result store"
+      },
+      {
+        "address": "0x0049EA1A",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly: DWORD EAX load and result store"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete 25-byte region and both returns; independent direct callers corroborate entry; surrounding padding excluded.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_0047B210.c",
+    "candidate_symbol": "_sub_0047B210",
+    "candidate_abi_compatible": true,
+    "calling_convention": "custom: DWORD input EAX, DWORD result EAX, plain ret; non-EAX registers preserved",
+    "prototype": "unsigned int sub_0047B210(unsigned int value /* EAX */)",
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "notes": [
+      "Whole region 25 original / 24 compiled bytes; no relocations. ADD versus LEA, branch displacement and XOR encoding differ.",
+      "No memory accesses; preserves nonzero inputs with zero low 11 bits as base address. Semantic names unassigned.",
+      "Compiler branch hint changes code generation only; no original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 24 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -212,6 +952,52 @@
   },
   {
     "schema_version": 1,
+    "address": "0x00494BD0",
+    "size": 24,
+    "name": "sub_00494BD0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D802D",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller disassembly reviewed"
+      },
+      {
+        "address": "0x004D8079",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller disassembly reviewed"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed full 24-byte pinned PE body; single ret 0x00494BE7, neighboring padding, and two direct callers corroborate entry and EAX/ECX inputs.",
+    "calling_convention": "Custom: unsigned inputs EAX/ECX, complete unsigned result EAX; ECX clobbered, EDX preserved; plain ret",
+    "prototype": "unsigned int sub_00494BD0(unsigned int first /* EAX */, unsigned int second /* ECX */)",
+    "candidate_source": "src/game/sub_00494BD0.c",
+    "candidate_symbol": "___regcall3__sub_00494BD0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Fresh strict whole-region comparison: original 24 bytes, compiled 22, no relocations, not exact. Both existing profiles produce movzx/cmov; original and/branch. Candidate and original preserve caller-carried DX. No original-process execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 22 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
     "address": "0x00496FF0",
     "size": 11,
     "name": "sub_00496FF0",
@@ -312,6 +1098,53 @@
     ],
     "match": {
       "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004A8B90",
+    "size": 18,
+    "name": "sub_004A8B90",
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004AE154",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller disassembly; AL initialized immediately before call, complete EAX tested after return."
+      },
+      {
+        "address": "0x004CD8C3",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE caller disassembly; AL initialized immediately before call, complete EAX tested after return."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE inspection: previous ret 0x004A8B89; entry 0x004A8B90 independently targeted by two calls; ret 0x004A8B96/0x004A8BA1; padding starts 0x004A8BA2. Independently written C.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_004A8B90.c",
+    "candidate_symbol": "_sub_004A8B90",
+    "calling_convention": "custom: unsigned byte AL input, zero-extended DWORD EAX result, plain ret; original preserves ECX",
+    "prototype": "unsigned int __attribute__((regparm(1))) sub_004A8B90(unsigned char index)",
+    "candidate_abi_compatible": false,
+    "compiler_profile": "clang-i686-scaffold",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Reads one byte at 0x0059BDA8 + index only when index < 8.",
+      "19-byte candidate versus 18-byte original. Candidate clobbers ECX, original does not; ECX dead across both inspected calls. Full register contract equality not claimed.",
+      "Ten compiler/source trials across scaffold and size profiles; no exact match. No original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 18 original / 19 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -659,6 +1492,133 @@
     ],
     "match": {
       "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D0910",
+    "size": 6,
+    "name": "sub_004D0910",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004E0AED",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly from prologue 0x004E0AE0; direct target corroborates entry"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Fresh pinned PE extraction: preceding return 0x004D090E, padding 0x004D090F; complete DWORD load and return 0x004D0915; padding 0x004D0916..0x004D091F; independent direct caller 0x004E0AED. Independently authored C.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "No arguments; full DWORD result in EAX; plain ret; other registers and flags preserved",
+    "prototype": "unsigned int sub_004D0910(void)",
+    "candidate_source": "src/game/sub_004D0910.c",
+    "candidate_symbol": "_sub_004D0910",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Reads DWORD at preferred-image 0x00596B78; global semantics unknown. Caller prepares no arguments and ignores getter result before GetCurrentThreadId. Historical ABI name unknown. Independent coordinator rebuild required; no original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 6 original / 6 candidate bytes; literal equality true. No original differential execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D5900",
+    "size": 21,
+    "name": "sub_004D5900",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D75E4",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE disassembly: EAX from ESI, DL from [EDI], CL from [EDI-1]; direct call to 0x004D5900"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE review: preceding function returns at 0x004D58F3 with padding to entry; direct call corroborates 0x004D5900; sole ret at 0x004D5914 and padding 0x004D5915..0x004D591F. Independent C candidate.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004D5900.c",
+    "candidate_symbol": "___regcall3__sub_004D5900",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "Custom: EAX object pointer, DL byte for +0x0E, CL byte for +0x0F; plain ret; all general registers preserved",
+    "prototype": "void sub_004D5900(Sub004D5900View *object /* EAX */, unsigned char second /* CL */, unsigned char first /* DL */)",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Byte-only comparisons, byte OR at +0x0C and byte stores at +0x0E/+0x0F; no memory writes if both values equal. Semantic field names remain unknown.",
+      "Three-argument i386 regcall orders arguments EAX, ECX, EDX; source parameter order reflects that mapping. Exact isolated section is relocation-free.",
+      "Worker proposal: coordinator independent rebuild required; no original-process or differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 21 original / 21 candidate bytes; literal equality true. No original differential execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DBBE0",
+    "size": 27,
+    "name": "sub_004DBBE0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004EE141",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller disassembly; no arguments prepared, EAX and CL overwritten after call."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE review: preceding ret 0x004DBBD4 and padding through 0x004DBBDF; direct caller 0x004EE141 corroborates start; sole ret 0x004DBBFA, padding starts 0x004DBBFB.",
+    "match_expectation": "exploratory",
+    "candidate_source": "src/game/sub_004DBBE0.c",
+    "candidate_symbol": "_sub_004DBBE0",
+    "candidate_abi_compatible": true,
+    "calling_convention": "cdecl, no arguments, plain ret; EAX and CL scratch; caller ignores incidental EAX result",
+    "prototype": "void sub_004DBBE0(void)",
+    "compiler_profile": "clang-i686-size",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "proposed_names": [],
+    "notes": [
+      "27 original / 27 compiled bytes; single instruction differs: original sub eax,36 versus candidate add eax,-36. Whole function comparison, no trimming or normalization.",
+      "Byte accesses at eight descending addresses 0x0057EFE4 through 0x0057EEE8, stride 36; conditional replacement 5 -> 6. No semantic label asserted.",
+      "No original differential execution.",
+      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 27 candidate bytes; literal equality false. No original differential execution."
+    ],
+    "match": {
+      "exact": false,
       "score": null,
       "semantic": null,
       "cfg": null
