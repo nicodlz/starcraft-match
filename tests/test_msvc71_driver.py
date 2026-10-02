@@ -194,7 +194,8 @@ class HistoricalPipelineTests(unittest.TestCase):
             record = {'address': '0x00001000', 'candidate_source': 'synthetic.c',
                       'compiler_profile': 'historic', 'binary_sha256': '0'*64}
             identity = {'status': 'available', 'component_sha256': {'c1.dll': '1'*64}}
-            build = {'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+            build = {'matching_tools_sha256': {'tools/decomp': 'b'*64},
+                     'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'headers_sha256': {}, 'compiler_profile_config': historical,
                      'compiler_sha256': 'a'*64, 'compiler_identity': identity,
                      'function_record_sha256': hashlib.sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()}
@@ -202,6 +203,7 @@ class HistoricalPipelineTests(unittest.TestCase):
             with mock.patch.object(DECOMP, 'ROOT', root), \
                  mock.patch.object(DECOMP, 'read', return_value=profiles), \
                  mock.patch.object(DECOMP, 'compiler_digest', return_value='a'*64), \
+                 mock.patch.object(DECOMP, 'matching_tools_identity', return_value={'tools/decomp': 'b'*64}), \
                  mock.patch.object(DECOMP, 'compiler_identity', return_value=identity) as current_identity:
                 self.assertTrue(DECOMP.report_is_fresh(record, report))
                 # Wrapper/source/profile hashes remain identical; only c1 changes.

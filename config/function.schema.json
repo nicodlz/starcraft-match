@@ -35,7 +35,42 @@
     "original_asm": {"type": ["array", "string", "null"]},
     "known_structures": {"type": "array"},
     "known_calls": {"type": "array"},
-    "notes": {"type": "array"}
+    "notes": {"type": "array"},
+    "linkage": {
+      "type": "object",
+      "required": [
+        "method",
+        "bindings"
+      ],
+      "properties": {
+        "method": {
+          "const": "coff-ld-i386-v1"
+        },
+        "bindings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "symbol",
+              "address"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string",
+                "pattern": "^[A-Za-z_@][A-Za-z0-9_@]*$"
+              },
+              "address": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4294967295
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
   },
   "additionalProperties": true
 }

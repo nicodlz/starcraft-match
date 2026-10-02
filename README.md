@@ -196,6 +196,8 @@ chmod +x .git/hooks/pre-commit
 
 ## Analysis and matching tools
 
+Reviewed relocation-bearing C candidates use [whole-function linking](docs/relocation-linking.md). Raw extraction still rejects unresolved relocations; portable linked builds remain source-only and cannot qualify as exact matches.
+
 | Command | Purpose |
 | --- | --- |
 | `./tools/decomp analyze` | Export deterministic PE identity, imports, sections, strings, function seeds and symbols |

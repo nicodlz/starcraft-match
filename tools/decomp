@@ -2,12 +2,15 @@
 """Automation primitive: pin, analyze, compile, compare, and export one task."""
 import argparse
 import hashlib
+import importlib.util
 from functools import lru_cache
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
@@ -115,24 +118,123 @@ def compiler_identity(profile):
     return identity
 
 
+@lru_cache(maxsize=2)
+def link_backend(profile):
+    name = 'link' if profile in ('msvc71-o2', 'msvc71-o2-frame') else 'portable'
+    if name == 'portable' and profile != 'clang-i686-scaffold':
+        raise ValueError('Linked source requires a supported historical or portable profile')
+    path = ROOT/'tools/matching'/f'{name}.py'
+    spec = importlib.util.spec_from_file_location(f'decomp_{name}', path)
+    module = importlib.util.module_from_spec(spec)
+    # Load the inspected bytes, without relying on cached Python bytecode.
+    exec(compile(path.read_bytes(), str(path), 'exec'), module.__dict__)
+    return module
+
+
+def reviewed_linkage(r):
+    linkage = r['linkage']
+    if (not isinstance(linkage, dict) or set(linkage) != {'method', 'bindings'}
+            or linkage['method'] != 'coff-ld-i386-v1'
+            or not isinstance(linkage['bindings'], list)):
+        raise ValueError('Unsupported reviewed linkage record')
+    seen_symbols, seen_addresses = set(), set()
+    for binding in linkage['bindings']:
+        if (not isinstance(binding, dict) or set(binding) != {'symbol', 'address'}
+                or not isinstance(binding['symbol'], str)
+                or not re.fullmatch(r'[A-Za-z_@][A-Za-z0-9_@]*', binding['symbol'])
+                or type(binding['address']) is not int
+                or not 0 < binding['address'] <= 0xffffffff):
+            raise ValueError('Invalid reviewed symbol/address binding')
+        if binding['symbol'] in seen_symbols or binding['address'] in seen_addresses:
+            raise ValueError('Duplicate or aliased reviewed linkage binding')
+        seen_symbols.add(binding['symbol'])
+        seen_addresses.add(binding['address'])
+    return linkage
+
+
+def matching_tools_identity():
+    return {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for path in (ROOT/'tools/decomp', ROOT/'tools/matching/compare.py',
+                         ROOT/'config/function.schema.json')}
+
+
+def linked_build(r):
+    linkage = reviewed_linkage(r)
+    backend = link_backend(r['compiler_profile'])
+    out = private(ROOT/'build'/r['address']/('link-' + uuid.uuid4().hex))
+    try:
+        data, link = backend.compile_and_link(ROOT/r['candidate_source'], r['candidate_symbol'],
+            int(r['address'], 0), linkage['bindings'], out, profile=r['compiler_profile'])
+    except backend.ToolchainUnavailable as error:
+        raise OptionalCompilerUnavailable(str(error)) from error
+    compilation = link['compilation']
+    profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
+    manifest = dict(command=compilation['command'], matching_tools_sha256=matching_tools_identity(),
+        source_sha256=compilation['source_sha256'], headers_sha256={},
+        candidate_sha256=hashlib.sha256(data).hexdigest(), profile=r['compiler_profile'],
+        candidate_abi_compatible=(r.get('candidate_abi_compatible', False)
+                                  and r['compiler_profile'].startswith('msvc71-')),
+        link_proof_eligible=(r['compiler_profile'].startswith('msvc71-')
+                             and link.get('proof_eligible') is not False),
+        compiler_profile_config=profile, compiler_sha256=compiler_digest(profile['executable']),
+        compiler_identity=compilation['compiler_identity'],
+        source_only_fallback_for=r.get('source_only_fallback_for'),
+        function_record_sha256=hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest(),
+        linkage=linkage, linked_build_directory=str(out), link_manifest=link)
+    (out/'candidate.bin').write_bytes(data)
+    write(ROOT/'build'/r['address']/'build.json', manifest)
+    return data, manifest
+
+
+def linked_report_is_fresh(r, b):
+    linkage = reviewed_linkage(r)
+    link = b['link_manifest']
+    backend = link_backend(r['compiler_profile'])
+    out = private(b['linked_build_directory'])
+    compilation = link['compilation']
+    profile_hash = hashlib.sha256((ROOT/'config/compilers.json').read_bytes()).hexdigest()
+    registered_hash = compilation.get('profiles_sha256')
+    if registered_hash is None:
+        registered_hash = compilation['registered_profile']['sha256']
+    current_compiler = (backend.fresh_identity() if r['compiler_profile'].startswith('msvc71-')
+                        else backend.compiler_identity())
+    return bool(b['linkage'] == linkage and link['bindings'] == linkage['bindings']
+        and link['function_symbol'] == r['candidate_symbol']
+        and link['candidate_address'] == int(r['address'], 0)
+        and registered_hash == profile_hash
+        and compilation['compiler_identity'] == current_compiler
+        and link['implementation_identity'] == backend.implementation_identity()
+        and link['linker_identity'] == backend.linker_identity(link['linker_identity']['executable'])
+        and hashlib.sha256(Path(compilation['object']).read_bytes()).hexdigest() == link['object_sha256']
+        and hashlib.sha256((out/'linked.exe').read_bytes()).hexdigest() == link['image_sha256']
+        and hashlib.sha256((out/'placement.ld').read_bytes()).hexdigest() == link['script_sha256']
+        and hashlib.sha256((out/'candidate.bin').read_bytes()).hexdigest() == b['candidate_sha256']
+        and link['candidate_sha256'] == b['candidate_sha256'])
+
+
 def report_is_fresh(r, report):
     try:
         b = report['build']
         profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
-        return bool(r.get('candidate_source') and r.get('binary_sha256') == report['binary_sha256']
+        if r.get('linkage') is not None and not linked_report_is_fresh(r, b):
+            return False
+        return bool(b.get('matching_tools_sha256') == matching_tools_identity()
+            and r.get('candidate_source') and r.get('binary_sha256') == report['binary_sha256']
             and b['source_sha256'] == hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest()
             and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
             and b.get('compiler_profile_config') == profile
             and b.get('compiler_sha256') == compiler_digest(profile['executable'])
-            and b.get('compiler_identity') == compiler_identity(profile)
+            and (r.get('linkage') is not None or b.get('compiler_identity') == compiler_identity(profile))
             and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
-    except (OSError, KeyError, ValueError):
+    except (OSError, KeyError, ValueError, TypeError, AttributeError, ImportError, subprocess.SubprocessError):
         return False
 
 
 def build(r):
     if not r.get('candidate_source'):
         raise ValueError('No candidate source')
+    if r.get('linkage') is not None:
+        return linked_build(r)
     profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
     identity = compiler_identity(profile)
     out = private(ROOT/'build'/r['address'])
@@ -143,7 +245,7 @@ def build(r):
     subprocess.run(cmd, cwd=ROOT, env=env, check=True)
     data = coff_function(obj, r['candidate_symbol'])
     (out/'candidate.bin').write_bytes(data)
-    manifest = dict(command=cmd, compiler_version=subprocess.check_output([profile['executable'], '--version'], text=True),
+    manifest = dict(command=cmd, matching_tools_sha256=matching_tools_identity(), compiler_version=subprocess.check_output([profile['executable'], '--version'], text=True),
                     source_sha256=hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest(),
                     headers_sha256={h: hashlib.sha256((ROOT/h).read_bytes()).hexdigest() for h in r.get('known_structures', [])},
                     candidate_sha256=hashlib.sha256(data).hexdigest(), profile=r['compiler_profile'],
@@ -181,10 +283,14 @@ def match(args):
     pe = binary(args.binary)
     if r.get('binary_sha256') != pe.metadata['sha256'] or not r.get('boundary_verified') or not r.get('size'):
         raise ValueError('Matching requires reviewed boundaries tied to this binary hash')
+    out = private(ROOT/'analysis/matches'/f'{r["address"]}.json')
+    out.unlink(missing_ok=True)
     data, manifest = build(r)
+    if r.get('linkage') is not None and not manifest['link_proof_eligible']:
+        raise ValueError('Portable linked builds are source-only and cannot establish a match')
     result = compare(pe.region(int(r['address'], 0), r['size']), data, int(r['address'], 0))
     result.update(address=r['address'], binary_sha256=pe.metadata['sha256'], build=manifest,
-                  abi_compatible=r.get('candidate_abi_compatible', False),
+                  abi_compatible=manifest['candidate_abi_compatible'],
                   original_region_sha256=hashlib.sha256(pe.region(int(r['address'], 0), r['size'])).hexdigest())
     out = private(ROOT/'analysis/matches'/f'{r["address"]}.json')
     write(out, result)
