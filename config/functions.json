@@ -9658,6 +9658,67 @@
   },
   {
     "schema_version": 1,
+    "address": "0x004D5A50",
+    "size": 176,
+    "name": "sub_004D5A50",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00498DDC",
+        "type": "direct_call",
+        "provenance": "Fresh EAX from EBX and two stack pushes; next instruction overwrites EAX."
+      },
+      {
+        "address": "0x004D7012",
+        "type": "direct_call",
+        "provenance": "Fresh ESI=0x245, EAX from EBX, two stack pushes."
+      },
+      {
+        "address": "0x004D6E06",
+        "type": "direct_call",
+        "provenance": "Fresh EDI parent from object+0x3C, EAX from EBX, two stack pushes."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004D5A50.c",
+    "candidate_symbol": "_sub_004D5A50@20",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "calling_convention": "Custom MSVC optimized static: EAX object pointer, ESI full 32-bit index, EDI parent pointer, two DWORD stack slots read as BYTE, ret 8. Changes EAX/ECX/EDX/flags; EBX/ESI/EDI/EBP preserved. No return value consumed.",
+    "prototype": "static void __stdcall sub_004D5A50(void *s, unsigned long id, void *parent, unsigned char x, unsigned char y)",
+    "proposed_names": [
+      {
+        "name": "InitializeImageData",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "provenance": "Coordinator-reviewed complete pinned region, neighboring boundaries and independently corroborating original entry references; final public pure C candidate independently rebuilt with recorded compiler profile.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "known_structures": [],
+    "dependencies": [],
+    "notes": [
+      "C memset calls for constant 8/4-byte zero ranges lowered fully by MSVC; zero_pair inline helper emitted no separate call dependency. Only ordinary context helper has a relocation in its own separate section; not matched, reconstructed or counted.",
+      "Whole 176-byte section at _sub_004D5A50@20 exactly reproduces pinned full region; decoration @20 does not imply five actual stack args.",
+      "SI low 16 bits stored at object+8; first type lookup uses reloaded low WORD, second type lookup and initial table accesses use full ESI. No index normalization or bounds check introduced.",
+      "Portable Clang same symbol strictly extracts whole 239-byte zero-relocation callee; source compilation only, no portable original ABI/byte proof.",
+      "Coordinator recorded-profile portable extraction caught an unresolved memset relocation; an independent volatile BYTE loop replaces only the portable branch. Whole 239-byte Clang section extracts at the same symbol without relocations. Final public translation unit independently recompiled; historical branch unchanged."
+    ],
+    "candidate_linkage": "static",
+    "category": "game_routine"
+  },
+  {
+    "schema_version": 1,
     "address": "0x004DBBE0",
     "size": 27,
     "name": "sub_004DBBE0",
