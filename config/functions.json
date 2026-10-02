@@ -26825,5 +26825,540 @@
     "known_calls": [],
     "dependencies": [],
     "proposed_names": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041D3A0",
+    "name": "sub_0041D3A0",
+    "size": 117,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0041D3A0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0041D3A0@4",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x0041E2E3",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00411E4E",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x004100E2",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00411E48",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_006CEFF4": {
+          "address": 7139316,
+          "kind": "data",
+          "evidence": [
+            "Original DWORDpointer tosourcepixels; target readsDWORD thenrowstride640."
+          ]
+        },
+        "_sub_00411E4E@20": {
+          "address": 4267598,
+          "kind": "code",
+          "evidence": [
+            "Complete6-byte JMP IAT4FE5A0 Stormordinal350, callerpushesfiveDWORDargs; no caller cleanup."
+          ]
+        },
+        "_sub_004100E2@32": {
+          "address": 4260066,
+          "kind": "code",
+          "evidence": [
+            "Complete6-byte JMP IAT4FE3B8 Stormordinal313, callerpusheseightDWORDargs; no caller cleanup."
+          ]
+        },
+        "_sub_00411E48@16": {
+          "address": 4267592,
+          "kind": "code",
+          "evidence": [
+            "Complete6-byte JMP IAT4FE59C Stormordinal356, callerpushesfourDWORDargs; no caller cleanup."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_0041D3A0",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "notes": [
+      "Whole117-byte target and whole424-byte caller corroborate actual ESI rectangle input, no stack argument and plain RET, with all nonvolatile registers preserved. The source stdcall decoration is not the optimized internal machine ABI. An ordinary15-byte C context selects ESI and is inventoried separately, excluded from the match. Native Storm350/313/356 exports in the legally available companion DLL (SHA256706ff2164ca472f27c44235ed55586644e5c86e68cd69b62d76f5a78778bff25) are independently reviewed across415/361/272 bytes, establishing stack5/8/4 contracts and RET20/32/16. Storm350 returning success writes a nonnull buffer and stride; COM surface extent/pitch and generated blit behavior remain original external contracts. Source admission is scoped to the corroborated caller rectangle0,0,640,480 and legitimate distinct surface/source storage; arbitrary rectangles may cause signed overflow or out-of-object pointer arithmetic and are not certified. Full machine equality preserves original failure paths and always unlocks after the blit. No DLL body is copied or counted, no DLL/original-process execution or complete driver closure is claimed."
+    ],
+    "calling_convention": "Optimized internal ESI pointer input, no stack argument, plain RET; EBP/EBX/ESI/EDI preserved.",
+    "provenance": "Pinned whole0x0041D3A0 function; independent boundary/ABI/source-domain review and coordinator final-public-path fresh recompilation.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041D420",
+    "name": "sub_0041D420",
+    "size": 80,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0041D420.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0041D420",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_00411E4E@20": {
+          "address": 4267598,
+          "kind": "code",
+          "evidence": [
+            "Pinned whole6B Storm ordinal350 thunk IAT004FE5A0; original standard stack5 calls, DLL code remains external."
+          ]
+        },
+        "_sub_00411E54@20": {
+          "address": 4267604,
+          "kind": "code",
+          "evidence": [
+            "Pinned whole6B Storm ordinal432 thunk IAT004FE5A4; original standard stack5 calls, DLL code remains external."
+          ]
+        },
+        "_sub_00411E48@16": {
+          "address": 4267592,
+          "kind": "code",
+          "evidence": [
+            "Pinned whole6B Storm ordinal356 thunk IAT004FE59C; original standard stack4 calls, DLL code remains external."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "confidence": 0.95,
+    "notes": [
+      "Whole80-byte target and CALL0041E3EA in whole424-byte caller0041E280 establish no argument, plain RET and preserved nonvolatile registers. Original Storm350/432/356 thunks are separately reviewed. Native companion DLL SHA256706ff2164ca472f27c44235ed55586644e5c86e68cd69b62d76f5a78778bff25 verifies stack5/5/4 and RET20/20/16; export432 whole53 bytes calls whole167-byte leaf with RET16. This replaces the earlier community-only432 ABI hypothesis with native evidence. Storm350 success initializes DWORD buffer/stride outputs. Local height name denotes actual stride; its unsigned32 representation is forwarded without C arithmetic or buffer dereference. Valid mapped DWORD globals and four-byte output locals are required. Original DLL descriptor/buffer faults, COM/driver effects and native copy semantics remain external and uncounted. No whole-process/DLL execution or universal allocation validity is claimed. Lock failure skips globals and later calls; unlock always follows432 regardless of its result."
+    ],
+    "calling_convention": "No arguments, plain RET; EBP/EBX/ESI/EDI preserved.",
+    "provenance": "Pinned whole0x0041D420 function; independent boundary/ABI/source-domain review and coordinator final-public-path fresh recompilation.",
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "references": [
+      {
+        "address": "0x0041E3EA",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00411E4E",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00411E54",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00411E48",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0042BBD0",
+    "name": "sub_0042BBD0",
+    "size": 84,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0042BBD0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0042BBD0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_005056A4": {
+          "address": 5265060,
+          "kind": "data",
+          "evidence": [
+            "pinned string pointer Storm403"
+          ]
+        },
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "6-byte JMP Storm403 stdcall4 thunk"
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_0042BBD0",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004EEA47",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x00483DE4",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [
+      "0x005056A4"
+    ],
+    "calling_convention": "Optimized internal ESI pointer input, no stack argument, plain RET; EBP/EBX/ESI/EDI preserved.",
+    "notes": [
+      "Whole84-byte function, whole874/88-byte callers and whole6-byte Storm403 thunk corroborate actual ESI object input and plain RET. An ordinary12-byte C context chooses ESI, preserves the observed nonvolatile registers and is inventoried/excluded. Four DWORD allocation handles are loaded and sent to original Storm403 with unchanged file-address/line/flags arguments, stack4/RET16. C never dereferences the allocation handles, adds no null guard and clears no field. NULL and duplicate-handle faults remain original external allocator effects. Admission requires the aligned four-DWORD sixteen-byte object remain readable across all four external calls, with object storage distinct from freed buffers; arbitrary alias and concurrent corruption are unproved. No DLL body is reconstructed or counted."
+    ],
+    "provenance": "Pinned whole0x0042BBD0 function; independent boundary/ABI/source-domain review and coordinator final-public-path fresh recompilation.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044A730",
+    "name": "sub_0044A730",
+    "size": 133,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0044A730.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0044A730",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x0044C9CB",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "notes": [
+      "Whole133-byte target and CALL0044C9CB in whole640-byte caller0044C960 corroborate no argument/plain RET and preserved nonvolatile registers. Four aligned mapped DWORD globals at6D5D4C/50/54/58 are read sequentially, each nonzero handle is passed to original Storm403 with the fixed original file-address and line239/242/245/249, then that global is reset after the call. No pointer is dereferenced by C; duplicate/aliased allocation faults and original external allocator effects remain native. Volatile DWORD reads and writes preserve their widths and original order even when an import changes a global. The6-byte IAT thunk and independent whole69-byte caller confirm stack4/RET16. Native companion DLL SHA256706ff2164ca472f27c44235ed55586644e5c86e68cd69b62d76f5a78778bff25 export403 at150205D0 is independently reviewed across374 bytes, confirming RET16 and nonvolatile preservation. DLL implementations remain external, uncopied and uncounted. Valid mapped DWORD storage and standard i386 foreign contracts are required; no original-process/DLL execution or universal allocator safety is claimed."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Whole6B thunk IAT4FE564 stdcall4cleanup16 corroborated whole69B4CB0A0 pushESI then4pushesCALL410070 thenPOPESI/RET withoutframe reset; target similarlypushESI/allpathsPOPESI/RET. DLLopaque/notcounted."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "calling_convention": "No arguments, plain RET; EBP/EBX/ESI/EDI preserved.",
+    "provenance": "Pinned whole0x0044A730..0x0044A7B5 exclusive, independent native ABI and source-operation audit, coordinator final-path fresh compilation.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004A8790",
+    "name": "sub_004A8790",
+    "size": 92,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004A8790.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_004A8790@12",
+    "confidence": 0.95,
+    "calling_convention": "Optimized internal ESI output, EDI capacity and one stack suffix, RET4; EBP/EBX/ESI/EDI preserved.",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "__imp__GetModuleFileNameA@12": {
+          "address": 5235244,
+          "kind": "data",
+          "evidence": [
+            "IAT KERNEL32 stdcall3 output is ESI capacity EDI pushed before module0"
+          ]
+        },
+        "_sub_0040C530": {
+          "address": 4244784,
+          "kind": "code",
+          "evidence": [
+            "Whole45 CRT reverse BYTE scan cdecl2 preserving EDI"
+          ]
+        },
+        "_sub_0041007C@12": {
+          "address": 4259964,
+          "kind": "code",
+          "evidence": [
+            "Whole6 Storm503 IAT thunk stdcall3"
+          ]
+        },
+        "_data_00503EA8": {
+          "address": 5258920,
+          "kind": "data",
+          "evidence": [
+            "First appended literal"
+          ]
+        },
+        "_data_00500BC4": {
+          "address": 5245892,
+          "kind": "data",
+          "evidence": [
+            "BYTE flag nonzero suffix"
+          ]
+        },
+        "_data_00500BCC": {
+          "address": 5245900,
+          "kind": "data",
+          "evidence": [
+            "BYTE flag zero suffix"
+          ]
+        },
+        "_data_0057F0B4": {
+          "address": 5763252,
+          "kind": "data",
+          "evidence": [
+            "BYTE flag post two append calls"
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_004A8790",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "references": [
+      {
+        "address": "0x004A88FB",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x004A8961",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x0045254E",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x004A8867",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x004ED8BF",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0040C530",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x0041007C",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x004FE22C",
+        "type": "reviewed_import_iat"
+      }
+    ],
+    "strings": [
+      "0x00503EA8",
+      "0x00500BC4",
+      "0x00500BCC"
+    ],
+    "notes": [
+      "Whole92-byte target and five complete43/188/255/50/246-byte callers corroborate actual ESI output, EDI capacity and one stack suffix, RET4 with all nonvolatile registers preserved. Apparent source stdcall decoration is distinct from optimized internal ABI. Ordinary24-byte context is inventoried/excluded. Every reviewed caller provides a260-byte frame buffer and capacity260. GetModuleFileNameA is the named KERNEL32 IAT stdcall3; failure writes BYTE0. Original45-byte CRT reverse-search remains opaque cdecl2; a returned backslash causes one BYTE store at its next character. Three original Storm503 appends preserve order, capacity, suffix pointer and fresh BYTE flag load after the first two calls. Admission requires writable nonnull260-byte output and, on API success, a readable NUL-terminated path with a writable byte after any returned backslash. Readable suffix/literal sources and conforming native append contracts are required; truncated success without NUL, capacity0/NULL and arbitrary overlap safety are not certified. No restrict, guard repair or local string implementation is substituted. Original external failures and effects remain uncounted, no original-process execution. Native companion DLL SHA256706ff2164ca472f27c44235ed55586644e5c86e68cd69b62d76f5a78778bff25 export503 at15021840 is independently reviewed across446 bytes, directly confirming three stack DWORD arguments, all six RET12 exits and preserved nonvolatile registers, with no hidden incoming register. Native string scans/overlap effects remain external, not reconstructed or universally certified."
+    ],
+    "provenance": "Pinned whole0x004A8790 body with independent boundary/native ABI/C-domain audit and coordinator final-path fresh compilation.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CDD30",
+    "name": "sub_004CDD30",
+    "size": 130,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004CDD30.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_004CDD30@4",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004CDE95",
+        "type": "reviewed_direct_call"
+      },
+      {
+        "address": "0x004CE243",
+        "type": "reviewed_direct_call"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0041006A",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x0041016C",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041006A@16": {
+          "address": 4259946,
+          "kind": "code",
+          "evidence": [
+            "Whole import thunk Storm401, four DWORD stack arguments."
+          ]
+        },
+        "_sub_0041016C@12": {
+          "address": 4260204,
+          "kind": "code",
+          "evidence": [
+            "Whole import thunk Storm491, three DWORD stack arguments."
+          ]
+        },
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Whole import thunk Storm403, four DWORD stack arguments."
+          ]
+        },
+        "_data_0050286C": {
+          "address": 5253228,
+          "kind": "data",
+          "evidence": [
+            "Constant diagnostic file string passed to allocation/free."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_004CDD30",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "notes": [
+      "Whole130-byte body, complete142/69-byte callers and native companion DLL exports401/403/491 corroborate actual ESI state input, plain RET, all nonvolatile registers preserved and stdcall4/4/3 imports with RET16/16/12. Ordinary12-byte context is inventoried/excluded. Native DLL SHA256706ff2164ca472f27c44235ed55586644e5c86e68cd69b62d76f5a78778bff25 exports are reviewed across209/374/34 bytes, uncopied/uncounted. Count+512, capacity+10000, address subtraction and cursor reconstruction use explicit unsigned32 modulo arithmetic; conversions to signed32 retain the original signed predicate under recorded MSVC71 Windowsi386 two-complement behavior, and integer/pointer casts use the recorded flat32 representation. No signed-overflow addition, C pointer subtraction or C pointer addition remains. Native zero offset still produces NULL even when cursor originally equals buffer. Growth allocation/copy/free order and field reloads are unchanged. Storm491 is original opaque native code, not ISO memcpy; its REP zero-count behavior and faults remain external. Admission requires valid aligned24-byte State storage across calls and original foreign ABI contracts; allocator/runtime/system semantic closure and hostile alias corruption are unproved. No DLL/original-process execution or portable flat-pointer guarantee is claimed."
+    ],
+    "provenance": "Pinned whole0x004CDD30 body with independent boundary/native ABI/C-domain audit and coordinator final-path fresh compilation.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "calling_convention": "Optimized internal ESI state pointer, no stack argument, plain RET; EBP/EBX/ESI/EDI preserved.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

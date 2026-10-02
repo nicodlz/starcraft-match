@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![459 exact functions](https://img.shields.io/badge/verified-459%20exact%20functions-287d67)
+![465 exact functions](https://img.shields.io/badge/verified-465%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -31,8 +31,9 @@ adds seven reviewed C contributions / 457 bytes using the shared external-only l
 
 The [third-session tenth linked lot](docs/parallel-third-linked-tenth-2026-10-02.md) adds four reviewed C bodies / 847 bytes, including one claim scoped to its corroborated internal caller contract.
 The [third-session eleventh linked lot](docs/parallel-third-linked-eleventh-2026-10-02.md) adds two reviewed C bodies / 314 bytes, with explicit pinned-module API scope and original external runtime limits.
+The [third-session twelfth linked lot](docs/parallel-third-linked-twelfth-2026-10-02.md) adds six reviewed C bodies / 636 bytes, including native companion-DLL ABI corroboration and explicit modulo32 growth arithmetic.
 
-**459 whole functions match exactly, totaling 29,724 original bytes.** The independent
+**465 whole functions match exactly, totaling 30,360 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -86,7 +87,7 @@ The [third-session third linked lot](docs/parallel-third-linked-third-2026-10-02
 
 The [third-session second linked lot](docs/parallel-third-linked-second-2026-10-02.md) adds 15 reviewed whole C functions / 979 bytes, after the independently validated main-branch merge.
 
-The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 92 standard-linked matches / 8,005 bytes.
+The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 98 standard-linked matches / 8,641 bytes.
 
 The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
 
@@ -147,8 +148,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 459 matches are
-about **10.93% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 465 matches are
+about **11.07% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -198,7 +199,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 459 exact matches
+make proof                    # Recompile and require all 465 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
