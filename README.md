@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![418 exact functions](https://img.shields.io/badge/verified-418%20exact%20functions-287d67)
+![429 exact functions](https://img.shields.io/badge/verified-429%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -27,9 +27,9 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 ## Current progress
 
 The [fourth-session linked continuation](docs/parallel-fourth-linked-2026-10-02.md)
-adds two reviewed C contributions / 86 bytes using the shared external-only linker.
+adds seven reviewed C contributions / 457 bytes using the shared external-only linker.
 
-**418 whole functions match exactly, totaling 24,638 original bytes.** The independent
+**429 whole functions match exactly, totaling 25,630 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -67,11 +67,13 @@ functions / 5,911 bytes, independently rebuilt by the coordinator.
 The [bounded continuation](docs/parallel-fourth-continuation-2026-10-02.md) adds
 nine further functions / 776 bytes after fresh independent validation.
 
+The [third-session fourth linked lot](docs/parallel-third-linked-fourth-2026-10-02.md) adds six reviewed C functions / 621 bytes while reconciling five further concurrent main-branch functions.
+
 The [third-session third linked lot](docs/parallel-third-linked-third-2026-10-02.md) adds 11 reviewed C functions / 828 bytes while preserving the concurrent main-branch continuation.
 
 The [third-session second linked lot](docs/parallel-third-linked-second-2026-10-02.md) adds 15 reviewed whole C functions / 979 bytes, after the independently validated main-branch merge.
 
-The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 51 standard-linked matches / 2,919 bytes.
+The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 62 standard-linked matches / 3,911 bytes.
 
 The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
 
