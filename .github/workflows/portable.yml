@@ -1,0 +1,43 @@
+name: Portable checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: portable-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-and-tooling:
+    name: Source builds and portable tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install compiler and disassembler
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y clang-18 gcc binutils make
+          mkdir -p "$RUNNER_TEMP/starcraft-toolchain"
+          ln -s /usr/bin/clang-18 "$RUNNER_TEMP/starcraft-toolchain/clang"
+          echo "$RUNNER_TEMP/starcraft-toolchain" >> "$GITHUB_PATH"
+      - name: Record tool versions
+        run: |
+          python3 --version
+          clang --version
+          objdump --version
+      - name: Check public file policy
+        run: ./tools/check-publication
+      - name: Build candidates and run portable tests
+        run: make
+      - name: Verify proprietary input is absent
+        run: |
+          test ! -e original/StarCraft.exe
+          test ! -e downloads/Starcraft_1161.zip

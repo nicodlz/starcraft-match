@@ -1,0 +1,50 @@
+name: Tooling bug
+description: Report a reproducible analysis, compilation, matching or tracking failure.
+title: "[Tooling] Short description"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `CONTRIBUTING.md`. Use synthetic fixtures when possible.
+        Do not attach proprietary executables, assets, binary regions or generated export dumps. Remove personal paths, credentials and other sensitive data from logs.
+  - type: input
+    id: revision
+    attributes:
+      label: Repository revision
+      description: Commit hash and whether local modifications are present.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and tool versions
+      description: Host OS and architecture; Python, compiler, objdump and any relevant Ghidra/Java versions; compiler profile and flag overrides.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Exact commands and relevant configuration. If the original is required, give its SHA-256 and function address, never the executable or extracted bytes.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Exit status and a short sanitized error excerpt. Do not paste entire analysis or matching exports.
+    validations:
+      required: true
+  - type: checkboxes
+    id: publication
+    attributes:
+      label: Public report checks
+      options:
+        - label: The reproduction and excerpts contain no proprietary binary data, assets, generated export dumps or sensitive information.
+          required: true

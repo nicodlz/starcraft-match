@@ -1,0 +1,66 @@
+name: Function reconstruction
+description: Propose a bounded function task or report a reconstruction result.
+title: "[Function] 0x004XXXXX — short description"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `CONTRIBUTING.md` and `docs/contributing-with-ai.md`.
+        Keep public reports small and independently written. Do not attach proprietary executables, assets, binary regions, or generated disassembly/decompiler export dumps.
+        A byte-identical region counts as a whole-function match only when entry, extent and ABI are supported by evidence.
+  - type: input
+    id: address
+    attributes:
+      label: Function address
+      description: Preferred-image-base virtual address, for example 0x004020B0.
+      placeholder: "0x004XXXXX"
+    validations:
+      required: true
+  - type: input
+    id: binary_hash
+    attributes:
+      label: Original executable SHA-256
+      description: Record the locally calculated hash. Do not upload the executable.
+    validations:
+      required: true
+  - type: dropdown
+    id: result
+    attributes:
+      label: Current result
+      options:
+        - Proposed task; no candidate yet
+        - Exploratory candidate; boundaries or ABI uncertain
+        - Verified function; compiling but unmatched
+        - Verified function; literal exact match
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Entry, extent, ABI and provenance
+      description: Give size, final return, entry references or dispatch pointers, argument/result locations, stack cleanup and public reference links. Separate direct observations, community names and hypotheses; state unresolved questions.
+    validations:
+      required: true
+  - type: textarea
+    id: candidate
+    attributes:
+      label: Candidate and compilation
+      description: Link the independently written source and function record, name its symbol and compiler profile, and list compiler version and any flag changes. For a proposed task, describe the intended scope.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Reproduction and validation
+      description: Give exact commands, original and compiled sizes, literal-byte result and relevant tests. Summarize differences without uploading export dumps. Leave unmeasured semantic, instruction or CFG scores unknown.
+    validations:
+      required: true
+  - type: checkboxes
+    id: publication
+    attributes:
+      label: Public report checks
+      options:
+        - label: This report contains no proprietary binaries, assets, binary-region attachments or generated export dumps.
+          required: true
+        - label: I distinguish verified observations from proposed names, uncertain boundaries and unmeasured results.
+          required: true

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="220" viewBox="0 0 1080 220" role="img" aria-labelledby="title desc">
+<title id="title">The matching decompilation workflow</title>
+<desc id="desc">A locally supplied pinned executable and independently written C produce two machine-code regions, which are compared for exact equality.</desc>
+<rect width="1080" height="220" rx="16" fill="#0d1421"/>
+<g font-family="system-ui,Segoe UI,sans-serif" text-anchor="middle">
+<text x="540" y="35" fill="#a8b9cd" font-size="14" letter-spacing="2">OBSERVE · RECONSTRUCT · COMPILE · COMPARE</text>
+<g fill="#162338" stroke="#304563"><rect x="24" y="70" width="202" height="86" rx="10"/><rect x="286" y="70" width="202" height="86" rx="10"/><rect x="548" y="70" width="202" height="86" rx="10"/><rect x="810" y="70" width="246" height="86" rx="10"/></g>
+<g fill="#f0f6fc" font-size="19"><text x="125" y="107">Pinned executable</text><text x="387" y="107">Candidate C</text><text x="649" y="107">Compiled x86</text><text x="933" y="107">Exact byte comparison</text></g>
+<g fill="#97acc5" font-size="13"><text x="125" y="134">Local input · SHA-256 identity</text><text x="387" y="134">Reviewed boundaries and ABI</text><text x="649" y="134">Recorded compiler profile</text><text x="933" y="134">Fresh evidence · explicit uncertainty</text></g>
+<g stroke="#54cbb4" stroke-width="2" fill="none"><path d="M238 113h35m-8-6 8 6-8 6"/><path d="M500 113h35m-8-6 8 6-8 6"/><path d="M762 113h35m-8-6 8 6-8 6"/></g>
+<text x="540" y="191" fill="#54cbb4" font-size="14">Progress is measured against the original machine code, one function at a time.</text>
+</g></svg>
