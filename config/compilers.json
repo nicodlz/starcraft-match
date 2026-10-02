@@ -92,5 +92,22 @@
     ],
     "optional_portable_profile": "clang-i686-scaffold",
     "purpose": "Local historical CL 13.10.3077 with frame-pointer omission disabled; strict full-function match only. Missing default compiler permits source-only build-all fallback."
+  },
+  "msvc71-o2-size": {
+    "executable": "./tools/compilers/msvc71",
+    "flags": [
+      "/nologo",
+      "/O2",
+      "/Os",
+      "/Oy",
+      "/Gy",
+      "/Zl",
+      "/G6"
+    ],
+    "identity_arguments": [
+      "--identity-json"
+    ],
+    "optional_portable_profile": "clang-i686-scaffold",
+    "purpose": "Historical CL 13.10.3077 O2 with Os instruction selection; independently verified whole-function matches only, not recovered original global switches."
   }
 }
