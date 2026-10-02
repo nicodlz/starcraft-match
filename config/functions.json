@@ -21195,5 +21195,175 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00452320",
+    "size": 41,
+    "name": "sub_00452320",
+    "boundary_verified": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00452320.c",
+    "candidate_symbol": "_sub_00452320",
+    "known_structures": [],
+    "candidate_abi_compatible": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "No parameters; plain RET, full EAX32 result; no callee-saved register writes. External thunk call has four DWORD stack arguments and inferred callee16 cleanup.",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041006A@16": {
+          "address": 4259946,
+          "kind": "code",
+          "evidence": [
+            "Pinned CALL00452336 directly targets0041006A; complete six-byte thunk is JMP through IAT004FE568, Storm ordinal401.",
+            "Four DWORD arguments pushed right-to-left:1, pointer0050467C,0x3F3,zero. No caller stack adjustment; balanced plain RET establishes16-byte callee cleanup. EAX pointer is stored and used as byte destination. Imported implementation unavailable; cleanup is inferred from the complete caller."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "status": "exact_match",
+    "provenance": "Complete pinned body00452320..00452349 exclusive and caller00450C50..00450D01 reviewed. Independently authored C, fresh MSVC13.10.3077 and canonical genuine GNU ld linking; imported implementation is absent and not counted.",
+    "notes": [
+      "Original instruction access widths/order preserved:DWORD pointer load, null initialization, DWORD pointer store, BYTE0x5B store, fullDWORD1 return. Null allocator result is not checked; original fault possibility preserved.",
+      "Complete41-byte input section equals original after canonical standard external linking; differs from strict zero-relocation COFF category. No padding trimming, instruction normalization, object edits or original-process execution.",
+      "One externalREL32 operand binds to independently reviewed Storm import thunk; no excluded context and no dependency reconstruction.",
+      "Coordinator independently reviewed pinned entry/full body/caller and dependency ABI; freshly rebuilt final public source using canonical external-only linker. Complete compiler contribution verified, no normalization or byte modification; portable source-only evidence separate."
+    ],
+    "references": [
+      {
+        "address": "0x00450C71",
+        "type": "direct_call",
+        "provenance": "Fresh pinned full177-byte caller region reviewed; directCALL to00452320 with no target arguments, followed by TEST EAX,EAX. Caller saves/restoresESI/EDI; target itself uses no preserved register."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00452336",
+        "to": "0x0041006A"
+      }
+    ],
+    "strings": [
+      "0x0050467C"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "confidence": 0.95,
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10,
+    "category": "game_routine"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C2EC0",
+    "size": 45,
+    "name": "sub_004C2EC0",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0048697F",
+        "type": "direct_call",
+        "provenance": "Pinned-PE reviewed caller0048696E..00486988; no arguments pushed or register parameters established, returned EAX discarded by immediate JMP continuation."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x004C2EC7",
+        "to": "0x0049A850",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE E8 displacement arithmetic; complete callee ABI reviewed"
+      },
+      {
+        "from": "0x004C2EDE",
+        "to": "0x00468280",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE E8 displacement arithmetic; complete callee ABI reviewed"
+      },
+      {
+        "from": "0x004C2EE3",
+        "to": "0x0049A850",
+        "type": "direct_call",
+        "provenance": "Fresh pinned-PE E8 displacement arithmetic; complete callee ABI reviewed"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned-PE full45-byte body, adjacent INT3 and direct entry call review. Independently authored C source; genuine GNU ld external REL32 resolution using reviewed callee VAs; Coordinator independently reviewed full boundary, direct entry call and observed ABI; final public source freshly rebuilt with canonical external-only linker.",
+    "candidate_source": "src/game/sub_004C2EC0.c",
+    "candidate_symbol": "_sub_004C2EC0",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "cdecl no arguments; no meaningful return consumed; plain RET. Named next callee no arguments/EAX pointer; named action callee one ECX pointer, no stack arguments and no incoming EDX dependency.",
+    "prototype": "void __cdecl sub_004C2EC0(void)",
+    "candidate_abi_compatible": true,
+    "known_calls": [
+      {
+        "address": "0x0049A850",
+        "prototype": "unsigned char * __cdecl sub_0049A850(void)",
+        "observed_abi": "Entry reads globals, no incoming register/stack parameter; all RET paths EAX pointer/null; EBX/ESI/EDI saved and restored on paths which use them."
+      },
+      {
+        "address": "0x00468280",
+        "prototype": "void __fastcall sub_00468280(unsigned char *pointer)",
+        "observed_abi": "Entry copies ECX into saved ESI; incoming EDX overwritten by MOV DL then MOV DX before uses, no caller-supplied EDX dependency; no incoming stack arguments; plain RET paths and restored-ESI tail JMP. Conditional EDI save/restore reviewed."
+      }
+    ],
+    "known_structures": [],
+    "dependencies": [
+      "sub_0049A850",
+      "sub_00468280"
+    ],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Entire45-byte executable input section at offset0 is linked004C2EC0..004C2EED; three external REL32 relocations resolved by genuine linker. No original bytes, inline assembly, code patching, instruction normalization or match subsequence.",
+      "Writes global6284B6 asBYTE zero before first next call; loops over returned pointers, compares zero-extended BYTE+4C to full DWORD512678, calls action if equal, and requests next again. No invented player-value truncation or guard.",
+      "Fresh MSVC build links whole45 bytes identically; fresh Clang source-only build links whole49 bytes under same bindings, nonexact as expected. Source variant count is3, including section-layout variant.",
+      "PE raw alignment48 is excluded by independently established entire input and PE virtual section extent45, rather than by trimming comparison bytes. No complete program or original differential execution.",
+      "Coordinator independently reviewed pinned entry/full body/caller and dependency ABI; freshly rebuilt final public source using canonical external-only linker. Complete compiler contribution verified, no normalization or byte modification; portable source-only evidence separate."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0049A850": {
+          "address": 4827216,
+          "kind": "code",
+          "evidence": [
+            "Fresh pinned-PE CALLs004C2EC7/004C2EE3 displacement arithmetic lands0049A850. Full84-byte callee reads globals, no incoming argument; returns EAX pointer/null; preservesEBX/ESI/EDI; no stack cleanup."
+          ]
+        },
+        "@sub_00468280@4": {
+          "address": 4620928,
+          "kind": "code",
+          "evidence": [
+            "Fresh pinned-PE CALL004C2EDE lands00468280 after MOVECX,EAX. Full410-byte callee copies ECX to savedESI, incomingEDX overwritten before use, no incoming stack argument; EDI preserved when used; plainRET or restoredESI tail transfer."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10,
+    "category": "game_routine"
   }
 ]
