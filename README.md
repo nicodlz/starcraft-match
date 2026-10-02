@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![154 exact functions](https://img.shields.io/badge/verified-154%20exact%20functions-287d67)
+![197 exact functions](https://img.shields.io/badge/verified-197%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**154 whole functions match exactly, totaling 2,805 original bytes.** The independent
+**197 whole functions match exactly, totaling 5,768 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -42,8 +42,13 @@ functions / 480 bytes, including list traversals, counting loops and score calcu
 The [larger historical lot](docs/historical-second-2026-10-02.md) adds another
 20 game functions / 881 bytes and validates one C-generated EAX/ECX contract.
 
-The table lists the 34 earlier non-initializer functions; the 44 historical-toolchain
-additions are listed in the two reports linked above. The 76 initializer entries, their
+The [third historical lot](docs/historical-third-2026-10-02.md) adds 43 game
+functions / 2,963 bytes, including list maintenance, searches, option updates,
+resource refunds and parser callbacks. Several private register contracts are
+selected by the historical compiler from ordinary C compilation contexts.
+
+The table lists the 34 earlier non-initializer functions; the 87 historical-toolchain
+additions are listed in the three reports linked above. The 76 initializer entries, their
 destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
@@ -95,8 +100,8 @@ measured compiler/ABI differences are documented in the catalog and function not
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 154 matches are
-about **3.67% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 197 matches are
+about **4.69% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -146,7 +151,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 154 exact matches
+make proof                    # Recompile and require all 197 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
