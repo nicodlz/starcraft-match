@@ -15781,5 +15781,216 @@
     ],
     "candidate_abi_compatible": true,
     "coordinator_lot": "parallel20-fourth"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0042D400",
+    "size": 90,
+    "name": "sub_0042D400",
+    "confidence": 1,
+    "references": [
+      {
+        "address": "0x0042D50C",
+        "type": "direct_call",
+        "provenance": "Coordinator freshly disassembled0042D500..0042D515; E8 targets entry, continuation overwrites EAX. No arguments consumed."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_0042D400.c",
+    "candidate_symbol": "_sub_0042D400",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "No arguments; ESI preserved and EDI preserved when loop entered; ECX EDX clobbered; plain RET. EAX retains final parent index; caller ignores it. Candidate explicitly returns that observed EAX value, without asserting original source return type.",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "notes": [
+      "Fresh reviewed90-byte region through RET0042D459, eight preceding and six following INT3 excluded. Direct call0042D50C corroborates entry; next instruction0042D511 reloads EAX. DWORD index at006C4A2C selects 8-byte pairs starting006C4A30. Holds complete key/value pair, parent=index>>1. While unsigned index>1, compares parent unsigned key against held key; when parent key smaller, copies parent key then parent value downward, then updates index and parent. Finally writes held value before held key. Local Pair held and C structure assignment select EDX held key, ESI held value and conditional EDI loop temporary; previous scalar experiments selected ESI key/EDI value. No assembly, byte arrays or patching. Seventh source variant matches whole90 bytes with zero relocations. Portable Clang C90 compilation passes.",
+      "Coordinator independently reviewed pinned boundary/caller and observed ABI, and freshly rebuilt the public C candidate with recorded compiler profile. Complete isolated zero-relocation COFF section compared without trimming or normalization; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 6,
+    "provenance": ""
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0045A920",
+    "size": 37,
+    "name": "sub_0045A920",
+    "confidence": 0.98,
+    "references": [
+      {
+        "from": "0x004716C7",
+        "type": "UNCONDITIONAL_CALL",
+        "reviewed_window": "0x004716C2+14",
+        "provenance": "Pinned PE: CL compared unsigned to4 before call; EAX tested afterward."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent reconstruction from full pinned body, direct caller, predecessor return and excluded following padding. Ghidra discovery only; no map size assumption.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0045A920.c",
+    "candidate_symbol": "@sub_0045A920@4",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "fastcall CL byte argument; full EAX 0/1 return; no stack args; ECX input unmodified, EAX/EDX scratch",
+    "prototype": "unsigned int __fastcall sub_0045A920(unsigned char value);",
+    "dependencies": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "notes": [
+      "Complete37-byte zero-relocation section compared literally; no normalization or trimming.",
+      "Reverse eight36-byte entries, starting0057F008 and sentinel0057EEE8. Decrement cursor before stop test but compare old cursor, matching original.",
+      "Compare byte cursor+2 againstCL before byte cursor against5; short-circuit access order preserved.",
+      "Explicit goto scan/next inhibits historical compiler loop rotation under unchanged msvc71-o2 profile. Labels are source-control experiment, not recovered names.",
+      "Coordinator independently reviewed pinned boundary/caller and observed ABI, and freshly rebuilt the public C candidate with recorded compiler profile. Complete isolated zero-relocation COFF section compared without trimming or normalization; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 6
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0049A480",
+    "size": 118,
+    "name": "sub_0049A480",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x0049ABB4",
+        "type": "UNCONDITIONAL_CALL",
+        "reviewed_window": "0x0049ABAA-0x0049ABC3",
+        "provenance": "Pinned specimen ESI current object, DL loaded from stack byte before call; full EAX tested after call."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent binary review: contiguous0049A480-0049A4F5 with all branches/returns contained, int3 padding0049A4F6-0049A4FF; prior function ret0049A479 with padding before entry. Direct call and ABI reviewed.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0049A480.c",
+    "candidate_symbol": "_sub_0049A480",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Private ESI pointer and DL byte inputs; no stack args, ret; full EAX boolean result. ESI unchanged, EBX preserved. Ordinary separate C caller retaining pointer after call selects ESI/DL register contract; helper not counted.",
+    "prototype": "int sub_0049A480(unsigned char *p, unsigned char action)",
+    "dependencies": [],
+    "proposed_names": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Raw offsets/widths retained, table semantics unnamed. Returning materialized enabled on its zero path preserves original boolean instruction sequence.",
+      "Private ESI pointer and DL byte inputs; no stack args, ret; full EAX boolean result. ESI unchanged, EBX preserved. Ordinary separate C caller retaining pointer after call selects ESI/DL register contract; helper not counted.",
+      "Coordinator independently reviewed pinned boundary/caller and observed ABI, and freshly rebuilt the public C candidate with recorded compiler profile. Complete isolated zero-relocation COFF section compared without trimming or normalization; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 6
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0048D700",
+    "size": 75,
+    "name": "sub_0048D700",
+    "proposed_names": [],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004EECAC",
+        "type": "direct_call",
+        "provenance": "Pinned PE0x004EEC97..0x004EECB8: no arguments pushed/loaded; continuation tests DWORDglobal640880 and ignores EAX."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_0048D700.c",
+    "candidate_symbol": "_sub_0048D700",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "No arguments; EAX ECX EDX clobbered; plain RET; no return consumed by caller.",
+    "candidate_abi_compatible": true,
+    "prototype": "void sub_0048D700(void)",
+    "dependencies": [],
+    "match_expectation": "exact",
+    "provenance": "Independently authored pure C90; fresh pinned PE body and caller review; whole zero-relocation COFF comparison. MSVC context caller separately isolated and not counted. Coordinator independently reviewed entry, complete boundary and ABI.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "cfg": null,
+      "semantic": null
+    },
+    "notes": [
+      "75/75 literal complete zero-relocation COFF exact, independently authored C90 plus MSVC short-bitfield extension and #pragma pack2. Bitfield16 chooses induction base6CEF90; this compiler context is a hypothesis, not authenticated original field declaration. Four sequential WORD stores, two DWORD stores and trailing BYTE store retained; two iterations of20-byte record stride/8-byte associated stride. No original execution.",
+      "Coordinator independently reviewed pinned boundary/caller and observed ABI, and freshly rebuilt the public C candidate with recorded compiler profile. Complete isolated zero-relocation COFF section compared without trimming or normalization; no original differential execution."
+    ],
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 6
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004AB050",
+    "size": 72,
+    "name": "sub_004AB050",
+    "confidence": 0.98,
+    "references": [
+      {
+        "from": "0x00490737",
+        "type": "UNCONDITIONAL_CALL",
+        "reviewed_window": "0x00490730-0x00490743",
+        "provenance": "fresh pinned binary disassembly; EAX loaded from00512684, ECX from EDI, then TEST EAX,EAX"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004AB050.c",
+    "candidate_symbol": "_sub_004AB050",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "private first index EAX, second index ECX; DWORD boolean EAX; EBX preserved; plain RET",
+    "prototype": "unsigned int sub_004AB050(unsigned int first, unsigned int second) /* EAX/ECX */",
+    "match_expectation": "exact",
+    "proposed_names": [],
+    "dependencies": [],
+    "provenance": "Independent C reconstruction from fresh pinned-binary disassembly and callers; Ghidra bounds/references discovery only. Compiler-selected private register experiment uses separately isolated ordinary C caller, not recovered source.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "72 contiguous bytes004AB050-004AB097; RET004AB05F/004AB097; padding004AB043-4F and004AB098-9F; next entry004AB0A0.",
+      "Private EAX/ECX ABI selected from ordinary C context; context is not recovered original source. Globals semantics unknown. Initial variants1-12 had incorrect globalBYTE comparison9 and are superseded; actual binary compares1 after MOV EAX,1. No original differential execution.",
+      "Coordinator independently reviewed pinned boundary/caller and observed ABI, and freshly rebuilt the public C candidate with recorded compiler profile. Complete isolated zero-relocation COFF section compared without trimming or normalization; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 6
   }
 ]
