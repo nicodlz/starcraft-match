@@ -3852,7 +3852,7 @@
     "category": "game_leaf",
     "notes": [
       "Fresh final-source strict COFF 178/178 exact with zero relocations.",
-      "Unsigned minimum of valid ground and air weapon DWORD minimum ranges; sentinel 130 and one-level child fallback preserved.",
+      "Unsigned minimum of DWORD table values after excluding BYTE sentinel 130, with a one-level child fallback. The ground/air weapon interpretation is a community annotation, not an observed source identity or a range-validation claim.",
       "Inline selectors and compiler_context_00440520 are independently authored optimizer context, not separately reconstructed or counted.",
       "Strict portable Clang extraction at registered _sub_00440520 succeeds, 154 bytes with zero relocations; no portable match, portable ABI compatibility or original-process execution claimed."
     ],
@@ -6090,6 +6090,56 @@
     },
     "abi_construction": "MSVC 13.10.3077 whole-TU optimization of independent static noinline ordinary C, no assembly or register-binding shim.",
     "category": "game_routine"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00482E10",
+    "size": 530,
+    "name": "sub_00482E10",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00484234",
+        "type": "direct_call",
+        "provenance": "Pinned PE fresh caller pushes context EDI at 0x00484233, calls the entry and has no caller cleanup or result consumption; another DWORD push at 0x00484239 precedes next call"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Coordinator-reviewed complete pinned region, neighboring boundaries and independently corroborating original entry references; final public pure C candidate independently rebuilt with recorded compiler profile.",
+    "proposed_names": [
+      {
+        "name": "SAI_PathCreate_Sub3_2",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00482E10.c",
+    "candidate_symbol": "_sub_00482E10@4",
+    "candidate_abi_compatible": true,
+    "calling_convention": "stdcall: one DWORD context stack argument; RET 4; no return contract inferred; EAX/ECX/EDX scratch; EBX/ESI/EDI/EBP restored",
+    "prototype": "void __stdcall sub_00482E10(Context *context)",
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "notes": [
+      "Fresh final-source full 530 / 530 literal byte equality, entire isolated COFF section at _sub_00482E10@4 without relocations; final-match.json and compiler-identity.json record compilation provenance.",
+      "Reverse region traversal, threshold increment by 2, lowest-weight compatible edge neighbor, WORD tile replacement and weight/rectangle merge retain original widths, signed coordinate division and field order. Equal minima preserve first eligible edge.",
+      "No extra edge/coordinate/index/self-alias/overflow checks or pass cap. Nonconverging >=2500 active regions may repeat indefinitely; invalid accesses/signed shifts/overflow have no independent portable-C guarantee.",
+      "Same frozen source Clang fallback strict entire 846-byte section without relocations at same symbol, standard stdcall maintained, nonexact; portable.json.",
+      "The declared Region regions[1] tail and the decrement producing a pointer before the first region have no general standard-C guarantee even when the allocation supplies multiple regions and count is positive. Exactness is the observed output of the pinned compiler; portable language equivalence is not claimed. Self-neighbor edges are retained: the WORD weight is first doubled and then cleared when source and destination alias."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   },
   {
     "schema_version": 1,

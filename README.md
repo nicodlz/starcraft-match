@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![261 exact functions](https://img.shields.io/badge/verified-261%20exact%20functions-287d67)
+![262 exact functions](https://img.shields.io/badge/verified-262%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**261 whole functions match exactly, totaling 12,007 original bytes.** The independent
+**262 whole functions match exactly, totaling 12,537 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -67,8 +67,11 @@ The [eighth historical lot](docs/historical-eighth-2026-10-02.md) adds eight fun
 1,348 bytes, including path copying, neighbor classification, unit unlinking,
 image bounding boxes and ordered list hashing.
 
-The table lists the 34 earlier non-initializer functions; the 151 historical-toolchain
-additions and promotions are listed in the eight reports linked above. The 76 initializer entries, their
+The [ninth historical lot](docs/historical-ninth-2026-10-02.md) adds one
+530-byte region-merging routine with nested tile updates.
+
+The table lists the 34 earlier non-initializer functions; the 152 historical-toolchain
+additions and promotions are listed in the nine reports linked above. The 76 initializer entries, their
 destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
@@ -119,8 +122,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 261 matches are
-about **6.21% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 262 matches are
+about **6.24% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -170,7 +173,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 261 exact matches
+make proof                    # Recompile and require all 262 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
