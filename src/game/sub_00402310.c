@@ -1,20 +1,14 @@
-#include <stddef.h>
-
-typedef struct {
-    unsigned char reserved_000[0xDC];
-    volatile unsigned int field_0DC;
-} Sub00402310View;
-
-_Static_assert(offsetof(Sub00402310View, field_0DC) == 0xDC, "observed DWORD offset");
-_Static_assert(sizeof(unsigned int) == 4, "observed DWORD width");
-
-#if defined(__i386__)
-#define SC_EAX_ARG __attribute__((regparm(1)))
+#if defined(_MSC_VER)
+#define SC_LOCAL static __declspec(noinline)
 #else
-#define SC_EAX_ARG
+#define SC_LOCAL static __attribute__((noinline))
 #endif
+typedef char sc_dword_width[(sizeof(unsigned int) == 4) ? 1 : -1];
 
-/* Non-null EAX input; a single DWORD read, then a full EAX Boolean result. */
-SC_EAX_ARG int sub_00402310(const Sub00402310View *object) {
-    return (object->field_0DC & 0x3000u) != 0;
+/* Observed non-null EAX input, one DWORD read, full EAX Boolean result. */
+SC_LOCAL int sub_00402310(const unsigned char *object) {
+    unsigned int value = *(const volatile unsigned int *)(object + 0xDC);
+    return (value & 0x1000u) != 0 || (value & 0x2000u) != 0;
 }
+/* Independent compiler context only; not counted or claimed linked. */
+int sc_compile_context_00402310(const unsigned char *object) { return sub_00402310(object); }

@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![197 exact functions](https://img.shields.io/badge/verified-197%20exact%20functions-287d67)
+![212 exact functions](https://img.shields.io/badge/verified-212%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,7 +26,7 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**197 whole functions match exactly, totaling 5,768 original bytes.** The independent
+**212 whole functions match exactly, totaling 6,145 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -47,8 +47,12 @@ functions / 2,963 bytes, including list maintenance, searches, option updates,
 resource refunds and parser callbacks. Several private register contracts are
 selected by the historical compiler from ordinary C compilation contexts.
 
-The table lists the 34 earlier non-initializer functions; the 87 historical-toolchain
-additions are listed in the three reports linked above. The 76 initializer entries, their
+The [reviewed-mismatch lot](docs/historical-fourth-2026-10-02.md) promotes
+15 existing candidates / 377 bytes to exact, including the initial unit predicate.
+Four reviewed source candidates remain non-exact.
+
+The table lists the 34 earlier non-initializer functions; the 102 historical-toolchain
+additions and promotions are listed in the four reports linked above. The 76 initializer entries, their
 destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
@@ -92,16 +96,15 @@ Names are community annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Nineteen reviewed functions remain unmatched, including the initial unit-state predicate
-[`0x004020B0`](docs/functions/004020B0.md) (50 / 48 bytes),
-[`0x004C50D0`](docs/functions/004C50D0.md) (11 / 16 bytes), and seventeen candidates
-from the [20-worker batch](docs/batch-2026-10-02.md). Their complete regions and
-measured compiler/ABI differences are documented in the catalog and function notes.
+Four reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+[`0x00432180`](docs/functions/00432180.md), [`0x00446D40`](docs/functions/00446D40.md)
+and [`0x0047B210`](docs/functions/0047B210.md). Their complete regions and measured
+compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 197 matches are
-about **4.69% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 212 matches are
+about **5.05% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -151,7 +154,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 197 exact matches
+make proof                    # Recompile and require all 212 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```

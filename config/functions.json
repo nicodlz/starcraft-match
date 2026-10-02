@@ -56,29 +56,29 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Fresh pinned PE inspection: preceding function RET at 0x004011E8 and INT3 to 0x004011EF; direct call targets 0x004011F0; complete predicate has RET at 0x00401202 and 0x00401208; INT3 begins 0x00401209. Independently authored C.",
-    "match_expectation": "exploratory",
+    "provenance": "Fresh pinned PE full region/neighbors and direct caller audit; independently authored pure C90 static leaf; strict full zero-relocation COFF equality, final private source build. Coordinator review/public-path rebuild pending.",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_004011F0.c",
     "candidate_symbol": "_sub_004011F0",
-    "compiler_profile": "clang-i686-scaffold",
-    "calling_convention": "custom EAX object pointer; full EAX result 0 or 1; plain RET",
-    "prototype": "unsigned int sub_004011F0(const struct Sub004011F0View *object /* EAX */)",
-    "candidate_abi_compatible": false,
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Custom EAX object pointer selected for static noinline leaf by genuine MSVC whole-TU optimization; full EAX result 0 or 1; only EAX/flags change; plain RET.",
+    "prototype": "static unsigned int sub_004011F0(const struct Sub004011F0View *object /* EAX */)",
+    "candidate_abi_compatible": true,
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "Only reads WORD at object+0x64. Returns 1 iff equal to 3 or 17; otherwise 0. No null guard.",
-      "One direct caller independently audited. Candidate regparm(1) represents EAX input and EAX result; original changes only EAX, candidate also changes CL. Audited caller overwrites ECX before further use; no indirect caller preservation contract established.",
-      "Whole-region comparison: original 25 bytes, candidate 24 bytes under both recorded profiles. Candidate zero extends the WORD load and replaces branches with SETE/OR. No relocations. No exact claim or original differential execution.",
-      "Coordinator review: candidate additionally clobbers registers preserved by original; compatibility is not established despite inspected caller discarding those values.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 24 candidate bytes; literal equality false. No original differential execution."
+      "Reads one WORD at object+0x64; returns full DWORD 1 iff value is 3 or 17. No null guard.",
+      "Static symbol _sub_004011F0 has observed EAX argument, verified by both exact complete leaf and emitted independent ordinary C context loading stack pointer argument into EAX then tail-jumping. Context is nonmatching/noncounted and separately relocated.",
+      "Fresh final private source compilation: 25 original / 25 compiled bytes, literal exact. MSVC13.10.3077 /O2 /Oy /Gy /Zl /G6. No ignored options or relocation bypass.",
+      "Portable C90 Clang/GCC native tests exhaust all 65536 WORD values; Clang Windows i686 source compilation passed. These are source-only checks; original differential execution not performed.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -99,33 +99,40 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Fresh pinned PE extraction: entry independently corroborated by direct call 0x004C877F; returns 0x00401445 and 0x00401448; padding begins 0x00401449.",
-    "match_expectation": "exploratory",
+    "provenance": "Fresh full pinned body, neighboring returns/padding, direct caller and pinned BWAPI map independently reviewed. Static noinline pure C90 leaf plus independently authored ordinary C compiler context.",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00401430.c",
     "candidate_symbol": "_sub_00401430",
-    "compiler_profile": "clang-i686-scaffold",
-    "candidate_abi_compatible": false,
-    "calling_convention": "custom: pointer input EAX; full DWORD 0/1 result EAX; other general-purpose registers untouched; plain ret",
-    "prototype": "unsigned int sub_00401430(const Sub00401430View *object /* EAX */)",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "calling_convention": "custom EAX pointer input; full EAX 0/1 result; ECX/EDX/EBX/ESI/EDI/EBP/ESP preserved; flags clobbered; plain RET; no stack arguments",
+    "prototype": "static unsigned int sub_00401430(const unsigned char *object /* EAX */)",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
-    "proposed_names": [],
+    "proposed_names": [
+      {
+        "name": "unitIsTrap",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
     },
     "notes": [
-      "Original 25 bytes versus candidate 20 bytes under both existing profiles; Clang folds two branches into range arithmetic and SETB.",
-      "Candidate additionally clobbers ECX, whereas original preserves it; full ABI equivalence is not established.",
-      "Single unsigned 16-bit read; inclusive interval 0xCB through 0xD5; no null check.",
-      "Private proposed record; coordinator must independently review and recompile before catalog integration.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 20 candidate bytes; literal equality false. No original differential execution."
+      "Complete 25-byte zero-relocation section equals pinned region under MSVC /O2 /Oy /Gy /Zl /G6.",
+      "Static noinline ordinary C context induces EAX private ABI without assembly or shim; context helper has distinct section and its ordinary relocation, not counted/reconstructed.",
+      "Single unsigned WORD load at pointer+0x64; inclusive interval 0xCB..0xD5; no null check.",
+      "Portable Clang scaffold retains _sub_00401430 in an isolated zero-relocation section but is source-only and not ABI/exact evidence.",
+      "No original process execution or similarity metrics claimed.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ]
   },
   {
@@ -148,33 +155,39 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Reviewed pinned PE 0x00401450\u20130x00401468, returns 0x00401462/0x00401468; adjacent padding reviewed and entry independently corroborated by two direct callers.",
-    "match_expectation": "exploratory",
+    "provenance": "Fresh pinned PE complete body, neighbors, two direct caller windows, pinned map entry/size and complete isolated VC7.1 callee ABI reviewed. Pure C static leaf and ordinary context compiler-selected EAX; strict final private candidate recompilation exact.",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00401450.c",
     "candidate_symbol": "_sub_00401450",
-    "compiler_profile": "clang-i686-scaffold",
-    "candidate_abi_compatible": false,
-    "calling_convention": "custom: EAX pointer; EAX 0/1; plain ret; original preserves all other general registers",
-    "prototype": "int sub_00401450(const Sub00401450View *object /* EAX */)",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "calling_convention": "custom compiler-selected EAX pointer input; EAX full 0/1; plain ret; all other general registers preserved; flags modified",
+    "prototype": "static unsigned int sub_00401450(const View *object /* compiler-selected EAX */)",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "Original single WORD read at +0x64 tests equality with 0x49 or 0x55. No null check.",
-      "Both Clang profiles produce 24 relocation-free bytes against original 25; candidate clobbers ECX while original preserves it. Full ABI compatibility is not established.",
-      "Four additional source forms did not match. Coordinator independent rebuild required.",
-      "Local candidate layout: local Sub00401450View: unsigned short at +0x64",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 24 candidate bytes; literal equality false. No original differential execution."
+      "WORD read at pointer+64; equality to 0x49 or 0x55; no null check or stores.",
+      "Static noinline pure C leaf plus ordinary C context selects observed EAX ABI in VC7.1. Context has its own COFF section and relocation; it is neither reconstructed nor counted. Strict leaf extraction rejects unresolved relocations and includes complete section.",
+      "MSVC O2 and O2-frame produce25 exact bytes; O1 produces23 unequal. Clang Windows i386 and host C90 compilation both succeed; portable compilation is not byte equality or original differential execution.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "proposed_names": [
+      {
+        "name": "unitIsHangerUnit",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ]
   },
   {
     "schema_version": 1,
@@ -217,32 +230,33 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Reviewed complete leaf at 0x00401470 through final ret at 0x00401488; padding starts 0x00401489. Independent direct callers corroborate entry and register ABI. Independently authored C.",
+    "provenance": "Fresh pinned-PE full body, adjacent entries and INT3 padding; six independent direct caller windows freshly reviewed. Independently authored C90 static leaf and noncounted compiler context.",
     "calling_convention": "custom: EAX pointer; full EAX result 0 or 1; plain ret; all other general-purpose registers preserved",
-    "prototype": "int sub_00401470(const Sub00401470View *object /* EAX */)",
+    "prototype": "static int sub_00401470(const Sub00401470View *object /* emitted EAX */)",
     "candidate_source": "src/game/sub_00401470.c",
     "candidate_symbol": "_sub_00401470",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
     },
     "notes": [
-      "Observed WORD read at offset 0x64; comparisons to 0x48 and 0x52. No null check or stores.",
-      "regparm(1) models EAX input; no_caller_saved_registers prevents ECX clobber introduced by Clang boolean materialization.",
-      "Fresh comparison: original 25 bytes, compiled 26 bytes, no relocations, not exact. Both existing profiles yield 26 bytes. No original-process execution.",
-      "Local candidate layout: candidate-local opaque view with WORD field at 0x64",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 26 candidate bytes; literal equality false. No original differential execution."
+      "Observed WORD read +0x64, comparisons 0x48 and 0x52, no null check, stores or calls.",
+      "Fresh final private source rebuild gives exact 25/25-byte entire zero-relocation COFF section; _sub_00401470 static symbol; all other GPRs preserved.",
+      "MSVC71 whole-TU optimization selects custom EAX input for static noinline leaf from ordinary C context; helper is a compiler hypothesis, not reconstructed or counted. Helper relocation remains in its separate section; strict isolated leaf extraction contains none.",
+      "Eight measured source variants, two exact; final private source separately rebuilt after adding layout checks and comments.",
+      "Portable C90 compilation passed cc and clang with -Wall -Wextra -Werror. No original-process execution or differential behavior tests.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ]
   },
   {
@@ -250,7 +264,13 @@
     "address": "0x00401490",
     "size": 25,
     "name": "sub_00401490",
-    "proposed_names": [],
+    "proposed_names": [
+      {
+        "name": "unitIsReaver",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.99
+      }
+    ],
     "confidence": 0.98,
     "references": [
       {
@@ -291,30 +311,30 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "compiling",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Fresh pinned-PE full 25-byte leaf reviewed; returns 0x004014A2/0x004014A8, padding begins 0x004014A9. Seven direct calls independently corroborate entry. Independently authored C; no machine byte insertion or assembly.",
-    "calling_convention": "custom: pointer EAX; full Boolean EAX; plain ret; original preserves ECX and EDX",
-    "prototype": "unsigned int sub_00401490(const Sub00401490View *value /* EAX */)",
+    "provenance": "Fresh complete25-byte body/returns/neighbors, seven aligned direct callers and pinned map entry corroborate boundary. Independently authored C90 static noinline leaf and explicitly noncounted ordinary C caller produce whole zero-relocation COMDAT equality.",
+    "calling_convention": "Compiler-selected custom static leaf: pointer EAX, full Boolean EAX; plain ret; only EAX and flags clobbered; ECX/EDX and all other registers preserved",
+    "prototype": "static unsigned int sub_00401490(const Sub00401490View *value /* compiler-selected EAX */)",
     "candidate_source": "src/game/sub_00401490.c",
     "candidate_symbol": "_sub_00401490",
-    "candidate_abi_compatible": false,
-    "compiler_profile": "clang-i686-scaffold",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "notes": [
-      "Strict whole-section comparison: original 25 bytes, candidate 17 bytes, no relocations. -O2 and -Oz yield the same mismatch.",
-      "Compiler merges equalities into masked comparison and sete and clobbers ECX. Original preserves ECX; all callers have not been audited for tolerance.",
-      "WORD +0x64 equals 0x53 or 0x51; one read, no writes or null check. No gameplay name asserted.",
-      "No original-process execution or differential semantics testing. Coordinator review and rebuild required.",
-      "Local candidate layout: Sub00401490View local to candidate: WORD +0x64",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 25 original / 17 candidate bytes; literal equality false. No original differential execution."
+      "WORD +0x64 single read returns DWORD Boolean for0x53 or0x51. No writes or null check.",
+      "Static noinline callee takes EAX under recorded MSVC whole-TU context. Context caller is hypothetical, not reconstructed, not matched or counted; its separate relocation does not contaminate strict callee extraction.",
+      "Fresh VC7.1 /O2 /Oy /Gy /Zl /G6 compilation yields full25-byte equality; no asm, bytes, normalization or trimming.",
+      "GCC and Clang strict C90 portable tests pass all65536 WORD values and offset64; these are candidate-only native tests, not original differential execution.",
+      "Pinned public map names entry unitIsReaver; separate community evidence, neutral source name retained.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -336,7 +356,7 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Fresh pinned PE inspection: returns 0x004014F4 and 0x004014F7; following padding starts 0x004014F8. Direct call at 0x0045E1FD independently corroborates entry. Independently authored C.",
@@ -345,32 +365,34 @@
     "candidate_source": "src/game/sub_004014E0.c",
     "candidate_symbol": "_sub_004014E0",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
     },
     "notes": [
-      "Original and candidate both 24 bytes; 23 literal bytes equal. Alternate XOR EAX,EAX opcode at 0x004014F5 differs (original 33, compiled 31); textual diff empty, literal comparison false.",
-      "Reads WORD +0x64, then BYTE at 0x00664080 plus four-byte-stride index. Bit 0x08 permits DWORD pointer read +0xC0; no checks.",
-      "Both recorded clang-i686-scaffold and clang-i686-size profiles measured; no original differential execution. Caller uses returned pointer fields +0xD0/+0xD2. Branch likelihood hint only controls code layout.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 24 candidate bytes; literal equality false. No original differential execution."
+      "Fresh full native MSVC C-derived 24/24 exact, isolated _sub_004014E0 section with no relocations.",
+      "Static noinline leaf has actual EAX pointer input, full EAX pointer return, ECX clobber, no stack argument or adjustment, two plain returns.",
+      "Ordinary shape_call_004014E0 is nonmatching and noncounted compiler context. It loads EAX from its cdecl argument and tail-jumps to leaf; its separate section relocation is not part of extracted leaf.",
+      "Clang branch explicitly exposes regparm(1) leaf to retain EAX input; whole isolated portable callee compiles without relocation (25 bytes), but clobbers EDX and is not byte-exact. Native ABI is the only matching claim.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "worker_measurement": {
       "original_size": 24,
       "recompiled_size": 24,
-      "equal_byte_count": 23,
-      "source_sha256": "a7d2e548a75ce18caa1df30dc7f0c04c0113aca818310c27832af0b614cf51c2",
+      "equal_byte_count": 24,
+      "source_sha256": "6bff0d57c408d2dafe477a6aa76d66fc447fde584cf04f19f32339ebb87a344d",
       "profiles_measured": [
-        "clang-i686-scaffold",
-        "clang-i686-size"
-      ]
+        "msvc71-o2",
+        "clang-i686-scaffold"
+      ],
+      "measured_variants": 3
     }
   },
   {
@@ -378,7 +400,13 @@
     "address": "0x00401D40",
     "size": 27,
     "name": "sub_00401D40",
-    "proposed_names": [],
+    "proposed_names": [
+      {
+        "name": "unitIsSubunit",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
     "confidence": 0.98,
     "references": [
       {
@@ -399,31 +427,36 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Fresh pinned PE review: body [0x00401D40,0x00401D5B), returns at 0x00401D57 and 0x00401D5A; preceding return 0x00401D3C and excluded CC padding. Three direct callers corroborate EAX pointer argument and full EAX result. Independently authored pure C.",
-    "match_expectation": "exploratory",
+    "provenance": "Fresh pinned PE full body [0x00401D40, 0x00401D5B), returns at 0x00401D57/0x00401D5A. Preceding return/padding and following CC padding through 0x00401D5F reviewed. Pinned public map entry/27-byte size and three independently inspected direct caller windows corroborate entry and EAX ABI. Final private pure C static callee strictly matches all 27 bytes.",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00401D40.c",
     "candidate_symbol": "_sub_00401D40",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
-    "calling_convention": "custom: pointer in EAX, DWORD boolean result EAX, plain ret, EAX and flags modified",
-    "prototype": "unsigned int sub_00401D40(const Sub00401D40View *object /* EAX */)",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "MSVC static custom ABI: EAX pointer input; full EAX 0/1 result, plain ret; EAX and flags modified, other general registers preserved",
+    "prototype": "static unsigned int sub_00401D40(const Sub00401D40View *object /* emitted EAX input */)",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "Null pointer returns 0; unsigned WORD index at +0x64; BYTE test at 0x00664080 + index * 4 using mask 0x10; no index bounds check.",
-      "Both existing profiles compile 26 bytes versus 27 original bytes. Byte equality false: Clang load/shift/mask replaces original test/branch/constant-one return. No original differential execution.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 26 candidate bytes; literal equality false. No original differential execution."
+      "Null pointer returns zero. Otherwise read unsigned WORD index at +0x64 and test BYTE bit 0x10 at 0x00664080 + index * 4; no bounds check.",
+      "Pure C static noinline plus independently authored ordinary C caller context induces internal EAX ABI under MSVC 13.10.3077 /O2 /Oy /Gy /Zl /G6. Helper section and its relocation are neither reconstructed nor counted; the complete callee section has zero relocations.",
+      "Combined pointer-and-property condition yields a shared zero return and exact 27-byte body; two sequential early-return conditions instead compile 24 bytes. Both byte and DWORD source experiments with combined condition matched; final source uses explicit BYTE width.",
+      "Final private source rebuilt and compared fresh; Clang i686 and native GCC C90 compilation pass without diagnostics. These source-only checks are not original differential execution.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "compiler_context_symbols": [
+      "source_context_00401D40"
+    ]
   },
   {
     "schema_version": 1,
@@ -435,36 +468,56 @@
         "name": "unit_is_frozen",
         "source": "GPTP CUnit::isFrozen",
         "confidence": 0.9
+      },
+      {
+        "name": "unitIsFrozen",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
       }
     ],
-    "confidence": 0.95,
-    "references": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00463592",
+        "type": "direct_call",
+        "provenance": "Fresh caller moves ESI to EAX before call; negates full EAX result afterward"
+      },
+      {
+        "address": "0x00457440",
+        "type": "direct_call",
+        "provenance": "Fresh caller carries global-derived pointer in EAX and tests full EAX result"
+      }
+    ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
-    "provenance": "Manually inspected pinned PE: two returns at 0x004020DB/0x004020E1, padding begins 0x004020E2. Community entry corroborates start. Incoming references not yet audited.",
+    "status": "exact_match",
+    "provenance": "Fresh pinned PE complete body/returns/padding review; pinned BWAPI map entry/size plus fresh direct callers corroborate actual EAX input/full result ABI. Independently authored static C matching leaf with noncounted hypothetical caller.",
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "boundary_verified": true,
-    "calling_convention": "custom: unit in EAX; result EAX 0 or 1",
+    "calling_convention": "Compiler-selected custom: unit pointer EAX; full EAX result0/1; ECX and flags changed, all other GPRs preserved; plain ret",
     "prototype": "int sub_004020B0(const UnitView *unit /* EAX */)",
     "candidate_source": "src/units/sub_004020B0.c",
     "candidate_symbol": "_sub_004020B0",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "known_structures": [
       "include/reverse/unit_view.h"
     ],
     "known_calls": [],
     "dependencies": [],
     "notes": [
-      "EAX input via i386 regparm(1); return int EAX. No null check in original. Caller audit and original differential testing remain pending."
+      "MSVC branch has private static noinline matching leaf and ordinary independently authored context caller; emitted EAX ABI audited, helper excluded from match count.",
+      "Non-MSVC branch retains existing exported sub_004020B0 and i386 regparm/native calling convention for existing tests.",
+      "Full strict isolated callee COFF match with zero relocations. No assembly, bytes, patches, normalization or trimming; no original-process or differential execution.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": null,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "match_expectation": "exact"
   },
   {
     "schema_version": 1,
@@ -482,29 +535,29 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "compiling",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Fresh pinned PE inspection: entry at 0x00402310 independently corroborated by direct call 0x0043F6B4; returns at 0x0040231D and 0x00402323; excluded INT3 padding begins 0x00402324, next routine starts 0x00402330.",
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00402310.c",
     "candidate_symbol": "_sub_00402310",
     "candidate_abi_compatible": true,
-    "calling_convention": "custom: object pointer in EAX; full EAX Boolean result; ECX clobbered; plain RET, no stack arguments",
-    "prototype": "int sub_00402310(const Sub00402310View *object /* EAX */)",
-    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "custom: non-null object pointer in EAX; full EAX Boolean result; ECX/flags clobbered, EDX and all callee-saved registers preserved; plain RET, no stack arguments",
+    "prototype": "int sub_00402310(const unsigned char *object /* EAX */)",
+    "compiler_profile": "msvc71-o2",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "Reads one DWORD at object+0xDC, no null check. Returns 1 iff mask 0x3000 is nonzero, otherwise 0. Field semantics remain unknown.",
-      "Both existing compiler profiles measured 18 compiled bytes versus 20 original bytes. Original loads ECX then tests CH with branched full-EAX results; Clang emits a DWORD memory test and setne. Strict COFF extraction accepted no relocations.",
-      "Two compiler profile variants tested. No source-level or original differential execution performed. Coordinator must independently rebuild.",
-      "Local candidate layout: Sub00402310View: independently declared DWORD at offset 0xDC",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 20 original / 18 candidate bytes; literal equality false. No original differential execution."
+      "Independent C reads one volatile DWORD at object+0xDC, evaluates mask0x1000 or mask0x2000 from the saved value, returns full EAX0/1. No null checks, extra reads or assumptions about field semantics.",
+      "MSVC static noinline plus independently authored ordinary C caller induces private EAX input; emitted context loads EAX from stack+4 then tail-jumps to candidate. Helper not matched or counted and no full-program linking claimed.",
+      "Portable plain static noinline branch compiles and strict extraction of same _sub_00402310 symbol passes;16bytes, source-only, no original ABI/exact claim.",
+      "Fifteen variants measured. Branchless forms18bytes, logical OR of two predicates emitted original TEST CH and two RETs. No asm, embedded bytes, normalization, trimming, patching or original execution.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -515,7 +568,7 @@
     "address": "0x00402A70",
     "size": 24,
     "name": "sub_00402A70",
-    "confidence": 0.98,
+    "confidence": 0.99,
     "references": [
       {
         "address": "0x0046F1EA",
@@ -525,34 +578,44 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Fresh pinned PE inspection: entry direct-call corroborated; complete contiguous body ending with returns at 0x00402A84 and 0x00402A87; INT3 padding starts 0x00402A88. Independent C reconstruction.",
-    "match_expectation": "exploratory",
+    "provenance": "Fresh pinned PE full24-byte body/two returns/neighboring padding inspected. Pinned BWAPI map independently corroborates entry and size. Fresh direct caller prepares EAX at0x0046F1E8, calls0x0046F1EA and consumes fullEAX immediately afterward. Historical C-only reconstruction reproduces exact register preservation.",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00402A70.c",
     "candidate_symbol": "_sub_00402A70",
-    "candidate_abi_compatible": false,
-    "compiler_profile": "clang-i686-scaffold",
-    "calling_convention": "Custom EAX pointer input; EAX 0/1 result; plain ret, no stack arguments. Original body modifies only EAX and flags.",
-    "prototype": "unsigned int sub_00402A70(const struct Sub00402A70View *object /* EAX */)",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Custom MSVC optimized static callee: EAX pointer input; full EAX0/1 result; changes only EAX and flags, all other general registers preserved; plainRET, no stack arguments.",
+    "prototype": "static unsigned int sub_00402A70(const struct Sub00402A70View *object /* EAX */)",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
-    "proposed_names": [],
+    "proposed_names": [
+      {
+        "name": "isUnitBurrowed",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
     "notes": [
-      "Candidate uses regparm(1) for EAX input and a volatile unsigned DWORD access to retain the observed access width.",
-      "Original tests bit 0x800 set and bit 0x10 clear in the loaded DWORD at object +0xDC. Pointer must be valid; no null check.",
-      "Whole-region comparison: 24 original bytes versus 22 compiled bytes, not exact; candidate additionally uses ECX and EDX, so full register equivalence is not claimed. Inspected caller does not rely on their post-call contents, but other caller contracts are not proven.",
-      "Eight bounded source/profile experiments; no exact result. No original-process or differential execution performed.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 22 candidate bytes; literal equality false. No original differential execution."
+      "Exactly one DWORD read at object+0xDC; result1 iff bit0x800set and bit0x10clear; no null check or write.",
+      "Whole isolated static callee24bytes equals pinned whole24-byte region with zero relocations; ECX/EDX and other nonresult registers genuinely preserved.",
+      "Compilation context sc_probe_00402A70 has its own section and relocation, is independently authored, not matched/reconstructed/counted.",
+      "Final private source recompiled with historical profile and complete component identity retained. Portable Clang leaf23bytes at same symbol compiles and extracts; source-only evidence, no portable byte/ABI equality claim.",
+      "No original-process execution or differential test; unsupported similarity/semantic/CFG metrics remain null.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "candidate_linkage": "static",
+    "abi_construction": "MSVC13.10.3077 whole-TU optimization of static noinline independent C leaf referenced by ordinary C compilation-context caller; no assembly or ABI shim.",
+    "category": "game_routine"
   },
   {
     "schema_version": 1,
@@ -2479,7 +2542,7 @@
     "address": "0x00432430",
     "size": 27,
     "name": "sub_00432430",
-    "confidence": 0.95,
+    "confidence": 0.99,
     "references": [
       {
         "address": "0x004684F5",
@@ -2489,31 +2552,34 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Reviewed entry, full body, return at 0x0043244A, adjacent padding and independent direct caller in pinned PE.",
     "candidate_source": "src/game/sub_00432430.c",
-    "candidate_symbol": "___regcall3__sub_00432430",
-    "compiler_profile": "clang-i686-scaffold",
-    "calling_convention": "custom EAX object pointer; ECX index; plain ret; EAX loaded pointer and EDX zero on return, ignored by inspected caller",
-    "prototype": "void sub_00432430(unsigned char *object /* EAX */, unsigned int index /* ECX */)",
-    "candidate_abi_compatible": false,
+    "candidate_symbol": "_sub_00432430",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "MSVC inferred static custom ABI: EAX object pointer, ECX unsigned index; plain ret; EAX loaded state pointer, full EDX zero every path; ECX/EBX/ESI/EDI/EBP preserved; flags modified",
+    "prototype": "static void sub_00432430(unsigned char *object /* EAX */, unsigned int index /* ECX */)",
+    "candidate_abi_compatible": true,
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
     },
     "notes": [
-      "O2 isolated relocation-free COFF 30 bytes versus original 27; pointer-test and immediate-zero-store lowering mismatch.",
-      "regcall represents EAX/ECX inputs, but does not promise the original incidental EDX-zero output; other callers/register liveness not audited.",
-      "Oz produced 27 bytes but a DWORD read-modify-write instead of write-only store; profile not selected.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 30 candidate bytes; literal equality false. No original differential execution."
+      "Final private C source freshly rebuilt with MSVC 13.10.3077 /O2 /Oy /Gy /Zl /G6: complete isolated section 27/27 bytes exact, zero relocations.",
+      "Static noinline leaf plus ordinary independently authored C helper selects EAX/ECX inputs organically; emitted helper loads ECX from stack+8 and EAX from stack+4 before tail-jumping to leaf. Helper section has a callee relocation, is separate, not counted or claimed reconstructed.",
+      "Object DWORD pointer +0x134 is loaded into EAX. Full EDX zero is set before either exit branch. If state nonnull and BYTE +8 equals3, write zero BYTE +9+index then zero DWORD +0x18+index*4. No index bound or null object guard.",
+      "Entry432430 corroborated by direct call4684F5; complete body return43244A; padding43244B..43244F excluded; preceding return43242B plus padding43242C..43242F; next entry432450.",
+      "Caller4684EC supplies ECX as zero-extended object BYTE +0xA4, EAX object pointer; afterwards EDX and EAX results overwritten without consumption. No independent BWAPI map entry found; no proposed semantic name.",
+      "Portable Clang C90 Windows-i386 and native source compilations pass; their inferred ABI is not claimed equivalent or exact. No original-process execution; coordinator must independently rebuild before public promotion.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ]
   },
   {
@@ -5126,26 +5192,25 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Reviewed full 24-byte pinned PE body; single ret 0x00494BE7, neighboring padding, and two direct callers corroborate entry and EAX/ECX inputs.",
-    "calling_convention": "Custom: unsigned inputs EAX/ECX, complete unsigned result EAX; ECX clobbered, EDX preserved; plain ret",
-    "prototype": "unsigned int sub_00494BD0(unsigned int first /* EAX */, unsigned int second /* ECX */)",
+    "provenance": "Fresh pinned PE full24-byte body with precedingret0x00494BCA/padding and return0x00494BE7, followingpadding0x00494BE8..EF. Directcalls0x004D802D/0x004D8079 freshly reviewed and establish exactentry plus EAX/ECX inputs/fullEAX result and carriedDX preservation. Pinned BWAPI map has no entry for this address; no community name claimed.",
+    "calling_convention": "MSVC-selected internal custom ABI: unsigned first EAX and unsigned second ECX; full unsigned result EAX; ECX clobbered on folded path; EDX and all other general registers preserved; plain ret",
+    "prototype": "static unsigned int sub_00494BD0(unsigned int first /* EAX */, unsigned int second /* ECX */)",
     "candidate_source": "src/game/sub_00494BD0.c",
-    "candidate_symbol": "___regcall3__sub_00494BD0",
+    "candidate_symbol": "_sub_00494BD0",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "notes": [
-      "Fresh strict whole-region comparison: original 24 bytes, compiled 22, no relocations, not exact. Both existing profiles produce movzx/cmov; original and/branch. Candidate and original preserve caller-carried DX. No original-process execution.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 24 original / 22 candidate bytes; literal equality false. No original differential execution."
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -5815,32 +5880,39 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Fresh pinned PE inspection: previous ret 0x004A8B89; entry 0x004A8B90 independently targeted by two calls; ret 0x004A8B96/0x004A8BA1; padding starts 0x004A8BA2. Independently written C.",
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_004A8B90.c",
     "candidate_symbol": "_sub_004A8B90",
-    "calling_convention": "custom: unsigned byte AL input, zero-extended DWORD EAX result, plain ret; original preserves ECX",
-    "prototype": "unsigned int __attribute__((regparm(1))) sub_004A8B90(unsigned char index)",
-    "candidate_abi_compatible": false,
-    "compiler_profile": "clang-i686-scaffold",
+    "calling_convention": "compiler-selected static leaf: unsigned byte AL input with upper EAX unspecified; full zero-extended EAX result; plain RET; only EAX and flags modified, ECX preserved",
+    "prototype": "static unsigned int sub_004A8B90(unsigned char index /* emitted AL */)",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "Reads one byte at 0x0059BDA8 + index only when index < 8.",
-      "19-byte candidate versus 18-byte original. Candidate clobbers ECX, original does not; ECX dead across both inspected calls. Full register contract equality not claimed.",
-      "Ten compiler/source trials across scaffold and size profiles; no exact match. No original differential execution.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 18 original / 19 candidate bytes; literal equality false. No original differential execution."
+      "Final private static noinline C leaf with independent ordinary C context matches full 18-byte original and preserves ECX.",
+      "Only the leaf is extracted/countable; context section has its own call relocation and is not reconstructed or counted.",
+      "Actual AL input accepts unspecified upper EAX bits; 32-bit result confirmed by original callees and callers.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "proposed_names": [
+      {
+        "name": "getPlayerForce",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ]
   },
   {
     "schema_version": 1,
@@ -6514,16 +6586,16 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
-    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; community map corroborates entry and full size.",
+    "status": "exact_match",
+    "provenance": "Fresh pinned PE review: previous callback returns0x004C50CF immediately before entry; full11-byte body returns0x004C50DA; padding0x004C50DB..0x004C50DF; BWAPI entry/size corroborate. Slot54 at0x005128D8 contains entry; dispatcher0x00489196 invokes table slot after excludingzero action index and tests EAX. Pure C freshly compiled with MSVC13.10.3077, strict entire section equality.",
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "boundary_verified": true,
-    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "calling_convention": "No consumed arguments; EAX DWORD1 result; plain ret; other registers and flags preserved",
     "prototype": "unsigned int sub_004C50D0(void)",
     "candidate_source": "src/game/sub_004C50D0.c",
     "candidate_symbol": "_sub_004C50D0",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
@@ -6533,12 +6605,13 @@
         "width_bits": 32
       }
     ],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "notes": [
-      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation."
+      "One pure-C variant needed with MSVC71-O2. No static helper/context required; source directly represents no-argument ABI. DWORD1 store and full EAX1 result preserve original flags/register behavior.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -7143,29 +7216,30 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Fresh pinned PE review: preceding ret 0x004DBBD4 and padding through 0x004DBBDF; direct caller 0x004EE141 corroborates start; sole ret 0x004DBBFA, padding starts 0x004DBBFB.",
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_004DBBE0.c",
     "candidate_symbol": "_sub_004DBBE0",
     "candidate_abi_compatible": true,
     "calling_convention": "cdecl, no arguments, plain ret; EAX and CL scratch; caller ignores incidental EAX result",
     "prototype": "void sub_004DBBE0(void)",
-    "compiler_profile": "clang-i686-size",
+    "compiler_profile": "msvc71-o2",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "proposed_names": [],
     "notes": [
-      "27 original / 27 compiled bytes; single instruction differs: original sub eax,36 versus candidate add eax,-36. Whole function comparison, no trimming or normalization.",
-      "Byte accesses at eight descending addresses 0x0057EFE4 through 0x0057EEE8, stride 36; conditional replacement 5 -> 6. No semantic label asserted.",
-      "No original differential execution.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 27 candidate bytes; literal equality false. No original differential execution."
+      "Fresh complete zero-relocation COFF section: 27 original / 27 candidate bytes, exact true with msvc71-o2. No trimming or normalization.",
+      "Unsigned 32-bit address arithmetic and volatile BYTE accesses preserve load, decrement, conditional store order. Eight descending addresses 0x0057EFE4..0x0057EEE8 with stride36.",
+      "Ordinary external no-argument cdecl C function; EAX/CL scratch, plain ret, no callee-saved registers changed. Original direct caller 0x004EE141 overwrites EAX/CL and consumes no return.",
+      "Two measured source variants; final source recompiled freshly. Portable clang scaffold also compiles source, but is 145 bytes and is not matching or historical ABI proof.",
+      "Coordinator independently reviewed boundaries, entry and caller/dispatcher evidence, memory widths/order and emitted ABI. Final public source independently recompiled with recorded MSVC profile; complete isolated section exact with zero relocations. Context helpers not matched/countable. Portable compilation is source-only; no original differential execution."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null

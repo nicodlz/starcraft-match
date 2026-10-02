@@ -18,7 +18,7 @@ third-party libraries may have different compiler histories.
 | Microsoft linker 7.10 | Local PE optional header major/minor linker version 7/10 | High for header observation; metadata alone can be altered |
 | Original optimization switches | Presentation reports approximate switches but does not disclose them; tiny region uses compact loads/tests and shared return paths | Unknown; do not infer `/O2` globally from one leaf |
 | 32-bit x86 Windows | PE32 optional header and machine 0x014C | Verified |
-| Custom register argument ABI at `0x004020B0` | Original first dereference uses EAX, both returns set EAX to 0/1, plain `ret`; no stack argument read | High for this region; incoming caller audit pending |
+| Custom register argument ABI at `0x004020B0` | Original first dereference uses EAX, both returns set EAX to 0/1, plain `ret`; no stack argument read | High for this region; direct callers and emitted C-selected EAX ABI reviewed |
 | Runtime selection | Imports are KERNEL32, USER32, GDI32, ADVAPI32, IMM32, VERSION, SHELL32 and storm; no MSVCRT/MSVCP import | Verified absence in import table; static CRT possible, exact CRT and `/MT` vs alternatives unverified |
 | Preferred image / relocations | Image base 0x00400000, relocations stripped and relocation directory absent | Verified in this specimen |
 | Debug linkage | CodeView RSDS record refers to a 1.16.1 build and `BroodWar.pdb`; no PDB supplied | Verified metadata; not usable debugging symbols |
@@ -151,3 +151,13 @@ fail. Individual builds, matching and proof remain strict; portable fallback
 manifests cannot satisfy historical match freshness. Compiler DLL or runner
 changes invalidate historical evidence even when the adapter/source are unchanged.
 The eleven portable adapter tests use synthetic Python runners and text fixtures.
+
+## Subsequent custom-register validation
+
+The [reviewed-mismatch lot](historical-fourth-2026-10-02.md) promotes the initial
+`004020B0` predicate to 50/50 exact bytes with MSVC 13.10.3077. An independent
+ordinary C caller provides optimization context for a static non-inlined callee;
+the compiler selects the observed EAX argument. The helper has a separate section
+and relocation and is not counted or presented as recovered original code.
+The native test branch remains exported. Earlier Clang-only limitations above
+are historical observations, not the current result for this function.
