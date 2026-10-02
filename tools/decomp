@@ -2,7 +2,6 @@
 """Automation primitive: pin, analyze, compile, compare, and export one task."""
 import argparse
 import hashlib
-from functools import lru_cache
 import json
 import os
 import shutil
@@ -13,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 from analysis.pe import PE, hx
 from matching.compare import coff_function, compare
+from matching.linking import link_external_candidate
 
 
 def read(path):
@@ -82,7 +82,6 @@ def analyze(args):
     print(f'Analyzed {pe.metadata["sha256"]}; {len(funcs)} function records (not a total function census)')
 
 
-@lru_cache(maxsize=8)
 def compiler_digest(executable):
     resolved = shutil.which(executable)
     if not resolved:
@@ -115,18 +114,95 @@ def compiler_identity(profile):
     return identity
 
 
+def json_digest(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def file_digest(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def linker_state(r):
+    if not r.get('linking'):
+        return None
+    spec = r['linking']
+    config = read(ROOT/'config/linkers.json')[spec['profile']]
+    required = dict(emulation='i386pe', image_base='0x00400000', section_alignment=16,
+                    file_alignment=16, timestamps=False, base_relocations=False,
+                    mode='external-only-whole-contribution-v1')
+    if any(config.get(k) != v for k, v in required.items()):
+        raise ValueError('Unsupported standard linker configuration')
+    executable = shutil.which(config['executable'])
+    if not executable:
+        raise OSError('Standard linker unavailable: ' + config['executable'])
+    executable = str(Path(executable).resolve())
+    version = subprocess.check_output([executable, '--version'], text=True).splitlines()[0]
+    return dict(config=config, executable=executable, sha256=file_digest(executable),
+                version=version, emulation='i386pe',
+                adapter_sha256=file_digest(ROOT/'tools/matching/linking.py'))
+
+
+def linking_record(r, build_manifest, state):
+    spec = r['linking']
+    if spec.get('schema_version') != 1:
+        raise ValueError('Unsupported per-function linking record')
+    return dict(schema_version=1,
+        candidate=dict(symbol=r['candidate_symbol'], section=spec['section'],
+                       address=int(r['address'], 0), object_sha256=build_manifest['object_sha256']),
+        bindings=spec['bindings'], excluded_contexts=spec.get('excluded_contexts', []),
+        compiler_provenance=dict(profile=r['compiler_profile'], source_sha256=build_manifest['source_sha256'],
+            compiler_driver_sha256=build_manifest['compiler_sha256'],
+            compiler_identity_sha256=json_digest(build_manifest['compiler_identity']),
+            compiler_profile_sha256=json_digest(build_manifest['compiler_profile_config'])),
+        linker={k: state[k] for k in ('sha256', 'version', 'emulation')})
+
+
 def report_is_fresh(r, report):
     try:
         b = report['build']
         profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
-        return bool(r.get('candidate_source') and r.get('binary_sha256') == report['binary_sha256']
-            and b['source_sha256'] == hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest()
-            and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
+        linked = linker_state(r)
+        headers = b['headers_sha256']
+        if not isinstance(headers, dict) or set(headers) != set(r.get('known_structures', [])):
+            return False
+        if b.get('source_only_fallback_for') or b.get('source_only_compile'):
+            return False
+        if not (r.get('candidate_source') and r.get('binary_sha256') == report['binary_sha256']
+            and b['source_sha256'] == file_digest(ROOT/r['candidate_source'])
+            and all(file_digest(ROOT/h) == digest for h, digest in headers.items())
             and b.get('compiler_profile_config') == profile
             and b.get('compiler_sha256') == compiler_digest(profile['executable'])
             and b.get('compiler_identity') == compiler_identity(profile)
-            and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
-    except (OSError, KeyError, ValueError):
+            and b.get('engine_sha256') == file_digest(ROOT/'tools/decomp')
+            and b.get('function_record_sha256') == json_digest(r)
+            and b.get('linker_state') == linked):
+            return False
+        mode = 'standard-linked-c-external' if linked else 'isolated-coff'
+        if b.get('match_method') != mode or report.get('abi_compatible') != r.get('candidate_abi_compatible', False):
+            return False
+        out = ROOT/'build'/r['address']
+        if file_digest(out/'candidate.bin') != b['candidate_sha256'] or file_digest(out/'candidate.obj') != b['object_sha256']:
+            return False
+        if linked:
+            m = b['linking']
+            expected = linking_record(r, b, linked)
+            if (b['linking_record_sha256'] != json_digest(expected)
+                    or m['compiler_provenance'] != expected['compiler_provenance']
+                    or m['linker'] != {k: linked[k] for k in ('executable', 'sha256', 'version', 'emulation')}
+                    or m['selected_section_name'] != r['linking']['section']
+                    or m['linked_size'] != (out/'candidate.bin').stat().st_size):
+                return False
+            if m['linked_function_sha256'] != b['candidate_sha256'] or m['whole_input_size'] != m['linked_size'] or m['address'] != int(r['address'], 0):
+                return False
+            if m['record_sha256'] != b['linking_record_sha256'] or m['category'] != 'external-standard-linked-C-contribution-v1':
+                return False
+            for artifact, key in [('candidate.exe', 'linked_image_sha256'), ('layout.ld', 'script_sha256'), ('link-input.obj', 'object_sha256')]:
+                if file_digest(out/'linked'/artifact) != m[key]:
+                    return False
+        elif b.get('linking') is not None:
+            return False
+        return True
+    except (OSError, KeyError, ValueError, TypeError, subprocess.CalledProcessError):
         return False
 
 
@@ -135,24 +211,48 @@ def build(r):
         raise ValueError('No candidate source')
     profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
     identity = compiler_identity(profile)
+    source_hash = file_digest(ROOT/r['candidate_source'])
+    header_hashes = {h: file_digest(ROOT/h) for h in r.get('known_structures', [])}
+    driver_hash = compiler_digest(profile['executable'])
     out = private(ROOT/'build'/r['address'])
     out.mkdir(parents=True, exist_ok=True)
     obj = out/'candidate.obj'
     cmd = [profile['executable'], *profile['flags'], '-c', r['candidate_source'], '-o', str(obj)]
     env = dict(os.environ, SOURCE_DATE_EPOCH='0')
     subprocess.run(cmd, cwd=ROOT, env=env, check=True)
-    data = coff_function(obj, r['candidate_symbol'])
-    (out/'candidate.bin').write_bytes(data)
+    if (source_hash != file_digest(ROOT/r['candidate_source'])
+            or header_hashes != {h: file_digest(ROOT/h) for h in r.get('known_structures', [])}
+            or driver_hash != compiler_digest(profile['executable'])
+            or identity != compiler_identity(profile)
+            or profile != read(ROOT/'config/compilers.json')[r['compiler_profile']]):
+        raise ValueError('Source, headers or compiler changed during compilation')
+    linked = None if r.get('source_only_compile') else linker_state(r)
     manifest = dict(command=cmd, compiler_version=subprocess.check_output([profile['executable'], '--version'], text=True),
-                    source_sha256=hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest(),
-                    headers_sha256={h: hashlib.sha256((ROOT/h).read_bytes()).hexdigest() for h in r.get('known_structures', [])},
-                    candidate_sha256=hashlib.sha256(data).hexdigest(), profile=r['compiler_profile'],
-                    source_date_epoch='0', candidate_abi_compatible=r.get('candidate_abi_compatible', False),
-                    compiler_profile_config=profile,
-                    compiler_sha256=compiler_digest(profile['executable']),
-                    compiler_identity=identity,
+                    source_sha256=source_hash, headers_sha256=header_hashes,
+                    profile=r['compiler_profile'], source_date_epoch='0',
+                    candidate_abi_compatible=r.get('candidate_abi_compatible', False),
+                    compiler_profile_config=profile, compiler_sha256=driver_hash,
+                    compiler_identity=identity, object_sha256=file_digest(obj),
                     source_only_fallback_for=r.get('source_only_fallback_for'),
-                    function_record_sha256=hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
+                    source_only_compile=r.get('source_only_compile', False),
+                    engine_sha256=file_digest(ROOT/'tools/decomp'),
+                    function_record_sha256=json_digest(r), linker_state=linked)
+    if r.get('source_only_compile'):
+        manifest.update(match_method='source-only-object', candidate_sha256=None)
+        write(out/'build.json', manifest)
+        return obj.read_bytes(), manifest
+    if linked:
+        record = linking_record(r, manifest, linked)
+        data, evidence = link_external_candidate(obj, record, out/'linked', linker=linked['executable'])
+        if linker_state(r) != linked:
+            raise ValueError('Linker configuration or adapter changed during linking')
+        manifest.update(match_method='standard-linked-c-external', linking=evidence,
+                        linking_record_sha256=json_digest(record))
+    else:
+        data = coff_function(obj, r['candidate_symbol'])
+        manifest.update(match_method='isolated-coff', linking=None)
+    (out/'candidate.bin').write_bytes(data)
+    manifest['candidate_sha256'] = hashlib.sha256(data).hexdigest()
     write(out/'build.json', manifest)
     return data, manifest
 
@@ -169,9 +269,10 @@ def build_all():
             if not isinstance(fallback, str) or fallback not in profiles or fallback == r['compiler_profile']:
                 raise
             portable = dict(r, compiler_profile=fallback,
-                            source_only_fallback_for=r['compiler_profile'], match_expectation='exploratory')
+                            source_only_fallback_for=r['compiler_profile'], source_only_compile=True,
+                            match_expectation='exploratory')
             data, _ = build(portable)
-            print(f'{r["address"]}: compiled {len(data)} bytes '
+            print(f'{r["address"]}: source compiled to {len(data)} object bytes '
                   f'(source-only fallback {fallback}; optional {r["compiler_profile"]} unavailable)')
     print(f'Compiled {len(candidates)} reviewed candidates')
 
@@ -206,9 +307,11 @@ def verify_matches(args):
     summary = []
     for r in proof:
         result = match(argparse.Namespace(address=r['address'], binary=args.binary, require_exact=True))
-        summary.append({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match', 'abi_compatible', 'original_region_sha256')})
+        summary.append({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match', 'abi_compatible', 'original_region_sha256')} | {'match_method': result['build']['match_method']})
     write(summary_path, dict(schema_version=1,
-          binary_sha256=summary and proof[0]['binary_sha256'], verified_exact_functions=len(summary), functions=summary))
+          binary_sha256=summary and proof[0]['binary_sha256'], verified_exact_functions=len(summary),
+          verified_by_method={method: sum(row['match_method'] == method for row in summary)
+                              for method in sorted({row['match_method'] for row in summary})}, functions=summary))
     print(f'Verified {len(summary)} exact C-derived matches against the pinned executable')
 
 

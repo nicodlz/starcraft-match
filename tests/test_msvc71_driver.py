@@ -174,6 +174,7 @@ class HistoricalPipelineTests(unittest.TestCase):
             self.assertEqual(fallback['compiler_profile'], 'portable')
             self.assertEqual(fallback['source_only_fallback_for'], 'historic')
             self.assertEqual(fallback['match_expectation'], 'exploratory')
+            self.assertTrue(fallback['source_only_compile'])
             self.assertIn('source-only fallback', output.getvalue())
             built.side_effect = OSError('synthetic bad configuration')
             with self.assertRaises(OSError):
@@ -194,11 +195,21 @@ class HistoricalPipelineTests(unittest.TestCase):
             record = {'address': '0x00001000', 'candidate_source': 'synthetic.c',
                       'compiler_profile': 'historic', 'binary_sha256': '0'*64}
             identity = {'status': 'available', 'component_sha256': {'c1.dll': '1'*64}}
-            build = {'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+            (root/'tools').mkdir()
+            (root/'tools/decomp').write_text('synthetic engine')
+            artifacts = root/'build'/record['address']
+            artifacts.mkdir(parents=True)
+            (artifacts/'candidate.bin').write_bytes(b'synthetic function')
+            (artifacts/'candidate.obj').write_bytes(b'synthetic object')
+            build = {'engine_sha256': DECOMP.file_digest(root/'tools/decomp'),
+                     'match_method': 'isolated-coff', 'linker_state': None, 'linking': None,
+                     'candidate_sha256': DECOMP.file_digest(artifacts/'candidate.bin'),
+                     'object_sha256': DECOMP.file_digest(artifacts/'candidate.obj'),
+                     'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'headers_sha256': {}, 'compiler_profile_config': historical,
                      'compiler_sha256': 'a'*64, 'compiler_identity': identity,
-                     'function_record_sha256': hashlib.sha256(json.dumps(record, sort_keys=True).encode()).hexdigest()}
-            report = {'build': build, 'binary_sha256': record['binary_sha256']}
+                     'function_record_sha256': DECOMP.json_digest(record)}
+            report = {'build': build, 'binary_sha256': record['binary_sha256'], 'abi_compatible': False}
             with mock.patch.object(DECOMP, 'ROOT', root), \
                  mock.patch.object(DECOMP, 'read', return_value=profiles), \
                  mock.patch.object(DECOMP, 'compiler_digest', return_value='a'*64), \
@@ -219,7 +230,8 @@ class HistoricalPipelineTests(unittest.TestCase):
                 self.assertFalse(DECOMP.report_is_fresh(record,
                                  {'build': fallback_build, 'binary_sha256': record['binary_sha256']}))
                 current_identity.return_value = None
-                self.assertTrue(DECOMP.report_is_fresh(fallback_record,
+                # Source-only fallback objects cannot be current original-match evidence.
+                self.assertFalse(DECOMP.report_is_fresh(fallback_record,
                                 {'build': fallback_build, 'binary_sha256': record['binary_sha256']}))
 
     def test_proof_does_not_fall_back_on_optional_absence(self):
