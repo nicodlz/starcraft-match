@@ -559,7 +559,13 @@
     "address": "0x00402C40",
     "size": 20,
     "name": "sub_00402C40",
-    "proposed_names": [],
+    "proposed_names": [
+      {
+        "name": "getHPGainForRepair",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
     "confidence": 0.98,
     "references": [
       {
@@ -575,33 +581,33 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
-    "provenance": "Reviewed complete body 0x00402C40..0x00402C53; single ret at 0x00402C53, preceding ret/padding and following padding inspected; two independent direct calls corroborate entry.",
+    "provenance": "Fresh pinned PE complete-body, prior/following boundary and two aligned caller-window review; pinned BWAPI map independently corroborates entry/20-byte extent. Sole RET 0x00402C53, padding starts 0x00402C54.",
     "calling_convention": "Custom: pointer EAX; DWORD result EAX (reviewed callers consume AX); plain ret; other GPRs preserved",
     "prototype": "unsigned int sub_00402C40(const Sub00402C40View *object /* EAX */)",
     "candidate_source": "src/game/sub_00402C40.c",
     "candidate_symbol": "_sub_00402C40",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "clang-i686-scaffold-narrow-fixed-layout",
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "notes": [
-      "Byte global at 0x006D5A6C is read/tested before zero-extending WORD +0xA8; bit 1 selects unsigned left shift by 4; no null check or stores.",
-      "Final whole isolated COFF section 21 bytes versus original 20: reversed branch layout and duplicated return; no relocations.",
-      "Branch likelihood hint is a compiler experiment, not measured frequency or recovered source. Original-process execution and differential semantics were not performed.",
-      "Local candidate layout: Local Sub00402C40View: WORD at +0xA8",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 20 original / 21 candidate bytes; literal equality false. No original differential execution."
+      "Fresh whole-region equality: 20 original / 20 compiled, no relocations, profile clang-i686-scaffold-narrow-fixed-layout. Source unchanged; disabling probability-driven block placement retains shared return.",
+      "Byte global 0x006D5A6C tested before WORD +0xA8 load, conditional shift left four; EAX input/result, all other general registers preserved.",
+      "Callers 0x00466834 and 0x004684A5 pass EAX pointers and consume AX. No original differential execution; community name is an annotation.",
+      "Coordinator independently reviewed complete pinned PE body, map and caller ABI, rebuilt the unchanged C source with the recorded profile, and verified all 20 bytes exactly without relocations or normalization."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
-    }
+    },
+    "category": "game_routine"
   },
   {
     "schema_version": 1,

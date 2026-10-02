@@ -42,5 +42,23 @@
       "-fixup-byte-word-insts=false"
     ],
     "purpose": "Modern Clang profile retaining partial byte/word register instructions; strict full-function matches only, not a historical compiler claim"
+  },
+  "clang-i686-scaffold-narrow-fixed-layout": {
+    "executable": "clang",
+    "flags": [
+      "--target=i686-pc-windows-msvc",
+      "-std=c11",
+      "-O2",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-ident",
+      "-ffunction-sections",
+      "-Iinclude",
+      "-mllvm",
+      "-fixup-byte-word-insts=false",
+      "-mllvm",
+      "-disable-block-placement"
+    ],
+    "purpose": "Modern Clang scaffold preserving narrow instructions and disabling late block-placement; strict whole-function evidence required, not an original compiler claim"
   }
 }

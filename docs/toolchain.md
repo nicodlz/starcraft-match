@@ -1,7 +1,8 @@
 # Original compiler and matching toolchain
 
 Initial conclusion: **Microsoft Visual C++ .NET 2003 (MSVC 7.1)** is the strongest
-compiler hypothesis for this 1.16.1 specimen. It is not available on this host.
+compiler hypothesis for this 1.16.1 specimen. It was initially absent; a private
+Toolkit 2003 compiler now runs locally for synthetic experiments (see below).
 Modern Clang is used for the feedback loop; it is not presented as a matching substitute.
 
 This conclusion concerns the **1.16.1 patch executable built in 2009**, not the
@@ -97,3 +98,24 @@ or solve the broader XOR/MOV encoding and CMP-direction mismatches. The compiler
 researcher's private synthetic matrix measured 50 Clang and 16 GCC configurations;
 no general XOR `33` / `31` or MOV `8B` / `89` solution was established. Shared profile
 changes require a fresh rebuild of the full proof set, including previous matches.
+
+## Machine block-placement experiment
+
+`clang-i686-scaffold-narrow-fixed-layout` adds `-mllvm -disable-block-placement`
+to the narrow profile. In [0x00402C40](functions/00402C40.md), the existing C source
+then retains one shared return instead of a duplicated return and matches all
+20 original bytes. The global BYTE test remains before the object WORD load;
+EAX input/result and other register preservation match. Disabling this pass does
+not freeze the entire compiler layout or establish historical compiler equivalence.
+The full proof set must be freshly rebuilt after adding this shared profile.
+
+## Historical compiler smoke test
+
+A privately extracted Visual C++ Toolkit 2003 compiler, **13.10.3077**, compiled an
+independent synthetic C function under [wibo 1.2.0](https://github.com/decompals/wibo/releases/tag/1.2.0).
+The isolated COFF function is nine bytes and has no relocations. This establishes a
+working compile-only experiment, not a game-function match or the identity of the
+original compiler build. [Research notes](continuous-2026-10-02.md) distinguish
+container integrity, historical signing evidence and current certificate trust.
+CL SHA-256: `2ecf86a3edfd3deae498e08298e210e984537ce9e11759930561e43f40bd2515`.
+Compiler, DLLs and runner remain private; no proprietary compiler binaries are bundled.
