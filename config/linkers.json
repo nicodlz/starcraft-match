@@ -1,0 +1,12 @@
+{
+  "gnu-i386pe-external-v1": {
+    "executable": "ld",
+    "emulation": "i386pe",
+    "image_base": "0x00400000",
+    "section_alignment": 16,
+    "file_alignment": 16,
+    "timestamps": false,
+    "base_relocations": false,
+    "mode": "external-only-whole-contribution-v1"
+  }
+}

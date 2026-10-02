@@ -109,7 +109,10 @@ make
 The example getter is suitable for demonstrating the exact-match gate. Larger
 functions may require additional analysis or matcher support; do not bypass a
 relocation rejection or guess the function extent to make the command succeed.
-Independent verification must retain the same strict extraction requirements.
+Independent verification retains strict extraction by default. The explicit
+external-only standard-linker method instead resolves approved references, checks
+the entire compiler contribution and records its separate method; see
+[standard linking](standard-linking.md).
 
 ## Measure useful progress
 

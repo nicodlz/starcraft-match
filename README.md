@@ -209,7 +209,9 @@ never changes the supported target or promotes guesses into reviewed functions.
 Matching compares the pinned PE region with the isolated compiled COFF function.
 Reports retain compiler/source/header/record hashes and literal differences.
 Instruction similarity and CFG scores are **null**, because reliable scoring for
-those metrics has not been implemented. Unresolved relocations are rejected.
+those metrics has not been implemented. Unresolved relocations are rejected. An explicit reviewed catalog record can use
+the [external-only standard linker](docs/standard-linking.md), which checks every
+relocation and the complete compiler contribution and reports a separate method.
 
 Optional headless Ghidra integration is supplied for discovery, disassembly,
 decompiler output, calls, references, strings and symbols:
