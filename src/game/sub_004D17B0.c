@@ -1,0 +1,19 @@
+void sub_004D17B0(void) { *(volatile unsigned char *)0x00596A78u = 0;
+*(volatile unsigned char *)0x00596A79u = 0;
+*(volatile unsigned char *)0x00596A7Au = 0;
+*(volatile unsigned char *)0x00596A7Bu = 0;
+*(volatile unsigned char *)0x00596A7Cu = 0;
+*(volatile unsigned char *)0x00596A7Du = 0;
+*(volatile unsigned char *)0x00596A7Eu = 0;
+*(volatile unsigned char *)0x00596A7Fu = 0;
+*(volatile unsigned char *)0x00596A80u = 0;
+*(volatile unsigned char *)0x00596A81u = 0;
+*(volatile unsigned char *)0x00596A39u = 0;
+*(volatile unsigned char *)0x00596A3Au = 0;
+*(volatile unsigned char *)0x00596A3Bu = 0;
+*(volatile unsigned char *)0x00596A3Cu = 0;
+*(volatile unsigned char *)0x00596A3Du = 0;
+*(volatile unsigned char *)0x00596A3Eu = 0;
+*(volatile unsigned char *)0x00596A3Fu = 0;
+*(volatile unsigned char *)0x00596A40u = 0;
+ }
