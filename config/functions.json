@@ -21365,5 +21365,343 @@
     "coordinator_lot": "parallel20-fourth",
     "coordinator_round": 10,
     "category": "game_routine"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00421730",
+    "size": 54,
+    "name": "sub_00421730",
+    "confidence": 0.96,
+    "references": [
+      {
+        "address": "0x004D1DD7",
+        "type": "direct_call",
+        "provenance": "Fresh pinned 39-byte instruction-aligned window 004D1DBC..004D1DE3 reviewed: DWORD value loaded into EAX immediately before CALL 00421730; no pushed target arguments or subsequent stack cleanup; EAX immediately overwritten by XOR after return."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x0042174E",
+        "to": "0x004215E0"
+      },
+      {
+        "from": "0x0042175E",
+        "type": "indirect_import",
+        "iat": "0x004FE37C",
+        "dll": "USER32.dll",
+        "name": "ClipCursor"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "compiler_profile": "msvc71-o2",
+    "candidate_source": "src/game/sub_00421730.c",
+    "candidate_symbol": "_sub_00421730",
+    "candidate_abi_compatible": true,
+    "calling_convention": "Compiler-derived private EAX32=value; no stack arguments, plain RET; ESI preserved. Return value not consumed by reviewed original caller. No-argument direct helper plainRET; importedClipCursor receives one pointer argument and inferred callee4 cleanup.",
+    "prototype": "static void sub_00421730(unsigned int value); private EAX32 contract selected by ordinary C context, not public cdecl/fastcall ABI",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_004215E0": {
+          "address": 4330976,
+          "kind": "code",
+          "evidence": [
+            "Pinned CALL 0042174E targets 004215E0. Complete 92-byte helper 004215E0..0042163C exclusive independently reviewed: inputs come from fixed globals and stack-local addresses; no incoming register/stack arguments; plain RET; caller ignores result. Helper saves/restores ESI and EBP."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_00421730",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "provenance": "IndependentC90 reconstruction from pinned54-byte contiguous region00421730..00421766 exclusive. Full helper004215E0..0042163C and instruction-aligned direct caller window independently reviewed; canonical external-only GNUld linking and literal whole-contribution equality.",
+    "notes": [
+      "Target contribution is 54 bytes with one undefined external REL32 binding to reviewed no-argument helper 004215E0. No defined helper rebinding, source/object edits, normalization or matching subsequence. Genuine linking is a separate category from zero-relocation COFF equality.",
+      "DWORD global 006D5DD0 read/updated only if different; helper conditional on nonzero input and zero DWORD 006D5DD4; imported ClipCursor receives fixed rectangle pointer 006CDDB0 for nonzero input or NULL for zero. Widths/order from exact pinned body; imported implementation unavailable, no original differential execution.",
+      "Context is an ordinary C compiler register-selection experiment, isolated in .scctx and never counted; original caller/source not recovered. Clang C90 source-only compilation passed."
+    ],
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00470DB0",
+    "size": 54,
+    "name": "sub_00470DB0",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00470DB0.c",
+    "candidate_symbol": "_sub_00470DB0@8",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "calling_convention": "stdcall: two four-byte stack slots read as bytes at EBP+8/EBP+C; RET8, EBP preserved; caller ignores EAX. External allocator stdcall four DWORD stack arguments, pointer returned in EAX, no caller cleanup.",
+    "prototype": "void __stdcall sub_00470DB0(unsigned char first, unsigned char second)",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041006A@16": {
+          "address": 4259946,
+          "kind": "code",
+          "evidence": [
+            "Fresh pinned target CALL00470DC9 resolves to0041006A, JMP through IAT004FE568. Four DWORD arguments size3/source50467C/line369/flags0; no caller cleanup, EAX pointer return. External callee implementation not reconstructed."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "references": [
+      {
+        "address": "0x00452360",
+        "type": "direct_call",
+        "provenance": "Pinned caller reviewed00452350..0045236E; pushes EAX/ECX and callee RET8."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00470DC9",
+        "target": "0x0041006A",
+        "type": "direct_call"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "confidence": 0.95,
+    "proposed_names": [],
+    "notes": [
+      "Whole54-byte compiler C contribution standard-linked at00470DB0; single undefined external _sub_0041006A@16 bound to pinned allocation thunk. No defined helper or code rebinding.",
+      "Complete body00470DB0..00470DE6 exclusive, one RET8; single branch00470DBA to00470DD3 inside body. Twelve preceding and ten following INT3 excluded after independent review.",
+      "Caller00452360 pushes EAX then ECX; postcall sets EAX=1, does not consume function result. Allocation CALL00470DC9 pushes flags0/line369/source50467C/size3; thunk0041006A JMP[IAT004FE568], importstorm.dll ordinal401 independently confirmed.",
+      "State006D5C8C loaded once, lazily assigned allocation result; writes bytes45/first/second in order. Failed allocation still dereferencesNULL, preserved original behavior. Source path literal identity/semantics remain unknown.",
+      "Portable Clang compilation and canonical COFF audit passed, whole56-byte contribution with one external relocation. No original-process execution or reconstructed allocation implementation."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00471010",
+    "size": 53,
+    "name": "sub_00471010",
+    "boundary_verified": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00471010.c",
+    "candidate_symbol": "_sub_00471010",
+    "candidate_abi_compatible": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "MSVC static optimized private BL byte input, plainRET/no stack inputs; preservesEBX/ESI/EDI/EBP. Return unused. External allocator stdcall4DWORD/RET16 inferred at pinned caller, pointerEAX.",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041006A@16": {
+          "address": 4259946,
+          "kind": "code",
+          "evidence": [
+            "Pinned53-byte body CALL00471034 targets six-byte JMP[004FE568] import thunk0041006A, storm.dll ordinal401. FourDWORD arguments2,0050467C,300,0 pushed right-to-left; no caller cleanup and pointer resultEAX, BL preserved across call. External module body unavailable; stdcall16 cleanup inferred from complete pinned caller."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_experiment_00471010",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "status": "exact_match",
+    "provenance": "Independently authoredC from pinnedbinary; fresh complete53-byte contribution linked with canonical external-only adapter. Compiler context excluded, no definedsymbol rebound.",
+    "references": [
+      {
+        "address": "0x004F40A9",
+        "type": "direct_call",
+        "provenance": "Fresh complete caller004F4080..004F40B3: pushesEBX, copies byte local intoBL, calls target, popsEBX; no argumentstack or resultuse."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "known_structures": [],
+    "proposed_names": [],
+    "confidence": 0.95,
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Early byte equality returns without allocation/write. Changedvalue stored0066FBF9 before allocation. Existingpointer006D5C74 reused; missingpointer allocated2 bytes and stored, unchecked failure preserved. Writes3D then inputbyte.",
+      "Externalimport storm.dll ordinal401 bound at thunk0041006A. Module implementation absent; fourargument stdcallABI inferred from pinned complete body/caller, no semantic authenticated allocatorname claim.",
+      "Entire .scmatch53-byte compiler contribution is compared after auditedGNUi386PE linking with one externalREL32. Hypothetical ordinaryC caller .scctx separately inventoried and excluded. No byte patch, object modification, normalization, originalprocess execution or wholeprogram link."
+    ],
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00499D00",
+    "size": 54,
+    "name": "sub_00499D00",
+    "boundary_verified": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00499D00.c",
+    "candidate_symbol": "@sub_00499D00@16",
+    "known_structures": [],
+    "candidate_abi_compatible": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "ECX context; EDX unused; two DWORD stack arguments animation/force; RET8; EBP EBX ESI EDI preserved. C fastcall placeholder represents ignoredEDX, not original argument claim.",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "@sub_004D8470@8": {
+          "address": 5080176,
+          "kind": "code",
+          "evidence": [
+            "Pinned entire142-byte004D8470..004D84FD callee reviewed: ECX node; one DWORDstackslot animation read lowbyte; EDX immediately overwritten, EBX/ESI/EDI/EBP preserved; RET4.",
+            "Original CALL00499D23 suppliesECX=node, pushesoneDWORD animation. C fastcall with one DWORD aggregate produces exactly that locations/cleanup, without fictitious EDX operand."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "status": "exact_match",
+    "provenance": "Pinned entire54-byte body and direct caller independently reviewed; candidate standard compiler contribution linked via canonical external-only GNUi386PE linker at reviewed address. Full external142-byte callee ABI reviewed. Independent C; source aggregate is ABI modeling context, not recovered original type.",
+    "notes": [
+      "External-standard-linked-C-contribution-v1 equality, distinct from isolated zero-relocation COFF category.",
+      "C aggregate animation_argument is exactlyoneDWORD stackslot under MSVCfastcall; avoids assigning fictitiousEDXarg. Callee consumes lowbyte of stackslot, overwritesEDX immediately, RET4.",
+      "Walk context+1C and node+4, forceflag short-circuit then contextbyte+0E signbit each iteration. Readnext onlyaftercall to preserve mutation.",
+      "No helper definitions, excluded contexts, original-byte insertion, asm, patches, normalization or original-process execution."
+    ],
+    "references": [
+      {
+        "address": "0x0047CA51",
+        "type": "direct_call",
+        "provenance": "Fresh callerinstruction-aligned0047CA4A..0047CA5F exclusive setsECX=[EDI+0C], pushesforce1 andanimation14, directE8target00499D00. Full body54bytes startsafterprecedingRET8/padding, endsRET8 at00499D33 followedtenCC."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00499D23",
+        "target": "0x004D8470",
+        "provenance": "FreshE8target check; entire142-byte callee region verified."
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "confidence": 0.95,
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CB5B0",
+    "size": 156,
+    "name": "sub_004CB5B0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004EEEBE",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE004EEEAD\u2013004EEEC3 exclusive: EDX gets selected pointer table005127DC[word0057F1DC]+4; CALL target004CB5B0."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh reviewed complete body004CB5B0\u2013004CB64B, RET followed INT3 padding. Independently written ordinary C, canonical external-data-only genuine GNUld placement.",
+    "calling_convention": "Custom EDX input pointer; undefined result; plain RET; preserves EBX/ESI/EDI/EBP; clobbers EAX/ECX/EDX/flags.",
+    "prototype": "void sub_004CB5B0(input *p)",
+    "candidate_source": "src/game/sub_004CB5B0.c",
+    "candidate_symbol": "_sub_004CB5B0",
+    "candidate_linkage": "static",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_006CE2A0": {
+          "address": 7135904,
+          "kind": "data",
+          "evidence": [
+            "Pinned SHA256ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46 reviewed target REPSTOSD destination006CE2A0 and indexSHL4+LEA006CE2A0."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_isolated_caller",
+          "section": ".scctx"
+        },
+        {
+          "symbol": "_fill",
+          "section": ".scfill"
+        }
+      ]
+    },
+    "notes": [
+      "Complete156-byte linked C contribution exactly matches pinned region; two genuine DIR32 data relocations are audited and resolved by standard GNUld. This is external-standard-linked equality, distinct from zero-relocation isolated-COFF evidence.",
+      "Unreferenced compiler-generated _fill44-byte/scfill and ordinary caller12-byte/scctx are separately audited/excluded; target has no call or relocation to either.",
+      "Unsigned byte output index wraps; no input-count bound added; unsigned32 mask shifts to zero after32 iterations. Clang source-only compilation passes; no original-process execution.",
+      "Reviewed 8-byte input and 16-byte output layouts described in function note; valid object extents remain a precondition."
+    ],
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 10
   }
 ]
