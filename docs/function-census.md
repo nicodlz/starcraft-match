@@ -13,9 +13,9 @@ The map count must not be labeled a verified total number of functions in the ga
 A Ghidra census with reviewed split/merged boundaries and library classification
 remains outstanding.
 
-**288 verified exact functions / 4, 201 community entries ≈ 6.86% by listed-function
+**311 verified exact functions / 4, 201 community entries ≈ 7.40% by listed-function
 count.** This is not a code-size, effort or completion percentage. The matches total
-13,604 original bytes and were deliberately selected for low complexity. More complex
+14,630 original bytes and were deliberately selected for low complexity. More complex
 routines, dependencies and linking will have very different costs.
 
 Reproduce the community count without storing the map in the public repository:
@@ -30,11 +30,13 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4, 201 external
-map entries. There are currently 295 source candidates: 288 confirmed exact, 4 reviewed
+map entries. There are currently 318 source candidates: 311 confirmed exact, 4 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
-The exact count includes **76 static data initializers / 836 bytes** and **212 other
-reviewed functions / 12,768 bytes**. The initializer destinations have unknown semantics;
+The exact count includes **76 static data initializers / 836 bytes** and **235 other
+reviewed functions / 13,794 bytes**. The initializer destinations have unknown semantics;
 identical copy patterns at distinct referenced entries do not demonstrate 76 distinct
 gameplay systems. The [numeric milestone report](hundred-functions-2026-10-02.md)
 separates the categories and explains the bounded selection.
+
+By measured method, the exact aggregate consists of **288 isolated zero-relocation COFF functions / 13,604 bytes** and **23 standard-linked external-only C functions / 1,026 bytes**. Whole compiler contributions are retained for both methods; linking resolves only reviewed external symbols and counts no dependency implementations or compiler contexts.
