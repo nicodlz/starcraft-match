@@ -64,7 +64,7 @@ priorities, compiler artifact hashes, reviewer decisions and SQLite storage once
 external agent upload, modernization branch or full-game build exists yet.
 
 
-The four proof functions have `match_expectation: "exact"`. This is a regression
+The reviewed proof functions have `match_expectation: "exact"`. This is a regression
 expectation, not a cached result: `verify-matches` compiles and compares every one
 against the pinned PE each time, and fails on byte inequality or incompatible ABI.
 It removes an earlier aggregate success before starting, so a failed run cannot
@@ -72,3 +72,13 @@ leave an old successful proof file behind. `match ADDRESS --require-exact` provi
 the same gate for a single task. Ordinary exploratory `match` still returns a useful
 diff without treating expected non-equality as a command error. Exact status counters
 use fresh local reports, not merely the catalog's recorded historical status.
+
+
+A parallel research batch on 2026-10-02 used three workers with disjoint address/path
+ownership and a coordinator. Eleven functions / 158 original bytes were independently
+reverified after integration. Three additional six-byte regions are explicitly excluded:
+their bytes coincide, but no independent entry/reachability evidence was found.
+`build-all` builds the full candidate catalog without an original. The exact regression
+suite derives its proof set from the catalog rather than a hardcoded function count.
+Task exports omit stale match reports; freshness includes the installed compiler hash.
+See [contributing with AI](contributing-with-ai.md) for the contributor workflow.

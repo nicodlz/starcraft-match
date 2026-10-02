@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+"""Count a public name/address/size map without treating it as a verified census."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT/'tools'))
+from analysis.pe import PE
+
+p = argparse.ArgumentParser(description=__doc__)
+p.add_argument('map', help='Local public community map: name address size, hexadecimal')
+p.add_argument('--binary', help='Optional pinned executable, used only to check address section membership')
+a = p.parse_args()
+try:
+    data = Path(a.map).read_bytes()
+    rows = []
+    for line in data.decode('utf-8-sig').splitlines():
+        if not line.strip():
+            continue
+        m = re.fullmatch(r'(\S+)\s+([0-9A-Fa-f]{8})\s+([0-9A-Fa-f]{8})', line.strip())
+        if not m:
+            raise ValueError('Unexpected map format; expected name / hex address / hex size')
+        rows.append((m[1], int(m[2], 16), int(m[3], 16)))
+    result = dict(schema_version=1, evidence='community_map_not_verified_function_census',
+                  map_sha256=hashlib.sha256(data).hexdigest(), listed_entries=len(rows),
+                  distinct_addresses=len({r[1] for r in rows}), zero_size_entries=sum(r[2]==0 for r in rows),
+                  distinct_executable_section_addresses=None, verified_total_program_functions=None)
+    if a.binary:
+        pe = PE(a.binary)
+        supported = json.loads((ROOT/'config/target.json').read_text())['supported_binaries']
+        if pe.metadata['sha256'] not in {b['sha256'] for b in supported}:
+            raise ValueError('Unsupported executable hash')
+        result['binary_sha256'] = pe.metadata['sha256']
+        result['distinct_executable_section_addresses'] = len({r[1] for r in rows if any(
+            s['executable'] and pe.image_base+s['rva'] <= r[1] < pe.image_base+s['rva']+s['virtual_size']
+            for s in pe.sections)})
+    print(json.dumps(result, indent=2))
+except (OSError, ValueError) as e:
+    p.exit(1, f'error: {e}\n')

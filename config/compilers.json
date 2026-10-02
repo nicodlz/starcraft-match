@@ -1,7 +1,30 @@
 {
   "clang-i686-scaffold": {
     "executable": "clang",
-    "flags": ["--target=i686-pc-windows-msvc", "-std=c11", "-O2", "-ffreestanding", "-fno-stack-protector", "-fno-ident", "-ffunction-sections", "-Iinclude"],
+    "flags": [
+      "--target=i686-pc-windows-msvc",
+      "-std=c11",
+      "-O2",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-ident",
+      "-ffunction-sections",
+      "-Iinclude"
+    ],
     "purpose": "Modern COFF semantic scaffold, not historical matching compiler"
+  },
+  "clang-i686-size": {
+    "executable": "clang",
+    "flags": [
+      "--target=i686-pc-windows-msvc",
+      "-std=c11",
+      "-Oz",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-ident",
+      "-ffunction-sections",
+      "-Iinclude"
+    ],
+    "purpose": "Modern size-optimized COFF candidate; permits AL-only byte returns, not a historical compiler claim"
   }
 }

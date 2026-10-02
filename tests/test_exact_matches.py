@@ -26,8 +26,13 @@ class ExactMatchProofTests(unittest.TestCase):
             self.assertEqual(success.returncode, 0, success.stdout+success.stderr)
             summary_path = checkout/'analysis/proof-of-concept.json'
             summary = json.loads(summary_path.read_text())
-            self.assertEqual(summary['verified_exact_functions'], 4)
-            self.assertEqual(sum(r['original_size'] for r in summary['functions']), 37)
+            catalog = json.loads((checkout/'config/functions.json').read_text())
+            expected = {r['address']: r for r in catalog if r.get('match_expectation') == 'exact'}
+            self.assertEqual(summary['verified_exact_functions'], len(expected))
+            self.assertEqual({r['address'] for r in summary['functions']}, set(expected))
+            initial_proof = {'0x00488780', '0x00496FF0', '0x004CE6B0', '0x004DC540'}
+            self.assertTrue(initial_proof <= set(expected), 'The initial proof must remain covered')
+            self.assertGreaterEqual(sum(r['original_size'] for r in summary['functions']), 37)
             for row in summary['functions']:
                 self.assertTrue(row['exact_byte_match'])
                 self.assertTrue(row['abi_compatible'])
@@ -35,6 +40,22 @@ class ExactMatchProofTests(unittest.TestCase):
                 report = json.loads((checkout/'analysis/matches'/f'{row["address"]}.json').read_text())
                 self.assertEqual(report['differences'], [])
                 self.assertEqual(report['build']['candidate_sha256'], report['original_region_sha256'])
+            task_cmd = [str(checkout/'tools/decomp'), 'task', '0x00488780', '--binary', str(BINARY)]
+            subprocess.run(task_cmd, check=True, capture_output=True)
+            task_path = checkout/'analysis/task.json'
+            task = json.loads(task_path.read_text())
+            self.assertTrue(task['match_report_current'])
+            self.assertIsNotNone(task['match_report'])
+            report_path = checkout/'analysis/matches/0x00488780.json'
+            stale = json.loads(report_path.read_text())
+            stale['build']['compiler_sha256'] = '0' * 64
+            report_path.write_text(json.dumps(stale))
+            subprocess.run(task_cmd, check=True, capture_output=True)
+            task = json.loads(task_path.read_text())
+            self.assertFalse(task['match_report_current'])
+            self.assertIsNone(task['match_report'])
+            status = subprocess.check_output([str(checkout/'tools/decomp'), 'status'], text=True)
+            self.assertEqual(json.loads(status)['exact_match'], len(expected) - 1)
             source = checkout/'src/game/sub_00488780.c'
             text = source.read_text()
             self.assertIn('return SC_PAUSE_STATE;', text)

@@ -62,6 +62,19 @@ These results are measured exceptions to the general difficulty of reproducing
 historical code with a different compiler, not evidence that Clang can match the
 original program broadly. The compiler-family hypothesis remains MSVC 7.1.
 
-An attempted unsigned-byte getter at 0x004CE6C0 remains outside the reviewed
-candidate catalog: original uses an AL-only load, whereas Clang emits a full EAX
+The initial unsigned-byte getter attempt at 0x004CE6C0 did not match with-O2: original uses an AL-only load, whereas Clang emits a full EAX
 zero-extension. Even equally simple adjacent routines need ABI/source-shape care.
+
+
+## Second research batch
+
+The reviewed proof set expanded to eleven exact functions / 158 original bytes.
+`clang-i686-size` differs by using `-Oz`: it produces AL-only byte loads for
+0x004CE6C0 and the narrow AL/CL copy at0x0047CCB0. Those candidates failed with-O2.
+The indexed property predicate0x00473490 matches with i386 fastcall; the two-branch
+image-state update0x00498150 matches using Clang regcall to express EAX and CL inputs.
+All complete candidate sections are re-extracted and byte-compared by the coordinator;
+no encoding substitutions or post-build patches are applied.
+The earlier unsigned-byte getter mismatch is now resolved by the-Oz profile.
+Exact results here remain narrow code-generation observations, not proof of the
+historic compiler's exact switches or a viable full-game Clang replacement.

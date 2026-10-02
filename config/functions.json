@@ -42,6 +42,122 @@
   },
   {
     "schema_version": 1,
+    "address": "0x00473490",
+    "size": 18,
+    "name": "sub_00473490",
+    "proposed_names": [
+      {
+        "name": "unitIsResourceContainer",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00473CF7",
+        "type": "direct_call",
+        "provenance": "Pinned PE full-section disassembly and inspected caller window"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE instructions and return/padding boundaries corroborate public map. Inspected direct callers corroborate ABI. Independently written C; no inline asm or machine bytes.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "ECX unit pointer; DWORD result EAX; plain ret",
+    "prototype": "unsigned int sub_00473490(const UnitTypeLeafView *unit /* ECX */)",
+    "candidate_source": "src/units/sub_00473490.c",
+    "candidate_symbol": "@sub_00473490@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/unit_leaf_views.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Whole isolated COFF function bytes match pinned preferred-layout region. Modern Clang exact leaf match does not establish original compiler identity; differential semantics not yet executed."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0047CCB0",
+    "size": 23,
+    "name": "sub_0047CCB0",
+    "proposed_names": [
+      {
+        "name": "saveMinimapCounts",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D9655",
+        "type": "direct_call",
+        "provenance": "Pinned PE full-section disassembly; caller window inspected"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE entry and final ret manually inspected; following int3 padding excluded. Community map agrees with entry and size.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no arguments; no result; plain ret",
+    "prototype": "void sub_0047CCB0(void)",
+    "candidate_source": "src/map/sub_0047CCB0.c",
+    "candidate_symbol": "_sub_0047CCB0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-size",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0059C1A8",
+        "width_bits": 8,
+        "access": "read"
+      },
+      {
+        "address": "0x0059C2B8",
+        "width_bits": 8,
+        "access": "read"
+      },
+      {
+        "address": "0x0065FC10",
+        "width_bits": 8,
+        "access": "write"
+      },
+      {
+        "address": "0x0065EB2D",
+        "width_bits": 8,
+        "access": "write"
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Independently written pure C. Clang-Oz emits narrow byte loads matching original; -O2 emits movzx and does not match. Modern compiler success does not identify original compiler. Fixed preferred VAs; original process/differential execution not tested."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
     "address": "0x00488780",
     "size": 6,
     "name": "sub_00488780",
@@ -150,6 +266,299 @@
   },
   {
     "schema_version": 1,
+    "address": "0x00498150",
+    "size": 22,
+    "name": "sub_00498150",
+    "proposed_names": [
+      {
+        "name": "Sprite_SetVerticalOffset",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0045E1EC",
+        "type": "direct_call",
+        "provenance": "Pinned PE full-section disassembly and inspected caller window"
+      },
+      {
+        "address": "0x0046464D",
+        "type": "direct_call",
+        "provenance": "Pinned PE full-section disassembly and inspected caller window"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE instructions and return/padding boundaries corroborate public map. Inspected direct callers corroborate ABI. Independently written C; no inline asm or machine bytes.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "EAX sprite pointer; CL new offset; void result; plain ret",
+    "prototype": "void sub_00498150(SpriteTailLeafView *sprite /* EAX */, unsigned char offset /* CL */)",
+    "candidate_source": "src/game/sub_00498150.c",
+    "candidate_symbol": "___regcall3__sub_00498150",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [
+      "include/reverse/unit_leaf_views.h"
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Whole isolated COFF function bytes match pinned preferred-layout region. Modern Clang exact leaf match does not establish original compiler identity; differential semantics not yet executed."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C5000",
+    "size": 18,
+    "name": "sub_004C5000",
+    "proposed_names": [
+      {
+        "name": "TRGACT_EnableDebugMode_fn",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x005128EC",
+        "type": "absolute_function_pointer",
+        "provenance": "Pinned PE .data action dispatch table"
+      },
+      {
+        "address": "0x00489196",
+        "type": "indirect_dispatch",
+        "provenance": "Pinned PE call [edx*4+0x00512800]; target depends on action index"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; community map corroborates entry and full size.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004C5000(void)",
+    "candidate_source": "src/game/sub_004C5000.c",
+    "candidate_symbol": "_sub_004C5000",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006509AC",
+        "width_bits": 32,
+        "access": "read_pointer"
+      },
+      {
+        "expression": "*(DWORD*)0x006509AC + 0x948",
+        "width_bits": 32,
+        "access": "read_modify_write"
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C5020",
+    "size": 18,
+    "name": "sub_004C5020",
+    "proposed_names": [
+      {
+        "name": "TRGACT_DisableDebugMode_fn",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x005128E8",
+        "type": "absolute_function_pointer",
+        "provenance": "Pinned PE .data action dispatch table"
+      },
+      {
+        "address": "0x00489196",
+        "type": "indirect_dispatch",
+        "provenance": "Pinned PE call [edx*4+0x00512800]; target depends on action index"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; community map corroborates entry and full size.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004C5020(void)",
+    "candidate_source": "src/game/sub_004C5020.c",
+    "candidate_symbol": "_sub_004C5020",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006509AC",
+        "width_bits": 32,
+        "access": "read_pointer"
+      },
+      {
+        "expression": "*(DWORD*)0x006509AC + 0x948",
+        "width_bits": 32,
+        "access": "read_modify_write"
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C50C0",
+    "size": 16,
+    "name": "sub_004C50C0",
+    "proposed_names": [
+      {
+        "name": "TRGACT_UnpauseTimer_fn",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x005128DC",
+        "type": "absolute_function_pointer",
+        "provenance": "Pinned PE .data action dispatch table"
+      },
+      {
+        "address": "0x00489196",
+        "type": "indirect_dispatch",
+        "provenance": "Pinned PE call [edx*4+0x00512800]; target depends on action index"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE manual disassembly: entry corroborated by community map and action dispatch pointer; final ret at0x004C50CF immediately precedes next routine0x004C50D0 with no int3 gap.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004C50C0(void)",
+    "candidate_source": "src/game/sub_004C50C0.c",
+    "candidate_symbol": "_sub_004C50C0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0058F04C",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C50D0",
+    "size": 11,
+    "name": "sub_004C50D0",
+    "proposed_names": [
+      {
+        "name": "TRGACT_PauseTimer_fn",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x005128D8",
+        "type": "absolute_function_pointer",
+        "provenance": "Pinned PE .data action dispatch table"
+      },
+      {
+        "address": "0x00489196",
+        "type": "indirect_dispatch",
+        "provenance": "Pinned PE call [edx*4+0x00512800]; target depends on action index"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; community map corroborates entry and full size.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004C50D0(void)",
+    "candidate_source": "src/game/sub_004C50D0.c",
+    "candidate_symbol": "_sub_004C50D0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0058F04C",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
     "address": "0x004CE6B0",
     "size": 8,
     "name": "sub_004CE6B0",
@@ -197,6 +606,185 @@
     ],
     "match": {
       "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CE6C0",
+    "size": 6,
+    "name": "sub_004CE6C0",
+    "proposed_names": [
+      {
+        "name": "getMapStartStatus",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D99AC",
+        "type": "direct_call",
+        "provenance": "Pinned PE full-section disassembly; caller window inspected"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Pinned PE entry and final ret manually inspected; following int3 padding excluded. Community map agrees with entry and size.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "calling_convention": "no arguments; byte result in AL; upper EAX unspecified",
+    "prototype": "unsigned char sub_004CE6C0(void)",
+    "candidate_source": "src/map/sub_004CE6C0.c",
+    "candidate_symbol": "_sub_004CE6C0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-size",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x006D121C",
+        "width_bits": 8,
+        "access": "read"
+      }
+    ],
+    "match_expectation": "exact",
+    "notes": [
+      "Independently written pure C. Clang-Oz emits narrow byte loads matching original; -O2 emits movzx and does not match. Modern compiler success does not identify original compiler. Fixed preferred VAs; original process/differential execution not tested."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DC510",
+    "size": 6,
+    "name": "sub_004DC510",
+    "proposed_names": [],
+    "confidence": 0.7,
+    "references": [],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; not annotated in community map; no reachability inferred.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": false,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004DC510(void)",
+    "candidate_source": "src/game/sub_004DC510.c",
+    "candidate_symbol": "_sub_004DC510",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0051CA14",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation.",
+      "No community map entry or direct call/jump or stored absolute code pointer found. Routine-like region boundaries are based on independent aligned instructions, ret and int3 padding. Reachability and original name remain unknown.",
+      "Observed byte-region coincidence only; excluded from confirmed function milestone until entry independently corroborated."
+    ],
+    "match": {
+      "exact": null,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DC520",
+    "size": 6,
+    "name": "sub_004DC520",
+    "proposed_names": [],
+    "confidence": 0.7,
+    "references": [],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; not annotated in community map; no reachability inferred.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": false,
+    "calling_convention": "no consumed arguments; DWORD result in EAX; plain ret",
+    "prototype": "unsigned int sub_004DC520(void)",
+    "candidate_source": "src/game/sub_004DC520.c",
+    "candidate_symbol": "_sub_004DC520",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0051CA10",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation.",
+      "No community map entry or direct call/jump or stored absolute code pointer found. Routine-like region boundaries are based on independent aligned instructions, ret and int3 padding. Reachability and original name remain unknown.",
+      "Observed byte-region coincidence only; excluded from confirmed function milestone until entry independently corroborated."
+    ],
+    "match": {
+      "exact": null,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DC530",
+    "size": 6,
+    "name": "sub_004DC530",
+    "proposed_names": [],
+    "confidence": 0.7,
+    "references": [],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Pinned PE manual disassembly: 16-byte aligned entry and final ret followed by int3 padding; not annotated in community map; no reachability inferred.",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": false,
+    "calling_convention": "custom: DWORD value in EAX; plain ret; no result",
+    "prototype": "void sub_004DC530(unsigned int value /* EAX */)",
+    "candidate_source": "src/game/sub_004DC530.c",
+    "candidate_symbol": "_sub_004DC530",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "clang-i686-scaffold",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "global_accesses": [
+      {
+        "address": "0x0051CA10",
+        "width_bits": 32
+      }
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Pure C, no assembly or machine-code embedding. Preferred-image-base absolute global accesses; no full-game link or execution validation.",
+      "No community map entry or direct call/jump or stored absolute code pointer found. Routine-like region boundaries are based on independent aligned instructions, ret and int3 padding. Reachability and original name remain unknown.",
+      "Observed byte-region coincidence only; excluded from confirmed function milestone until entry independently corroborated."
+    ],
+    "match": {
+      "exact": null,
       "score": null,
       "semantic": null,
       "cfg": null

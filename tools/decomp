@@ -2,6 +2,7 @@
 """Automation primitive: pin, analyze, compile, compare, and export one task."""
 import argparse
 import hashlib
+from functools import lru_cache
 import json
 import os
 import shutil
@@ -81,6 +82,28 @@ def analyze(args):
     print(f'Analyzed {pe.metadata["sha256"]}; {len(funcs)} function records (not a total function census)')
 
 
+@lru_cache(maxsize=8)
+def compiler_digest(executable):
+    resolved = shutil.which(executable)
+    if not resolved:
+        raise OSError(f'Compiler not available: {executable}')
+    return hashlib.sha256(Path(resolved).read_bytes()).hexdigest()
+
+
+def report_is_fresh(r, report):
+    try:
+        b = report['build']
+        profile = read(ROOT/'config/compilers.json')[r['compiler_profile']]
+        return bool(r.get('candidate_source') and r.get('binary_sha256') == report['binary_sha256']
+            and b['source_sha256'] == hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest()
+            and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
+            and b.get('compiler_profile_config') == profile
+            and b.get('compiler_sha256') == compiler_digest(profile['executable'])
+            and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
+    except (OSError, KeyError, ValueError):
+        return False
+
+
 def build(r):
     if not r.get('candidate_source'):
         raise ValueError('No candidate source')
@@ -99,10 +122,18 @@ def build(r):
                     candidate_sha256=hashlib.sha256(data).hexdigest(), profile=r['compiler_profile'],
                     source_date_epoch='0', candidate_abi_compatible=r.get('candidate_abi_compatible', False),
                     compiler_profile_config=profile,
-                    compiler_sha256=hashlib.sha256(Path(shutil.which(profile['executable'])).read_bytes()).hexdigest(),
+                    compiler_sha256=compiler_digest(profile['executable']),
                     function_record_sha256=hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
     write(out/'build.json', manifest)
     return data, manifest
+
+
+def build_all():
+    candidates = [r for r in read(ROOT/'config/functions.json') if r.get('candidate_source')]
+    for r in candidates:
+        data, _ = build(r)
+        print(f'{r["address"]}: compiled {len(data)} bytes')
+    print(f'Compiled {len(candidates)} reviewed candidates')
 
 
 def match(args):
@@ -153,13 +184,7 @@ def status():
         p = ROOT/'analysis/matches'/f'{r["address"]}.json'
         if p.exists():
             m = read(p)
-            # Ignore stale reports after source/header/profile changes.
-            b = m['build']
-            fresh = (r.get('binary_sha256') == m['binary_sha256'] and r.get('candidate_source')
-                     and b['source_sha256'] == hashlib.sha256((ROOT/r['candidate_source']).read_bytes()).hexdigest()
-                     and all(hashlib.sha256((ROOT/h).read_bytes()).hexdigest() == digest for h, digest in b.get('headers_sha256', {}).items())
-                     and b.get('compiler_profile_config') == read(ROOT/'config/compilers.json')[r['compiler_profile']]
-                     and b.get('function_record_sha256') == hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest())
+            fresh = report_is_fresh(r, m)
             if fresh:
                 counts['compiling'] += 1
                 counts['exact_match'] += int(m['exact_byte_match'] and m['abi_compatible'])
@@ -167,7 +192,8 @@ def status():
 
 
 def task(args):
-    r = function(args.address).copy()
+    record = function(args.address)
+    r = record.copy()
     pe = binary(args.binary)
     if r.get('binary_sha256') != pe.metadata['sha256'] or not r.get('boundary_verified'):
         raise ValueError('Task requires reviewed region from pinned executable')
@@ -176,7 +202,11 @@ def task(args):
     r['decompiler_output'] = None
     r['candidate_source_text'] = (ROOT/r['candidate_source']).read_text() if r.get('candidate_source') else None
     mp = ROOT/'analysis/matches'/f'{r["address"]}.json'
-    r['match_report'] = read(mp) if mp.exists() else None
+    report = read(mp) if mp.exists() else None
+    current = report is not None and report_is_fresh(record, report)
+    r['match_report'] = report if current else None
+    r['match_report_current'] = current
+    r['match_report_note'] = None if current else 'No fresh local match report; rerun matching'
     write(private(args.out), r)
     print(args.out)
 
@@ -192,11 +222,13 @@ def main():
         if cmd == 'task': a.add_argument('--out', default='analysis/task.json')
         if cmd == 'match': a.add_argument('--require-exact', action='store_true')
     a = s.add_parser('verify-matches'); a.add_argument('--binary', default='original/StarCraft.exe')
+    s.add_parser('build-all')
     s.add_parser('status'); s.add_parser('next')
     args = p.parse_args()
     try:
         if args.command == 'analyze': analyze(args)
         elif args.command == 'show': print(json.dumps(function(args.address), indent=2))
+        elif args.command == 'build-all': build_all()
         elif args.command == 'build': print(f'Compiled {len(build(function(args.address))[0])} bytes')
         elif args.command == 'match': match(args)
         elif args.command == 'verify-matches': verify_matches(args)
