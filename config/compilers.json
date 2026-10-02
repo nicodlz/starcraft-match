@@ -26,5 +26,21 @@
       "-Iinclude"
     ],
     "purpose": "Modern size-optimized COFF candidate; permits AL-only byte returns, not a historical compiler claim"
+  },
+  "clang-i686-scaffold-narrow": {
+    "executable": "clang",
+    "flags": [
+      "--target=i686-pc-windows-msvc",
+      "-std=c11",
+      "-O2",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-ident",
+      "-ffunction-sections",
+      "-Iinclude",
+      "-mllvm",
+      "-fixup-byte-word-insts=false"
+    ],
+    "purpose": "Modern Clang profile retaining partial byte/word register instructions; strict full-function matches only, not a historical compiler claim"
   }
 }

@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![27 exact functions](https://img.shields.io/badge/verified-27%20exact%20functions-287d67)
+![109 exact functions](https://img.shields.io/badge/verified-109%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,12 +26,18 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**27 whole functions match exactly, totaling 361 original bytes.** The independent
+**109 whole functions match exactly, totaling 1,424 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
-and image-state callbacks. The [latest bounded research batch](docs/exact-growth-2026-10-02.md)
-added 14 exact functions / 176 bytes; two are one-byte no-op callbacks.
+and image-state callbacks. The [100-function milestone batch](docs/hundred-functions-2026-10-02.md)
+added 82 exact functions / 1,063 bytes: 76 static data initializers, four game
+routines and two one-byte no-op callbacks. The 76 initializers account for 836 bytes;
+their destination semantics remain unknown. The numeric milestone does not establish
+100 representative gameplay routines or a representative whole-game match rate.
+
+The table lists the 33 other reviewed functions. The 76 initializer entries, their
+destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
 | --- | --- | ---: | --- |
@@ -45,9 +51,14 @@ added 14 exact functions / 176 bytes; two are one-byte no-op callbacks.
 | [0x00473490](docs/functions/00473490.md) | unitIsResourceContainer | 18 / 18 | Exact |
 | [0x0047A070](docs/functions/0047A070.md) | image_Insert | 25 / 25 | Exact |
 | [0x0047CCB0](docs/functions/0047CCB0.md) | saveMinimapCounts | 23 / 23 | Exact |
+| [0x0047D160](docs/functions/0047D160.md) | nullsub_gameloop | 1 / 1 | Exact |
+| [0x00484350](docs/functions/00484350.md) | NullInput | 1 / 1 | Exact |
 | [0x00488780](docs/functions/00488780.md) | isGamePaused | 6 / 6 | Exact |
 | [0x00496FF0](docs/functions/00496FF0.md) | EnableVisibilityHashUpdate | 11 / 11 | Exact |
 | [0x00498150](docs/functions/00498150.md) | Sprite_SetVerticalOffset | 22 / 22 | Exact |
+| [0x0049DCE0](docs/functions/0049DCE0.md) | CListPushBackHiddenUnitEntry | 55 / 55 | Exact |
+| [0x004B2AF0](docs/functions/004B2AF0.md) | structureScoreCalc | 60 / 60 | Exact |
+| [0x004B2B30](docs/functions/004B2B30.md) | unitScoreCalc | 60 / 60 | Exact |
 | [0x004C5000](docs/functions/004C5000.md) | Trigger: enable debug mode | 18 / 18 | Exact |
 | [0x004C5020](docs/functions/004C5020.md) | Trigger: disable debug mode | 18 / 18 | Exact |
 | [0x004C50C0](docs/functions/004C50C0.md) | Trigger: unpause timer | 16 / 16 | Exact |
@@ -62,6 +73,7 @@ added 14 exact functions / 176 bytes; two are one-byte no-op callbacks.
 | [0x004D5900](docs/functions/004D5900.md) | Unnamed conditional byte-state update | 21 / 21 | Exact |
 | [0x004DBC00](docs/functions/004DBC00.md) | setSinglePlayerValue | 22 / 22 | Exact |
 | [0x004DC540](docs/functions/004DC540.md) | SetInGameLoop | 12 / 12 | Exact |
+| [0x004E1220](docs/functions/004E1220.md) | MenuGenericBtnInitChildren | 50 / 50 | Exact |
 
 Names are community annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
@@ -75,8 +87,8 @@ measured compiler/ABI differences are documented in the catalog and function not
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 27 matches are
-about **0.64% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 109 matches are
+about **2.59% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -86,7 +98,8 @@ On Linux, the portable workflow needs **Python 3.10+**, **Clang**, **GNU objdump
 **Make**. GCC runs the native candidate truth-table test. There are no Python package
 dependencies, and these isolated candidates require no Windows SDK or CRT.
 The measured profiles use **Clang 18.1.3**, generating i686 Windows COFF with `-O2`
-or `-Oz`. See [environment](docs/environment.md) and [toolchain evidence](docs/toolchain.md).
+or `-Oz`; a separate narrow-register profile disables one LLVM widening pass.
+See [environment](docs/environment.md) and [toolchain evidence](docs/toolchain.md).
 
 ```sh
 git clone https://github.com/nicodlz/starcraft-match.git
@@ -121,7 +134,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 27 exact matches
+make proof                    # Recompile and require all 109 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
@@ -218,7 +231,8 @@ Documentation: [Prior art](docs/prior-art.md) · [Toolchain](docs/toolchain.md) 
 
 ## Next milestones
 
-1. Grow from tiny leaves to **100 representative functions**, measuring time,
+1. The **100 exact-function numeric milestone** is reached. Grow to **100
+   representative functions** beyond repeated static initializers, measuring time,
    dependencies, exact-match rate and human review needed per function.
 2. Validate headless Ghidra and investigate a legally obtained historic toolchain,
    linked placement and relocation-aware comparisons for harder routines.

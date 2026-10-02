@@ -78,3 +78,22 @@ no encoding substitutions or post-build patches are applied.
 The earlier unsigned-byte getter mismatch is now resolved by the-Oz profile.
 Exact results here remain narrow code-generation observations, not proof of the
 historic compiler's exact switches or a viable full-game Clang replacement.
+
+
+## Narrow-register profile for the 100-function milestone
+
+`clang-i686-scaffold-narrow` retains the scaffold flags and adds
+`-mllvm -fixup-byte-word-insts=false`. In the reviewed
+[0x004E1220](functions/004E1220.md) candidate, this prevents widening two partial
+WORD loads into MOVZX. The complete 50-byte function then matches exactly, including
+its access widths, caller contract and preservation of EAX/EDX. Both the ordinary
+scaffold and narrow profile produce 50 bytes, but the ordinary profile differs at
+those two loads. The option changes compiler instruction selection before emission;
+no assembly copy, encoding substitution or post-build patch is involved.
+
+This profile is pinned through the build manifests to the local Clang 18.1.3
+executable and recorded flags. It does not establish the original compiler's options
+or solve the broader XOR/MOV encoding and CMP-direction mismatches. The compiler
+researcher's private synthetic matrix measured 50 Clang and 16 GCC configurations;
+no general XOR `33` / `31` or MOV `8B` / `89` solution was established. Shared profile
+changes require a fresh rebuild of the full proof set, including previous matches.
