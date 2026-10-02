@@ -1,6 +1,6 @@
 # Fourth parallel session: bounded continuation
 
-Eight additional reviewed functions match exactly: 626 original bytes. The isolated publication branch now contains 304 exact functions / 15,387 bytes.
+Nine additional reviewed functions match exactly: 776 original bytes. The isolated publication branch now contains 305 exact functions / 15,537 bytes.
 
 The coordinator independently reviewed full boundaries, direct entry calls and actual ABI, then freshly compiled every accepted public C source and compared the whole isolated COFF section with zero relocations. No normalization, original instruction arrays, assembly copies or post-build patches are used.
 
@@ -14,6 +14,7 @@ The coordinator independently reviewed full boundaries, direct entry calls and a
 | [0x0047D2C0](functions/0047D2C0.md) | 57 / 57 |
 | [0x004AABF0](functions/004AABF0.md) | 110 / 110 |
 | [0x004531A0](functions/004531A0.md) | 67 / 67 |
+| [0x004475B0](functions/004475B0.md) | 150 / 150 |
 
 The declarations and control flow are independent compiler-context experiments. In0048D700, a packed full-width WORD bitfield selects the observed induction anchor; this uses a compiler extension and does not authenticate the original structure declaration. In004AB050, the byte comparison is1, as independently observed after the original EAX write.
 
@@ -22,3 +23,5 @@ Validation: recorded-profile strict full-function checks, portable source compil
 Further work remains bounded by disjoint address ownership and a cumulative20-variant limit per address. Unresolved relocations, unsupported ABI and source-domain uncertainty remain excluded from exact expectations.
 
 The final three additions use the unchanged compiler profile: explicit final index in004531A0, one return after the search loop in0047D2C0, and independently duplicated switch paths in004AABF0. Only isolated target sections count; compiler contexts do not.
+
+The final150-byte routine retains its observed ESI/EBX plus stack-pointer contract and memory access order. Its modulo arithmetic and potentially faulting division are unchanged. The Clang fallback for004AABF0 uses explicit DWORD clears to avoid unresolved external memset references; historical110-byte equality was rebuilt after this source change.

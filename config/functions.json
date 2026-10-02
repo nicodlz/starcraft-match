@@ -16077,7 +16077,8 @@
     "notes": [
       "110 contiguous bytes004AABF0-004AAC5D; returns004AAC29/004AAC5D; previous RET004AABE5 then INT3E6-EF; following INT35E-5F before004AAC60.",
       "Global semantic roles unknown. Explicitly duplicated clear paths are a C compiler-layout experiment, not recovered original source. No original differential execution or game linking.",
-      "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution."
+      "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution.",
+      "Portable Clang branch independently writes twelve volatile DWORD zeros per clear, avoiding unresolved external memset calls. The historical branch retains its measured memset intrinsic context; fresh public-source rebuild still110/110 bytes exact."
     ],
     "candidate_abi_compatible": true,
     "coordinator_lot": "parallel20-fourth",
@@ -16125,6 +16126,59 @@
       "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution."
     ],
     "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 7
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004475B0",
+    "size": 150,
+    "name": "sub_004475B0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from_address": "0x00435A34",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "Fresh pinned-PE caller: MOVZX ESI byteindex, EBX first outputbyte address, pushed second outputbyte address, EAX ignored",
+        "reviewed_window": "0x00435A29..0x00435A41"
+      },
+      {
+        "from_address": "0x00433679",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "Fresh pinned-PE caller: MOVZX ESI byteindex, EBX first outputbyte address, pushed second outputbyte address, EAX ignored",
+        "reviewed_window": "0x00433669..0x00433683"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh complete pinned-PE 004475B0..00447645 region, five ret4 paths, two direct callers and adjacent int3 padding independently reviewed. Ghidra supplied discovery only; independently authored C90.",
+    "calling_convention": "Private ESI fullDWORD index, EBX first byteoutput pointer, one DWORD stackslot second byteoutput pointer; ret4. Preserves ESI/EBX and EBP/EDI, clobbers EAX/ECX/EDX; callers ignore incidental EAX result. Not standard stdcall despite source context annotation.",
+    "prototype": "private ABI void sub_004475B0(u32 index, u8 *second, u8 *first)",
+    "candidate_source": "src/game/sub_004475B0.c",
+    "candidate_symbol": "_sub_004475B0@12",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "dependencies": [],
+    "proposed_names": [],
+    "known_calls": [],
+    "known_structures": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Static noinline target and ordinary separate caller select private register contract; amount/fraction inline helpers are compiler context experiments, no separate counted functions.",
+      "Unsigned32 multiplication/subtraction/addition wrap is explicit; signed-positive comparisons use observed two-complement cast, unsigned DIV remains unguarded.",
+      "C volatile choices order exact observed accesses, including volatile stack pointer and first destination with explicit nonvolatile cast only b==0 path; no claim these qualifiers existed in original source.",
+      "No original differential execution, full linking or complete compiler reconstruction.",
+      "Coordinator independently reviewed entry, complete150-byte body, both caller contracts and emitted ESI/EBX plus stack-pointer ABI; freshly compiled public source matches entire zero-relocation section. Unsigned arithmetic wraps; original DIV may fault for a wrapped zero denominator. No original differential execution."
+    ],
     "coordinator_lot": "parallel20-fourth",
     "coordinator_round": 7
   }
