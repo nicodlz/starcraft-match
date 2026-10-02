@@ -12422,5 +12422,1220 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004161C0",
+    "size": 126,
+    "name": "sub_004161C0",
+    "proposed_names": [
+      {
+        "name": "koreanTextLeadByteCheck",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0041630D",
+        "type": "direct_call",
+        "provenance": "Fresh pinned instructions: EDI=[ESI+0x14], EBX-=EDI, --EBX before call; full EAX compared with 2 at 0x00416312."
+      },
+      {
+        "address": "0x0041F9DA",
+        "type": "direct_call",
+        "provenance": "Fresh pinned instructions EDI=[EBP-4], EBX=ESI-EDI before call; EAX compared with 2 afterward, no cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed preceding entry 0x004161B0 ends RET at 0x004161B6; INT3 0x004161B7..BF. Entry 0x004161C0; complete 126-byte body ends RET 0x0041623D; INT3 at 0x0041623E..3F; next entry 0x00416240. All four returns and internal branches reviewed. Independent BWAPI map address/size 0x7E corroboration. Independently authored pure C. Coordinator independent rebuild/review pending.",
+    "calling_convention": "Custom EDI NUL-terminated text pointer, EBX unsigned byte position; full EAX 0/1/2; plain RET; EDI/EBX retained; ESI saved only on Korean-language path. Indirect imported APIs use stdcall; no arguments for LangID, zero-extended BYTE stack argument for lead-byte predicate.",
+    "prototype": "static unsigned int sub_004161C0(const char *text, unsigned int position)",
+    "candidate_source": "src/game/sub_004161C0.c",
+    "candidate_symbol": "_sub_004161C0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Get WORD LangID through IAT 0x004FE14C; return 0 unless 0x0412. Scan strlen text afresh initially and after every processed character. Imported IsDBCSLeadByte through IAT 0x004FE1C4 receives zero-extended unsigned byte. Return 1 for lead-byte position, 2 for following byte position, 0 for ordinary byte position/outside string/non-Korean language. DBCS skips next position without reading it; no null guard.",
+      "Ordinary strlen declaration is MSVC intrinsic-expanded in full; no imported strlen relocation. Dynamic text length is recomputed after API calls rather than cached. Static noinline context selects EDI/EBX; context relocated section excluded/noncounted.",
+      "Fresh strict entire zero-relocation COFF section equals pinned region; recorded hashes/profile in private report. Clang Windows i686 source-only compilation passed; no original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00417E50",
+    "size": 32,
+    "name": "sub_00417E50",
+    "proposed_names": [
+      "setSelectedIndexDirect"
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0041A68F",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE ECX object / EAX index caller review"
+      },
+      {
+        "address": "0x004DF926",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE ECX object / EAX index caller review"
+      },
+      {
+        "address": "0x004AE8B6",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE ECX object / EAX index caller review"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE complete boundaries and caller review; strict full32-byte equality. Provisional private worker result, coordinator review/rebuild pending.",
+    "calling_convention": "Custom ECX object, EAX index selected by ordinary MSVC static context; indirect callback ECX object/EDX event; plain RET; callers discard callback result.",
+    "prototype": "static void sub_00417E50(void *object /* ECX */, unsigned index /* EAX */)",
+    "candidate_source": "src/game/sub_00417E50.c",
+    "candidate_symbol": "_sub_00417E50",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Private preliminary proposal; coordinator owns acceptance.",
+      "Context is hypothetical, separately relocated, not reconstructed/countable.",
+      "Uninitialized event fields retained; widths/order audited.",
+      "Windows i686 Clang portable source compile passed; no original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00417F00",
+    "size": 31,
+    "name": "sub_00417F00",
+    "proposed_names": [
+      {
+        "name": "dlgUpdate1",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x00418F08",
+        "type": "direct_call",
+        "provenance": "Fresh pinned caller: ECX=[ESI+0x42]; EDI=0x00417E20; EBX was copied from input EDX at 0x00418EB5."
+      },
+      {
+        "address": "0x00418CF2",
+        "type": "direct_call",
+        "provenance": "Fresh pinned caller: ECX=[ESI+0x42]; EDI=0x00417E20; EBX was copied from EAX at 0x00418C41."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned PE whole region reviewed; prior RET4 at 0x00417EF0 followed by INT3; sole RET at 0x00417F1E, INT3 at 0x00417F1F; next entry 0x00417F20. Public community map independently corroborates entry/31-byte size. Pure C independently authored; coordinator review pending.",
+    "calling_convention": "Custom ECX node pointer, EBX opaque argument, EDI fastcall callback; callback receives current node ECX and opaque argument EDX. ESI preserved; EBX and EDI retained under callback ABI. Plain RET; no defined result.",
+    "prototype": "static void sub_00417F00(unsigned char *node, void *argument, Callback callback)",
+    "candidate_source": "src/game/sub_00417F00.c",
+    "candidate_symbol": "_sub_00417F00",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Nullable list traversal reads unsigned WORD at +0x22; zero selects unaligned DWORD pointer +0x42, nonzero selects DWORD pointer +0; save next BEFORE callback, then visit callback-modifiable node. No cycle protection.",
+      "Static noinline leaf compiler context selects observed ECX/EBX/EDI input registers. Context uses a separate section and a relocation and is hypothetical/nonmatching/noncounted.",
+      "Fresh strict complete zero-relocation COFF comparison: 31 original / 31 compiled bytes exactly equal. Clang i686 source-only compile passed. No original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00418270",
+    "size": 123,
+    "name": "sub_00418270",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "dlgPassHotkeyEventToFlags",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "references": [
+      {
+        "address": "0x0041BBB4",
+        "type": "direct_call",
+        "provenance": "Fresh aligned caller sets EAX node and EDX mask before call"
+      },
+      {
+        "address": "0x00418B16",
+        "type": "direct_call",
+        "provenance": "Fresh aligned caller sets EAX node and EDX mask before call"
+      },
+      {
+        "address": "0x00418B65",
+        "type": "direct_call",
+        "provenance": "Fresh aligned caller sets EAX node and EDX mask before call"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete 123-byte region with returns at 00418297 and 004182EA, surrounding INT3 and three direct callers; compiler strict zero-relocation section extraction.",
+    "calling_convention": "private EAX node, EDX mask; plain RET, no stack arguments; EAX full-width zero or callback result, ECX/EDX scratch; preserves nonvolatile registers",
+    "prototype": "int sub_00418270(void *node /* EAX */, unsigned int mask /* EDX */)",
+    "candidate_source": "src/game/sub_00418270.c",
+    "candidate_symbol": "_sub_00418270",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Indirect callback via unaligned DWORD at child+0x2A receives ECX child and EDX pointer to 20-byte stack record. Record offsets 8..11 and 18..19 remain uninitialized exactly as observed.",
+      "Search stops at first flags&mask child; if that child fails eligibility, returns zero without searching further.",
+      "Hypothetical ordinary C context induces private EAX/EDX ABI; context is not counted as reconstructed function. No original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004196A0",
+    "size": 75,
+    "name": "sub_004196A0",
+    "proposed_names": [
+      {
+        "name": "assignNextActiveDlgElement",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00416A82",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller selects ESI slot index and EDI replacement pointer"
+      },
+      {
+        "address": "0x00416A8F",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller selects ESI slot index and EDI replacement pointer"
+      },
+      {
+        "address": "0x00416A99",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller selects ESI slot index and EDI replacement pointer"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent C, reviewed complete body/padding/direct caller ABI; independently corroborated pinned community map entry and75byte size. Private proposal awaiting coordinator rebuild.",
+    "calling_convention": "Private ESI unsigned32 slot index / EDI replacement pointer; preserves ESI/EDI, no stack arguments or cleanup, result unspecified. Indirect callback ECX old object / EDX local20byte event.",
+    "prototype": "static void sub_004196A0(unsigned int index, void *next)",
+    "candidate_source": "src/game/sub_004196A0.c",
+    "proposed_public_note": "docs/functions/004196A0.md",
+    "candidate_symbol": "_sub_004196A0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Static ordinary C context selects actual ESI/EDI ABI; helper hypothetical and not counted.",
+      "20byte event preserves six uninitialized bytes, unchecked indexed slot, unaligned callback pointer.",
+      "Strict75byte zero-relocation extraction and literal equality; Clang portable compilation only; no original execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00420860",
+    "size": 126,
+    "name": null,
+    "proposed_names": [
+      "dlgCenterScreen_0"
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x004209F2",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x0042086D",
+        "type": "indirect-import",
+        "iat_address": "0x004FE300"
+      },
+      {
+        "from": "0x00420884",
+        "type": "indirect-import",
+        "iat_address": "0x004FE304"
+      },
+      {
+        "from": "0x00420890",
+        "type": "indirect-import",
+        "iat_address": "0x004FE068"
+      },
+      {
+        "from": "0x0042089F",
+        "type": "indirect-import",
+        "iat_address": "0x004FE068"
+      },
+      {
+        "from": "0x004208AD",
+        "type": "indirect-import",
+        "iat_address": "0x004FE30C"
+      },
+      {
+        "from": "0x004208D2",
+        "type": "indirect-import",
+        "iat_address": "0x004FE314"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "calling_convention": "private ESI input; plain RET; preserves ESI/EBX/EDI/EBP; implicit Win32 stdcall dependencies",
+    "prototype": "void sub_00420860(void *window /* ESI */)",
+    "candidate_source": "src/game/sub_00420860.c",
+    "candidate_symbol": "_sub_00420860",
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "provenance": "Independently authored C; pinned PE boundary/import/caller review; BWAPI map corroboration; private proposal pending coordinator independent rebuild",
+    "notes": [
+      "Static noinline C context selects ESI input; context helper uncounted and unmatched.",
+      "Zero candidate relocations; context helper relocation outside isolated section.",
+      "Full 126-byte strict literal equality freshly rebuilt from final candidate.c; portable Clang compilation only.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "candidate_abi_compatible": true
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00421670",
+    "size": 27,
+    "name": "sub_00421670",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "SetCursorPos_2",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "references": [
+      {
+        "from": "0x004D9975",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004FE2CC",
+        "kind": "import_IAT",
+        "name": "USER32.dll!SetCursorPos"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Manual pinned-PE complete region, padding and aligned direct-call review saved in original.json; independent community map agrees.",
+    "candidate_source": "src/game/sub_00421670.c",
+    "candidate_symbol": "_sub_00421670",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "original_size": 27,
+    "recompiled_size": 27,
+    "measured_report": ".local/parallel20-third/00421670/candidate-report.json",
+    "notes": [
+      "27/27 bytes match exactly using strict isolated COFF extraction. Source candidate.c; final fresh report candidate-report.json; profile msvc71-o2, symbol _sub_00421670. 13 meaningful variants measured (2 conventional ABI, 4 initial context, 6 order/context, 1 final naming/profile).\n\nBoundary: whole entry 0x00421670 through RET 0x0042168A, 27 bytes; eight preceding INT3 and following INT3 to next entry 0x00421690. Independent community map corroborates entry and extent. Direct caller 0x004D9975 in body 0x004D9950 sets ESI=240 and EDI=320, calls without stack arguments. Original body sign-extends SI then DI in place, pushes ESI then EDI, invokes USER32.dll SetCursorPos through IAT DWORD 0x004FE2CC, then writes signed x DWORD to 0x006CDDC4 and signed y DWORD to 0x006CDDC8, regardless of API success. Return is plain RET, API owns eight stack bytes. Candidate preserves EBX/EBP; ESI and EDI intentionally become sign-extended arguments; API EAX result survives, although candidate void does not promise a portable C return value and reviewed caller does not consume it.\n\nSource independently authored from observed widths/order. Static noinline function with sy declared before sx causes MSVC to choose this private DI=x, SI=y contract from ordinary C. Compiler context is hypothetical and uncounted. Its emitted instructions load ESI from second stack argument and EDI from first, establishing the contract before its relocation-bearing call. Only actual candidate section has zero relocations and full strict equality. Never include helper bytes/count as a reconstruction. Source/profile changes invalidate evidence.\n\nNo linked game, original-process execution, portable semantic test, instruction similarity or CFG score claimed. Coordinator must independently review/rebuild before integration.\n",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "calling_convention": "custom DI=signed x, SI=signed y; no stack args, plain RET; EDI/ESI sign extended in place; API EAX result survives; IAT callee owns pushed 8 bytes"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00427DA0",
+    "size": 136,
+    "name": "sub_00427DA0",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x0046D1BF",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00427DE2",
+        "type": "indirect_table_call",
+        "table_address": "0x00519E50",
+        "index_width_bits": 8,
+        "calling_convention": "ECX action pointer; EAX DWORD continuation",
+        "provenance": "Fresh pinned PE call and table/callback inspection; Ghidra discovery omitted indirect call"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00427DA0.c",
+    "candidate_symbol": "_sub_00427DA0",
+    "proposed_names": [
+      {
+        "name": "BriefingActionsLoop",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Private ESI trigger input; DWORD EAX 0/1 result; preserves ESI/callee-saved registers. Callback action pointer ECX, DWORD EAX result. Compiler-selected static contract from ordinary C context.",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Independent C; hypothetical context helper not matched or counted; its relocation outside isolated section.",
+      "No original execution; caller and callback register inputs independently reviewed.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044A000",
+    "size": 111,
+    "name": "sub_0044A000",
+    "proposed_names": [
+      {
+        "name": "GetObjectHeight",
+        "source": "local public BWAPI community map",
+        "confidence": 0.8
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x0044B4F9",
+        "type": "direct_call",
+        "provenance": "Pinned caller pushes returned object handle at0x0044B4F8; compares EAX againstFFFFFFFF after call."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh full region, caller, neighbors and import table reviewed; strict zero-relocation COFF match. Coordinator independent verification pending.",
+    "calling_convention": "stdcall; one dword handle stack argument, full signed EAX result, RET4; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "int STDCALL sub_0044A000(u32 object)",
+    "candidate_source": "src/game/sub_0044A000.c",
+    "candidate_symbol": "_sub_0044A000@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "111/111 exact whole section, no relocations; three source variants. Clang i686 compilation passed; no original differential execution.",
+      "Calls fixed IAT slots, preserves API call order and unchecked failure behavior. TEXTMETRICA buffer56 bytes; first signed dword height read only upon successful metrics result.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00461720",
+    "size": 40,
+    "name": "sub_00461720",
+    "proposed_names": [
+      {
+        "name": "isSaveGameTimerReady",
+        "provenance": "Unverified community annotation from discovery group; not an authenticated original name"
+      }
+    ],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004C9AFF",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller review: no arguments and full EAX test at 0x004C9B04"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004FE0C4",
+        "type": "absolute_iat_indirect",
+        "provenance": "Pinned PE imports identifies KERNEL32.dll GetTickCount"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent C reconstruction; complete 40-byte reviewed region, caller entry corroboration, both RETs and adjacent padding reviewed. Fresh strict isolated zero-relocation COFF equality. Coordinator rebuild pending.",
+    "calling_convention": "cdecl no arguments, full EAX boolean result; ECX/flags clobbered; plain RET. Calls no-argument stdcall GetTickCount through fixed IAT.",
+    "prototype": "unsigned int sub_00461720(void)",
+    "candidate_source": "src/game/sub_00461720.c",
+    "candidate_symbol": "_sub_00461720",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [
+      "KERNEL32.dll!GetTickCount via DWORD IAT 0x004FE0C4"
+    ],
+    "notes": [
+      "Reads BYTE 0x0057F0B4; if zero returns 1 without timer call. Otherwise calls timer then reads DWORD 0x00685164, adds 120000 modulo 2^32 and returns 0 iff now <= unsigned threshold. Equality returns 0; wraparound is preserved.",
+      "Complete region 0x00461720..0x00461748; RETs at 0x00461741 and 0x00461747. INT3 follows through 0x0046174F. Next routine starts with IAT call at 0x00461750.",
+      "Fresh final private candidate: 40 original / 40 compiled bytes, literal exact, zero relocations. Final source MSVC profile unchanged. Clang i686 and GCC native C90 source compilation passed. No original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00489200",
+    "size": 67,
+    "name": "sub_00489200",
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00489478",
+        "type": "direct_call",
+        "provenance": "Caller moves EAX=ESI at00489476; tests full EAX return at0048947D"
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00489222",
+        "type": "indirect_call",
+        "provenance": "DWORD515A98 indexed by zero-extended byte; callback receives ECX=p-15"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned full body, complete returns and adjacent padding manually inspected; caller independently corroborates entry/ABI. Independently authored pure C static context.",
+    "calling_convention": "Custom EAX pointer argument; DWORD EAX boolean result; preserves ESI/EDI; no stack args; plain RET; callback ECX pointer",
+    "prototype": "static int sub_00489200(unsigned char *object)",
+    "candidate_source": "src/game/sub_00489200.c",
+    "candidate_symbol": "_sub_00489200",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "ExecuteTriggerConditions",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "notes": [
+      "67/67 bytes on final candidate.c independent recompile; zero-relocation isolated COFF function. Static ordinary C context selects EAX argument. Context is hypothetical/nonmatching/not counted. Clang Windows-i686 portable source compilation succeeded, no Clang exact claim. Max16 slots of20bytes, skips flag2 before type0 early success. Callback full EAX zero yields failure. No original-process differential execution.",
+      "Independent local community map line2272 confirms entry and size0x43; map SHA256 60e69e90943073696458cd2e5ace9baa39c542cb4ec1ab1d2adfe5dba18035ee",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004BB5A0",
+    "size": 87,
+    "name": "sub_004BB5A0",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "CreateSoundBuffer",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "references": [
+      {
+        "from": "0x004BCC01",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [
+      {
+        "kind": "indirect_vtable",
+        "offset": 12
+      }
+    ],
+    "strings": [],
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "status": "exact_match",
+    "candidate_source": "src/game/sub_004BB5A0.c",
+    "candidate_symbol": "_sub_004BB5A0",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "calling_convention": "custom ESI state pointer; no stack args, plain RET; EAX bool result; ESI preserved",
+    "provenance": "Independent complete pinned PE region/padding/direct caller review and community map corroboration.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "original_size": 87,
+    "recompiled_size": 87,
+    "measured_report": ".local/parallel20-third/004BB5A0/candidate-report.json",
+    "notes": [
+      "Exact 87/87 bytes, strict isolated zero-relocation candidate section. Final candidate.c rebuilt after portability macros; candidate-report.json retains source/compiler/object hashes and flags. MSVC 13.10.3077, msvc71-o2-frame. Clang Windows i686 portable compilation succeeded (portable-check.json); it is source-only evidence. Nine exploratory variants and final rebuild; one exploratory declaration-order variant failed C90 compilation and is not a successful measurement.\n\nBoundary independently reviewed against pinned executable: full 87-byte EBP-framed body begins 004BB5A0, returns at 004BB5ED and 004BB5F6, excluded padding begins 004BB5F7. Community map corroborates entry and extent. Caller 004BCB70 moves EAX into ESI at 004BCB74, later calls 004BB5A0 at 004BCC01 and tests EAX. It passes no stack arguments to this callee. Ordinary static compiler context loads ESI from its stack state argument; only candidate is counted. Compiler context is hypothetical and its call relocation is outside candidate section.\n\nObserved state-pointer input ESI; EAX returns exactly 0 or 1; ESI unchanged. Function zeros all five descriptor DWORDs, loads DWORD object at 006D59F4, sets first fields to 20 and 1, obtains vtable DWORD at object+0, calls entry vtable+12. Four stdcall arguments: object, descriptor pointer, fixed output-pointer address 006D59F8, null. API result DWORD is stored at state+0. Any nonzero result causes DWORD store of 00502C9C at state+8 and EAX=0; zero leaves state+8 untouched and returns 1. No pointer validation. API semantic name is only inferred from community annotation; exact C does not assert original interface typedef names. memset intrinsic is a normal C compiler intrinsic and contains no byte/assembly data. Descriptor and HRESULT widths are pinned i386 observations.\n\nNo original-process execution, linking, native semantic test, CFG or instruction score. Coordinator independent rebuild/review required before public integration.\n",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004BB600",
+    "size": 56,
+    "name": "sub_004BB600",
+    "proposed_names": [
+      {
+        "name": "SetCooperativeLevel",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.9
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004BCBF8",
+        "type": "direct_call",
+        "provenance": "Fresh pinned caller 0x004BCB70 saves incoming EAX into ESI at 0x004BCB74; EDI loaded from stack [EBP+8] at 0x004BCBF5. Full EAX tested at 0x004BCBFD; no caller stack cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed prior function sole final RET at 0x004BB5F6, INT3 0x004BB5F7..0x004BB5FF; entry 0x004BB600, two returns 0x004BB631 and 0x004BB637; INT3 0x004BB638..0x004BB63F, next function 0x004BB640. Independent BWAPI map corroborates address/size 0x38. Independently authored pure C. Coordinator independent rebuild/review pending.",
+    "calling_convention": "Custom ESI pointer to error DWORD record, EDI opaque window argument; full EAX returns 0 or 1; plain RET, no stack arguments. Indirect vtable stdcall call takes object/window/flags, cleans 12 stack bytes; nonvolatile inputs retained.",
+    "prototype": "static unsigned int sub_004BB600(int *error, void *window)",
+    "candidate_source": "src/game/sub_004BB600.c",
+    "candidate_symbol": "_sub_004BB600",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Load global object pointer 0x006D59F4, call vtable slot +0x18 with object, EDI and flag 2; store result DWORD at [ESI]. On nonzero reload global object and retry flag 1, store result again. If nonzero set DWORD [ESI+8]=0x00502CB0 and return 0; otherwise return 1. No null guards; preserve reloads and observed accesses.",
+      "Source uses independent C noinline static leaf plus hypothetical ordinary C context selecting ESI/EDI; context nonmatching/noncounted in separate relocated section.",
+      "Fresh strict entire zero-relocation COFF section equals pinned region; recorded hashes/profile in private report. Clang Windows i686 source-only compilation passed; no original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004BB640",
+    "size": 158,
+    "name": "sub_004BB640",
+    "proposed_names": [
+      {
+        "name": "DSoundCreate",
+        "source": "local public BWAPI community map",
+        "confidence": 0.8
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004BCBEC",
+        "type": "direct_call",
+        "provenance": "Pinned caller retains ESI as three-dword error output and tests full EAX boolean after call."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned full region, callers, neighbors and import table reviewed; independently authored C static context; strict zero-relocation whole-section equality. Coordinator review pending.",
+    "calling_convention": "Custom ESI pointer to three-dword error output selected by MSVC static optimization; full EAX0/1, plain RET, ESI preserved. EBX conditionally saved for cached Sleep pointer; EDI preserved.",
+    "prototype": "static int sub_004BB640(u32 *error /* ESI */)",
+    "candidate_source": "src/game/sub_004BB640.c",
+    "candidate_symbol": "_sub_004BB640",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "158/158 whole isolated section exact; no relocations. Static hypothetical context helper uses ESI input and has its own excluded section/relocation; helper not reconstructed or counted.",
+      "Loads GetProcAddress pointer from IAT4FE244, GetLastError4FE214, cached Sleep4FE10C only on retry branch. Dynamic DirectSoundCreate pointer invoked stdcall with3args.",
+      "Global signed dword retry limit at51A43C is decremented after Sleep1000ms before retry. Status8878000A retry; error outputs3dwords, offsets0,4,8. Absolute string pointers are fixed-address references, no original bytes in C.",
+      "Final private MSVC build exact; Clang i686 source compilation passed, no original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D1650",
+    "size": 154,
+    "name": "sub_004D1650",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004D1C21",
+        "type": "direct_call",
+        "provenance": "Reviewed caller pushes DWORD wait then loads EAX with address of local message storage"
+      },
+      {
+        "address": "0x004D1C72",
+        "type": "direct_call",
+        "provenance": "Second caller site repeats EAX message pointer and one stack argument; consumes full EAX"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh PE complete function branches/returns/neighbors, two caller sites and original import table reviewed independently. Private independently authored pure C90 context.",
+    "calling_convention": "custom MSVC static optimized ABI: message pointer in EAX, one DWORD wait stack slot, full EAX unsigned result, RET4; other callee-saved registers unchanged. COFF decoration _sub_004D1650@8 reflects source stdcall two parameters and is not actual emitted ABI.",
+    "prototype": "static unsigned int __stdcall sub_004D1650(void *message, int wait) /* source prototype; emitted custom EAX + stack, RET4 */",
+    "candidate_source": "src/game/sub_004D1650.c",
+    "candidate_symbol": "_sub_004D1650@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Indirect original IAT calls: GetMessageA at0x004FE2B8, PeekMessageA at0x004FE2D0 and Sleep at0x004FE10C. No import relocations are introduced into the fixed-address candidate.",
+      "Preserves GetMessageA result0 yielding wrapper result1; only -1 yields0.",
+      "Static ordinary C context helper is hypothetical and nonmatching/noncounted; optimization emits compatible custom ABI only under the recorded MSVC profile. Clang compilation is source-only.",
+      "All154bytes match strictly in isolated zero-relocation section; no assembly, original byte arrays, patches, trimming or normalization.",
+      "No original-process/differential execution; provisional record requires coordinator review and independent rebuild.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D1750",
+    "size": 96,
+    "name": "sub_004D1750",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "GameShowCursor",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.95
+      }
+    ],
+    "references": [
+      {
+        "address": "0x004D1DCD",
+        "type": "direct_call",
+        "provenance": "Caller computes ECX boolean and moves ECX to ESI at004D1DCB."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004FE344",
+        "type": "indirect_iat",
+        "name": "LoadCursorA"
+      },
+      {
+        "address": "0x004FE338",
+        "type": "indirect_iat",
+        "name": "SetCursor"
+      },
+      {
+        "address": "0x004FE2DC",
+        "type": "indirect_iat",
+        "name": "GetCursorPos"
+      },
+      {
+        "address": "0x004FE2CC",
+        "type": "indirect_iat",
+        "name": "SetCursorPos"
+      },
+      {
+        "address": "0x004FE308",
+        "type": "indirect_iat",
+        "name": "ShowCursor"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh PE full96-byte region, caller and import review. Prior padding004D1746\u20134F, RET004D17AF, successor004D17B0. Coordinator review pending.",
+    "calling_convention": "custom ESI int input, preserved; no stack arguments, plain RET; EBP frame, EAX/ECX/EDX/flags clobbered, no semantic result",
+    "prototype": "void sub_004D1750(int show /* ESI */)",
+    "candidate_source": "src/game/sub_004D1750.c",
+    "candidate_symbol": "_sub_004D1750",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [
+      "USER32 LoadCursorA",
+      "USER32 SetCursor",
+      "USER32 GetCursorPos",
+      "USER32 SetCursorPos",
+      "USER32 ShowCursor"
+    ],
+    "notes": [
+      "Static noinline C with hypothetical noncounted context induces ESI input. Context relocation lies in another section. Full strict isolated section equality96/96.",
+      "GetCursorPos failure intentionally unchecked; local point data passed on regardless. Preserve original behavior.",
+      "Portable Clang compilation passed, exact evidence MSVC only. No original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D1810",
+    "size": 106,
+    "name": "sub_004D1810",
+    "proposed_names": [
+      {
+        "name": "GetKeyModifierFlags",
+        "source": "private reviewed Broodwar.map community annotation",
+        "confidence": 0.8
+      }
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004D21A9",
+        "type": "direct_call",
+        "provenance": "Pinned binary direct CALL entry; no arguments, caller stores returned AX."
+      },
+      {
+        "address": "0x004D1F36",
+        "type": "direct_call",
+        "provenance": "Pinned binary direct CALL entry; no arguments, caller stores returned AX."
+      },
+      {
+        "address": "0x004D226E",
+        "type": "direct_call",
+        "provenance": "Pinned binary direct CALL entry; no arguments, caller stores returned AX."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independently authored pure C; fresh full pinned body/caller audit and strict isolated COFF equality. Private proposal; coordinator independent validation pending.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004D1810.c",
+    "candidate_symbol": "_sub_004D1810",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "cdecl no arguments; full EAX unsigned DWORD flags; plain RET; preserves EDI and ESI. Four indirect stdcall calls consume one DWORD each, test return bit 0 in AL.",
+    "prototype": "unsigned long sub_004D1810(void)",
+    "candidate_abi_compatible": true,
+    "dependencies": [],
+    "known_structures": [],
+    "known_calls": [],
+    "notes": [
+      "Reads bytes at 0x596A28/29/2A; sets bits 3,4,8 respectively. Loads function pointer once from 0x4FE2C0; ordered calls 0x14,0x90,0x91,0x2D set 0x40,0x20,0x10,0x80 if low return bit is set.",
+      "MSVC71 /O2 /Oy /Gy /Zl /G6 exact 106/106 with zero callee-section relocations. No trimming, normalization, copied original bytes, assembly, or patching.",
+      "Clang i686 C11 source compilation passes; source-only check, no original execution. Boundary includes final RET at 004D1879, next six bytes INT3 until 004D1880.",
+      "No static context helper. Coordinator owns public integration and must fresh rebuild.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D1880",
+    "size": 127,
+    "name": "sub_004D1880",
+    "confidence": 0.99,
+    "proposed_names": [
+      {
+        "name": "Game_Close",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "references": [
+      {
+        "address": "0x004D22FB",
+        "type": "direct_call",
+        "provenance": "Fresh complete caller 004D1D70; no input arguments or cleanup, return EAX overwritten at 004D2302."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004FE334",
+        "type": "iat_indirect",
+        "name": "GetWindowThreadProcessId"
+      },
+      {
+        "address": "0x004FE32C",
+        "type": "iat_indirect",
+        "name": "EnumWindows"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE body and neighboring functions reviewed; complete direct caller reviewed; map entry corroborates 127-byte boundary. Independently authored C. Private worker proposal requires coordinator independent recompilation.",
+    "calling_convention": "No arguments; plain RET; EBP preserved, stack balanced; EAX/ECX/EDX scratch, caller ignores EAX. Imported function-pointer calls stdcall.",
+    "prototype": "void sub_004D1880(void)",
+    "candidate_source": "src/game/sub_004D1880.c",
+    "candidate_symbol": "_sub_004D1880",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "category": "game_state_callback",
+    "known_structures": [],
+    "known_calls": [
+      "GetWindowThreadProcessId",
+      "EnumWindows"
+    ],
+    "dependencies": [
+      "USER32 IAT 0x004FE334 and 0x004FE32C",
+      "Callback at 0x004DC6D0"
+    ],
+    "notes": [
+      "Both API return values ignored; process local is not initialized before passing its address, preserving observed behavior.",
+      "DWORD destination 0x006D0F31 intentionally unaligned; keep original Windows i386 width.",
+      "Clang portable source compile succeeded, strict region119 differs; only historical profile matches.",
+      "No original-process or original differential execution.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "measurement": {
+      "original_size": 127,
+      "recompiled_size": 127,
+      "source_sha256": "19ac359df821ff429f2452f4c7c651afc0d7ce8734af808bd6b5448cf7f64761",
+      "object_sha256": "3808986ef926649fec52883bf6919d28f377f866266f05ac5d4671ffea46252c",
+      "compiler_identity_sha256": "7d956ff2372f600b24fe66e86e5291541d125fb2d49d4e9bea0fa585f989c95b",
+      "report": ".local/parallel20-third/004D1880/candidate.report.json"
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D3510",
+    "size": 37,
+    "name": "sub_004D3510",
+    "confidence": 0.99,
+    "references": [
+      {
+        "from": "0x004D3E33",
+        "type": "UNCONDITIONAL_CALL"
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x004D3524",
+        "to": "0xEXTERNAL:00000029"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "proposed_names": [
+      {
+        "name": "ResetLeagueEvent",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": 0.8
+      }
+    ],
+    "candidate_source": "src/game/sub_004D3510.c",
+    "candidate_symbol": "_sub_004D3510",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "No arguments, plain RET. EAX/ECX volatile; no preserved-register writes. API import called through fixed IAT pointer with one stack DWORD, stdcall cleanup; caller ignores result.",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Independent C; no third-party implementation consulted.",
+      "Whole section zero relocations and equality.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004D9FE0",
+    "size": 126,
+    "name": "sub_004D9FE0",
+    "proposed_names": [
+      "dlgCenterScreen"
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004DA3BB",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller reviewed"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE full region/neighbors/caller/import review; strict whole-function zero-relocation equality; private worker proposal awaiting coordinator rebuild.",
+    "calling_convention": "Private ESI HWND selected by MSVC static context; EBP/EBX/EDI/ESI preserved; plain RET; last API return ignored by caller.",
+    "prototype": "static void sub_004D9FE0(unsigned window /* ESI */)",
+    "candidate_source": "src/game/sub_004D9FE0.c",
+    "candidate_symbol": "_sub_004D9FE0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Private proposal; coordinator review/rebuild required.",
+      "Full final candidate exact, Windows i686 Clang source-only compile passed; no original differential execution.",
+      "Hypothetical ordinary C context separately relocated/noncounted; emitted custom ESI ABI audited.",
+      "Original API failure handling absent and locals uninitialized, retained.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004DCC50",
+    "size": 59,
+    "name": "sub_004DCC50",
+    "proposed_names": [
+      "nextLeaveGameMenu"
+    ],
+    "confidence": 0.98,
+    "references": [
+      {
+        "address": "0x004BB4A4",
+        "type": "direct_call",
+        "provenance": "Fresh pinned PE caller reviewed"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh pinned PE full region/neighbors/caller/import review; strict whole-function zero-relocation equality; private worker proposal awaiting coordinator rebuild.",
+    "calling_convention": "No incoming arguments; conventional cdecl-compatible plain RET, result ignored by inspected caller.",
+    "prototype": "void sub_004DCC50(void)",
+    "candidate_source": "src/game/sub_004DCC50.c",
+    "candidate_symbol": "_sub_004DCC50",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Private proposal; coordinator review/rebuild required.",
+      "Full final candidate exact, Windows i686 Clang source-only compile passed; no original differential execution.",
+      "Fixed IAT indirect API calls emit no relocations; fixed callback code-address immediate retained.",
+      "Original API failure handling absent and locals uninitialized, retained.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004E88B0",
+    "size": 98,
+    "name": "sub_004E88B0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004E8982",
+        "type": "direct_call",
+        "provenance": "Reviewed caller at 004E8970 retains incoming ECX and calls on event kind14/code10"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Full pinned-PE body, internal branches, terminal return, surrounding padding, direct caller and indirect callback ABI independently reviewed; community DlgLatency label is an unverified annotation.",
+    "calling_convention": "fastcall ECX control pointer, EDX unused incoming; no stack arguments; callback fastcall ECX same control and EDX local20-byte record; ret0; upper EAX return unspecified and caller ignores it",
+    "prototype": "void __fastcall sub_004E88B0(struct Control *control)",
+    "candidate_source": "src/game/sub_004E88B0.c",
+    "candidate_symbol": "@sub_004E88B0@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Reviewed choice WORD at control+0x20; callback pointer DWORD at control+0x2A.",
+      "Global DWORD 0x6556E4 compared with choice-1 for choices1..3; unsupported choices return.",
+      "Local event code DWORD11 at+0, value DWORD boolean at+4, kind WORD14 at+12. Remaining local bytes intentionally uninitialized and source preserves this.",
+      "No third-party implementation copied. No executable/process differential execution.",
+      "Private provisional record; coordinator must independently rebuild final public source.",
+      "Coordinator reviewed the boundary/ABI audit and independently authored C, then freshly rebuilt the final public source path and compared the complete zero-relocation function section. Hypothetical compiler contexts remain noncounted."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
