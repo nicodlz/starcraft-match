@@ -14481,7 +14481,7 @@
     "candidate_source": "src/game/sub_0047EB30.c",
     "candidate_symbol": "_sub_0047EB30",
     "compiler_profile": "msvc71-o2",
-    "calling_convention": "cdecl-compatible no-argument leaf, imported stdcall callee",
+    "calling_convention": "cdecl-compatible no-argument function; calls USER32.dll!SetCursorPos through a stdcall IAT entry; return ignored",
     "prototype": "void sub_0047EB30(void)",
     "dependencies": [],
     "match": {
@@ -15992,5 +15992,140 @@
     "candidate_abi_compatible": true,
     "coordinator_lot": "parallel20-fourth",
     "coordinator_round": 6
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0047D2C0",
+    "size": 57,
+    "name": "sub_0047D2C0",
+    "confidence": 1,
+    "references": [
+      {
+        "from": "0x0047D544",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "MOV ECX,EDI at0047D540, MOV EDX,EBX at0047D542, direct call then TEST EAX,EAX"
+      },
+      {
+        "from": "0x0047DCC1",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "Direct call then saves ECX/EDX and moves result EAX into ESI"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent complete pinned region, neighboring boundaries and two direct callers reviewed; standard ECX/EDX fastcall observed. Independently authored C context with single return, recorded historical profile, full zero-relocation section equality. Coordinator independently reviewed and rebuilt the public source.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0047D2C0.c",
+    "candidate_symbol": "@sub_0047D2C0@8",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "Standard fastcall ECX/EDX full-width unsigned keys; EAX pointer result; ESI preserved; RET",
+    "prototype": "static unsigned char *__fastcall sub_0047D2C0(unsigned long a,unsigned long b)",
+    "dependencies": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "notes": [
+      "Independent C90 compiler context is a hypothetical compiler context; wrapper not counted.",
+      "No original differential execution; coordinator independently rebuilt.",
+      "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 7
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004AABF0",
+    "size": 110,
+    "name": "sub_004AABF0",
+    "confidence": 0.98,
+    "references": [
+      {
+        "from": "0x004EEC6C",
+        "type": "UNCONDITIONAL_CALL",
+        "reviewed_window": "0x004EEC61-0x004EEC71",
+        "provenance": "fresh binary disassembly; no args, EAX immediately overwritten after call"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004AABF0.c",
+    "candidate_symbol": "_sub_004AABF0",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "no arguments; void result; EDI preserved; plain RET",
+    "prototype": "void sub_004AABF0(void)",
+    "match_expectation": "exact",
+    "proposed_names": [],
+    "dependencies": [],
+    "provenance": "Independently authored C from pinned full region and no-argument direct caller; duplicated switch clear paths are a compiler layout experiment. Coordinator independently reviewed complete boundary/ABI and freshly rebuilt public source.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "110 contiguous bytes004AABF0-004AAC5D; returns004AAC29/004AAC5D; previous RET004AABE5 then INT3E6-EF; following INT35E-5F before004AAC60.",
+      "Global semantic roles unknown. Explicitly duplicated clear paths are a C compiler-layout experiment, not recovered original source. No original differential execution or game linking.",
+      "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 7
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004531A0",
+    "size": 67,
+    "name": "sub_004531A0",
+    "confidence": 0.98,
+    "references": [
+      {
+        "from": "0x0049F382",
+        "type": "UNCONDITIONAL_CALL",
+        "reviewed_window": "0x0049F380+12",
+        "provenance": "Pinned PE: entry pushes ESI/EDI before direct call, prepares no stack arguments and ignores return."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent reconstruction from complete pinned body, direct caller, predecessor RET/padding and excluded following padding. Ghidra discovery only, no map size assumption.",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004531A0.c",
+    "candidate_symbol": "_sub_004531A0",
+    "compiler_profile": "msvc71-o2",
+    "calling_convention": "cdecl-compatible no arguments; EAX/ECX scratch; successful sole return has full EAX=32; reviewed caller ignores EAX",
+    "prototype": "unsigned int sub_004531A0(void);",
+    "dependencies": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "notes": [
+      "Full67-byte zero-relocation section literal equality; no trimming or normalization.",
+      "i=0..31; truncate i+32 to byte for first four32-byte buffers, then i-64 for next four; ordered eight byte writes per iteration.",
+      "Successful return observes EAX=32. Source return i prevents MSVC induction strengthening to absolute pointer; this is an ABI-compatible compiler experiment, not authentication of original return type.",
+      "Recorded msvc71-o2 unchanged; no pragmas, assembly, byte embedding or post-build changes.",
+      "Coordinator freshly rebuilt the public source, required literal equality of the complete zero-relocation section and independently checked entry, boundary and ABI; no original differential execution."
+    ],
+    "candidate_abi_compatible": true,
+    "coordinator_lot": "parallel20-fourth",
+    "coordinator_round": 7
   }
 ]
