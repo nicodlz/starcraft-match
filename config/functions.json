@@ -25401,5 +25401,447 @@
       "cfg": null
     },
     "calling_convention": "No incoming arguments/plain RET, EAX Boolean0/1; EBX/ESI/EDI/EBP preserved."
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CE470",
+    "name": "sub_004CE470",
+    "size": 46,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004CE470.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_004CE470",
+    "references": [
+      {
+        "address": "0x004CFA32",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 226-byte caller at 004CFA10 passes ESI without stack arguments and tests full EAX."
+      }
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_00411BB7": {
+          "address": 4266935,
+          "kind": "code",
+          "evidence": [
+            "Full69byteCRTgetc-likecdeclwrapper, one streamstackarg/callerADDESP4, signedEAXcharacteror-1; SEHprologue/epilogue checked separately."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_004CE470",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "calling_convention": "Private ESI stream, no stack args/plainRET, full EAX 0/1; ESI unchanged, EBX/EDI/EBP preserved. Outgoingcdeclstream1 arg, returnEAXcharor-1.",
+    "notes": [
+      "Full46bytebody004CE470..004CE49D, reviewed directcaller004CFA32 within entirecallerbody. Entrycorroboratedbycall, notpaddingalone.",
+      "Complete69byteCRTwrapper411BB7 plusSEHprologue/epilogue andimmediateCRTdependencies reviewedABIonly/noncounted.",
+      "IndependentordinaryC compiledMSVC71-o2; full linkedextent46, two REL32 offsets2/23 tooneundefinedexternal, excludedordinarycontext12. No runtime original-process execution.",
+      "The private ESI stream input, no stack arguments, plain RET and full EAX Boolean result are corroborated by a complete 226-byte caller. The function consumes at least one character, repeats until signed -1 or 26, and returns whether the terminating value differs from -1. The complete 69-byte cdecl CRT wrapper and its 59/17-byte SEH prologue/epilogue preserve nonvolatile registers and leave the stream argument for caller cleanup. Immediate lock/refill/cleanup dependencies are reviewed for the external contract only. No CRT source is copied or counted. The original stream must be valid; endless input remains unbounded. Exceptions and deeper OS I/O are not executed. A 12-byte ordinary compiler context is excluded."
+    ],
+    "confidence": 0.95,
+    "calls": [
+      {
+        "address": "0x00411BB7",
+        "type": "reviewed_external_crt_wrapper",
+        "provenance": "Complete 69-byte cdecl one-stream-argument wrapper; SEH and immediate dependencies reviewed and uncounted."
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "known_structures": [],
+    "provenance": "Pinned complete function 0x004CE470..0x004CE49E exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004586F0",
+    "name": "sub_004586F0",
+    "size": 63,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004586F0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_004586F0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [],
+      "bindings": {
+        "_value_006D5CB0": {
+          "address": 7167152,
+          "kind": "data",
+          "evidence": [
+            "Pinned firstDWORDglobal test, stdcall16 thenDWORDclear."
+          ]
+        },
+        "_value_006D5CB8": {
+          "address": 7167160,
+          "kind": "data",
+          "evidence": [
+            "Pinned secondDWORDglobal reread after firstcall, then stdcall16/DWORDclear."
+          ]
+        },
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Complete6byte JMP[IAT4FE564], Stormordinal403, four pushedDWORDs(pointer,0,0,0), noADDESP stdcall16; importedimplementation external."
+          ]
+        }
+      }
+    },
+    "confidence": 0.95,
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_import_thunk",
+        "provenance": "Complete six-byte JMP through pinned Storm403 IAT; original four-DWORD stdcall16 contract inferred from stack balance."
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "notes": [
+      "No input arguments and plain RET; incidental EAX is ignored. Entry is corroborated by CALL 004598A7 in a complete 54-byte caller, independently supported by a pointer slot at 0051AD54. Its later indirect tail JMP at 004598BF is not the reference to this selected function. Two distinct DWORD global cells retain load/call/clear order, including rereading the second after external effects. Equal handle values still permit two calls; imported failure does not prevent clears. Four-DWORD stdcall cleanup16 is inferred from pinned thunk and stack balance. Mapped aligned storage and the opaque imported contract are required; unsynchronized concurrent writes are outside defined-C guarantees."
+    ],
+    "known_structures": [],
+    "references": [
+      {
+        "address": "0x004598A7",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 54-byte caller at 00459890; callable entry corroborated by pinned pointer slot 0051AD54."
+      }
+    ],
+    "calling_convention": "No incoming arguments, plain RET; nonvolatile registers preserved under original imported stdcall contract; incidental EAX not promised.",
+    "provenance": "Pinned complete function 0x004586F0..0x0045872F exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00448AD0",
+    "name": "sub_00448AD0",
+    "size": 69,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_00448AD0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_00448AD0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_006D5DC0": {
+          "address": 7167424,
+          "kind": "data",
+          "evidence": [
+            "Pinned target DWORD handles and const debugging string reference independently reviewed."
+          ]
+        },
+        "_data_006D5DC4": {
+          "address": 7167428,
+          "kind": "data",
+          "evidence": [
+            "Pinned target DWORD handles and const debugging string reference independently reviewed."
+          ]
+        },
+        "_data_005055D4": {
+          "address": 5264852,
+          "kind": "data",
+          "evidence": [
+            "Pinned target DWORD handles and const debugging string reference independently reviewed."
+          ]
+        },
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Full6-byte thunk JMP[4FE564], pinned import Storm403; four stackDWORD/RET16 inferred from balanced calls and other callsites. DLL implementation outside supplied PE."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "calling_convention": "No incoming arguments, plain RET; nonvolatile registers preserved under original imported stdcall contract; incidental EAX not promised.",
+    "notes": [
+      "Pinned full69-byte body, whole caller and full6-byte importthunk reviewed; Storm403 ABI corroborated by363 aligned callwindows, DLL implementation outside PE.",
+      "Only reviewed external symbols resolved; no implementation/ASM/bytes/shim/trim/patch/rebinding.",
+      "No incoming arguments, plain RET, incidental result ignored by a complete 349-byte caller. Two distinct DWORD cells may hold equal handles or be modified by the import; second load follows first call and clear. The observed debug-data pointer and line values 0x59/0x5d are passed unchanged, with no string contents copied. The complete six-byte Storm403 thunk and independent caller stack balances support stdcall16, while the DLL implementation remains unavailable and uncounted. Mapped writable globals and imported pointer contracts are required; no lifetime repair or deduplication is added."
+    ],
+    "confidence": 0.95,
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_import_thunk",
+        "provenance": "Complete six-byte JMP through pinned Storm403 IAT; original four-DWORD stdcall16 contract inferred from stack balance."
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "known_structures": [],
+    "references": [
+      {
+        "address": "0x00448DBE",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 349-byte caller at 00448D60 passes no arguments and overwrites incidental EAX."
+      }
+    ],
+    "provenance": "Pinned complete function 0x00448AD0..0x00448B15 exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044CDA0",
+    "name": "sub_0044CDA0",
+    "size": 75,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0044CDA0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0044CDA0",
+    "calling_convention": "No incoming arguments, plain RET; nonvolatile registers preserved under original imported stdcall contract; incidental EAX not promised.",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [],
+      "bindings": {
+        "_dependency_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Complete6byte JMP IAT004FE564 Storm ordinal403; fourDWORD pushes and continuing stackbalance prove callee16cleanup."
+          ]
+        }
+      }
+    },
+    "references": [
+      {
+        "address": "0x004ACF2E",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 87-byte caller at 004ACF20 passes no arguments and ignores incidental result."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_import_thunk",
+        "provenance": "Complete six-byte JMP through pinned Storm403 IAT; original four-DWORD stdcall16 contract inferred from stack balance."
+      }
+    ],
+    "notes": [
+      "Complete75byte body with precedingRET24 and INT3 padding, followingINT3; pinned complete87byte caller and6byte Storm403 importthunk reviewed.",
+      "Read firstglobal68F6D4 then nonnull call with504F0C,4A9,0 andclearaftercall. Read secondglobal68F6C0 onlyafterfirstcall/clear; args504F0C,4AD,0 thenclear. Externalmutation preserved.",
+      "Valid aligned writable DWORDglobals; nonnullpointer and staticstring externalcontract delegated to actual pinneddependency. DLLbody unavailable, no semantic allocatorclaim. PureC, no contexts/shims/ASM/bytes/patch/trim.",
+      "Firstcandidate MSVC71-o2 exact75/75, two externalREL32 only, entire .scmatch selected. Source-only Clang verification separate; original differential/CFG/semanticexecution not performed.",
+      "No incoming arguments, plain RET; the complete 87-byte caller ignores incidental EAX. Independent fixed-address C pointer accesses retain DWORD width, first call/clear and subsequent second load, including coincident pointers and external mutation. Observed debug-data address 00504F0C and line values 0x4a9/0x4ad are passed unchanged without copying strings. The whole six-byte Storm403 thunk is bound as an external four-DWORD stdcall16 dependency. Defined C requires valid aligned mapped global storage and the original external pointer contract; DLL implementation and execution are not claimed."
+    ],
+    "confidence": 0.95,
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "known_structures": [],
+    "provenance": "Pinned complete function 0x0044CDA0..0x0044CDEB exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0045E360",
+    "name": "sub_0045E360",
+    "size": 63,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0045E360.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "confidence": 0.95,
+    "calling_convention": "No incoming arguments, plain RET; nonvolatile registers preserved under original imported stdcall contract; incidental EAX not promised.",
+    "candidate_symbol": "_sub_0045E360",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [],
+      "bindings": {
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Complete6byteJMP IAT4FE564 Stormordinal403; observedfourDWORDargs callee16cleanup, no callerESPreset."
+          ]
+        },
+        "_data_0068AC7C": {
+          "address": 6859900,
+          "kind": "data",
+          "evidence": [
+            "PinnedDWORDload/test/postcallzero at45E360/375."
+          ]
+        },
+        "_data_0068AC84": {
+          "address": 6859908,
+          "kind": "data",
+          "evidence": [
+            "PinnedDWORDload/test/postcallzero at45E37F/394."
+          ]
+        }
+      }
+    },
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_import_thunk",
+        "provenance": "Complete six-byte JMP through pinned Storm403 IAT; original four-DWORD stdcall16 contract inferred from stack balance."
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "notes": [
+      "No input arguments, plain RET; the complete 100-byte caller and its separately reviewed dispatch tables corroborate CALL 0045F2D2. The subsequent tail destination overwrites EAX before reading it, supporting a void source result. Two distinct DWORD globals retain optional call then clear and a fresh second load. Equal values, imported mutations and ignored failure returns are preserved. The Storm403 thunk and original stack balance support four-DWORD stdcall16. Valid mapped storage and opaque imported behavior remain required; neither an allocator implementation nor original-process execution is claimed."
+    ],
+    "known_structures": [],
+    "references": [
+      {
+        "address": "0x0045F2D2",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 100-byte caller at 0045F290 with separate dispatch tables and entry pointer slot 0045F760."
+      }
+    ],
+    "provenance": "Pinned complete function 0x0045E360..0x0045E39F exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C2320",
+    "name": "sub_004C2320",
+    "size": 73,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004C2320.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_004C2320",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "@sub_0047B230@4": {
+          "address": 4698672,
+          "kind": "code",
+          "evidence": [
+            "Complete63-byte leaf ECX handle only, full EAX pointer/zero result, plain RET; no stack arguments consumed."
+          ]
+        },
+        "_sub_0049AB00@24": {
+          "address": 4827904,
+          "kind": "code",
+          "evidence": [
+            "Complete663-byte code body, six DWORD stack args, RET24; own dispatch and index tables separately reviewed."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_004C2320",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x00486820",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 2012-byte caller at 004865D0 sets EAX to packet after an 11-byte size check; result ignored."
+      }
+    ],
+    "notes": [
+      "Whole73-byte C-derived contribution exactly matches, with external code bindings and excluded ordinary context.",
+      "First dependency ECX-only leaf consumes no stack; pre-pushed three arguments intentionally remain for second dependency six DWORD stack args/RET24.",
+      "Second dependency reads fourth stack slot as DWORD; source supplies U16 actual converted to full DWORD with emitted XOR+MOV upper16 zero, exactly original observed domain. Byte args5/6 occupy DWORD slots and are zero-extended in fresh emission.",
+      "Complete caller2012, dependencies63 and code663 plus padding/tables165 (whole828), ten direct transitive bodies reviewed. No original-process execution.",
+      "The actual EAX packet pointer and no-stack plain-RET ABI are corroborated by a complete 2012-byte caller, which checks at least 11 packet bytes. WORD coordinates at offsets 1/3 are compared unsigned against WORD bounds, then sign-extended for the downstream call. The ECX-only helper is a complete 63-byte body. The downstream six-stack-DWORD RET24 callee is reviewed as 657 code bytes plus six internal padding bytes, with separate 8/156-byte dispatch tables and ten immediate dependencies. Although its fourth C formal is U16, fresh emission supplies the complete DWORD zero-extended from packet WORD+7; arguments five/six are zero-extended BYTEs. Packet WORD accesses can be unaligned: guarantees are specific to the recorded i386 little-endian compiler/machine contract, not arbitrary-host ISO C alignment. Valid 11-byte packet storage and mapped global WORD bounds are required. A nine-byte ordinary compiler context is excluded."
+    ],
+    "calls": [
+      {
+        "address": "0x0047B230",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x0049AB00",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "known_structures": [],
+    "calling_convention": "Private EAX packet pointer, no stack inputs, plain RET; result ignored; nonvolatile registers preserved. Outgoing ECX-only helper and six-stack-DWORD stdcall24.",
+    "provenance": "Pinned complete function 0x004C2320..0x004C2369 exclusive; entry, whole boundary, ABI and external bindings independently reviewed, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
