@@ -26607,5 +26607,223 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041EB80",
+    "name": "sub_0041EB80",
+    "size": 191,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0041EB80.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x0041ECEF",
+        "type": "reviewed_direct_call",
+        "provenance": "Whole412-byte caller at0041ECB0 supplies52-byte local output."
+      },
+      {
+        "address": "0x0041F02B",
+        "type": "reviewed_direct_call",
+        "provenance": "Whole207-byte caller at0041EFD0 supplies52-byte local output."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0041005E",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00410064",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00410058",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x004FE22C",
+        "type": "reviewed_import_iat"
+      },
+      {
+        "address": "0x004FE0A4",
+        "type": "reviewed_import_iat"
+      },
+      {
+        "address": "0x004FE1B0",
+        "type": "reviewed_import_iat"
+      }
+    ],
+    "strings": [],
+    "candidate_symbol": "_sub_0041EB80@4",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_0041005E@8": {
+          "address": 4259934,
+          "kind": "code",
+          "evidence": [
+            "Whole6 IAT4FE3A8 VERSION.dll GetFileVersionInfoSizeA stdcall2DWORDs."
+          ]
+        },
+        "_sub_00410064@16": {
+          "address": 4259940,
+          "kind": "code",
+          "evidence": [
+            "Whole6 IAT4FE3A4 VERSION.dll GetFileVersionInfoA stdcall4DWORDs."
+          ]
+        },
+        "_sub_00410058@16": {
+          "address": 4259928,
+          "kind": "code",
+          "evidence": [
+            "Whole6 IAT4FE3A0 VERSION.dll VerQueryValueA stdcall4DWORDs."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "calling_convention": "One DWORD stack output pointer, RET4; EBP/EBX/ESI/EDI preserved, incidental EAX ignored by reviewed callers.",
+    "notes": [
+      "The complete 191-byte function and whole412/207-byte callers corroborate one writable52-byte output argument, RET4 and preserved nonvolatile registers. The output is cleared as thirteen DWORDs before querying the main-module filename into260 local bytes. Size0 skips allocation; allocation failure is not repaired, query failures retain the clear output, and release follows every nonzero-size attempt. Root-query copy clamps a separate unsigned local amount to52 without rewriting the API length, retaining native DWORD/BYTE copy widths. Three complete VERSION.dll thunks and three raw KERNEL32 IAT entries are independently reviewed; no DLL or CRT implementation is copied or counted. Source behavior admission requires the main-module file remain the pinned supported image, a filename fitting260 bytes with its terminator, conforming original Windows API contracts and valid52-byte output distinct from allocation. Independent PE resource review finds type16/name1/language1033 atRVA002EAEA8 with root808-byte extent, Value52 and fixed-info signatureFEEF04BD. Combined with the documented root-query contract, this supports a nonnull52-byte successful value for this unchanged module; it is a scoped inference, not historical DLL execution or a universal success theorem. Resource mutation, malformed data, hooks and a hypothetical successNULL/length0 are outside that C-domain claim: memcpy(NULL,0) is not justified merely by native REP0. The full machine body remains identical, preserving short copies and failure paths without a guard or repair. Semantic/CFG metrics remain null."
+    ],
+    "provenance": "Pinned whole function0x0041EB80..0x0041EC3F exclusive; independent boundary/ABI/API-domain audit and separate coordinator final-path fresh compilation.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044B0D0",
+    "name": "sub_0044B0D0",
+    "size": 123,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0044B0D0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0044B0D0@4",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x0044B952",
+        "type": "reviewed_direct_call",
+        "provenance": "Whole478-byte caller0044B7E0 passes window and ignores return."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004100AC",
+        "type": "direct_call"
+      },
+      {
+        "address": "0x004DDD30",
+        "type": "direct_call"
+      },
+      {
+        "address": "0x00409CBE",
+        "type": "direct_call"
+      },
+      {
+        "address": "0x004FE358",
+        "type": "reviewed_import_iat"
+      }
+    ],
+    "strings": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_data_005159A4": {
+          "address": 5331364,
+          "kind": "data",
+          "evidence": [
+            "signedWORDloopbound reloaded after calls"
+          ]
+        },
+        "_data_0050110C": {
+          "address": 5247244,
+          "kind": "data",
+          "evidence": [
+            "signedWORDidentifier table stride4"
+          ]
+        },
+        "_data_004FF894": {
+          "address": 5240980,
+          "kind": "data",
+          "evidence": [
+            "genuine imported loader firststringpointer"
+          ]
+        },
+        "_data_00503794": {
+          "address": 5257108,
+          "kind": "data",
+          "evidence": [
+            "genuine imported loader secondstringpointer"
+          ]
+        },
+        "_sub_004100AC@20": {
+          "address": 4260012,
+          "kind": "code",
+          "evidence": [
+            "Whole6byte Storm422 stdcall5 thunk"
+          ]
+        },
+        "_sub_004DDD30@4": {
+          "address": 5102896,
+          "kind": "code",
+          "evidence": [
+            "Whole310byte stackidentifier RET4 EAXcstring helper"
+          ]
+        },
+        "_sub_00409CBE": {
+          "address": 4234430,
+          "kind": "code",
+          "evidence": [
+            "Whole105byte locale-sensitive CRT comparison cdecl2"
+          ]
+        },
+        "__imp__SendMessageA@16": {
+          "address": 5235544,
+          "kind": "data",
+          "evidence": [
+            "USER32SendMessageA IAT stdcall4"
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "stdcall1window/RET4, return discarded by sole observed caller; Storm422 stdcall5, stringhelperstdcall1RET4, CRTlocalecomparecdecl2, USER32SendMessageA IATstdcall4.",
+    "notes": [
+      "Whole123-byte body, whole478-byte caller and original direct/imported callees corroborate stdcall one window argument, RET4 and preserved nonvolatile registers. Loader return remains ignored and local128-byte buffer remains initially uninitialized. Candidate only forms its address and passes it to the separately declared original loader and original locale-sensitive CRT comparator; it performs no C character read and substitutes no ISO string routine. External unterminated-string reads, faults and failure effects remain original opaque external behavior, not a locally introduced indeterminate-value evaluation. No universal successful loader/string guarantee is claimed. Signed WORD count/identifier loads, four-byte table stride, count reload after foreign calls, first-match message order and early break are retained. Initial count7/IDs85..91 are independently observed; valid accessible Entry storage is required for positive counts. Concurrent corruption and arbitrary indirect mutation are not certified. Native CRT, Storm and USER32 implementations remain external and uncounted. No original-process execution or differential semantic evidence; semantic/CFG metrics remain null."
+    ],
+    "provenance": "Pinned executable whole0x0044B0D0..0x0044B14B exclusive, independently reviewed boundary/ABI/source operations and coordinator fresh final-path rebuild.",
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": []
   }
 ]
