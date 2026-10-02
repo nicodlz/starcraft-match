@@ -25843,5 +25843,368 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0044CF90",
+    "name": "sub_0044CF90",
+    "size": 75,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_0044CF90.c",
+    "known_structures": [],
+    "candidate_symbol": "_sub_0044CF90",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x0044D5E9",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 122-byte caller at 0044D5B0 passes no arguments and overwrites EAX immediately after the call."
+      }
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [],
+      "bindings": {
+        "_data_0068F6DC": {
+          "address": 6878940,
+          "kind": "data",
+          "evidence": [
+            "FirstDWORDload/test andclear afterimport."
+          ]
+        },
+        "_data_0068F6D8": {
+          "address": 6878936,
+          "kind": "data",
+          "evidence": [
+            "SecondDWORDload/test afterfirstimport andclear; distinctstorage4bytesaway."
+          ]
+        },
+        "_data_00504F0C": {
+          "address": 5263116,
+          "kind": "data",
+          "evidence": [
+            "Pinned debugfilename pointer sameaddress bothcalls, lineDWORD653/657; externreference, no stringdata copied."
+          ]
+        },
+        "_sub_00410070@16": {
+          "address": 4259952,
+          "kind": "code",
+          "evidence": [
+            "Complete6byte JMP[IAT4FE564], Storm403 stdcall16, argsallocation/debugfilename/line/0; externalimplementation not reconstructed."
+          ]
+        }
+      }
+    },
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "notes": [
+      "The complete 122-byte caller passes no arguments and overwrites incidental EAX immediately after the genuine CALL. Two distinct DWORD cells at 0068F6DC/0068F6D8 retain first call then clear and a fresh second load. Equal pointer values, imported mutation and potential repeated release are preserved; failure does not suppress the clears. The observed debug-data pointer 00504F0C and DWORD line values 653/657 are passed unchanged, with no string contents copied. Storm403 four-DWORD stdcall16 cleanup is inferred from the complete six-byte thunk and native stack balance; its DLL implementation remains unavailable and uncounted. Valid aligned mapped cells and the original opaque imported contract are required. No lifetime repair, deduplication or original-process execution is claimed."
+    ],
+    "calling_convention": "No incoming arguments, plain RET; EBX/ESI/EDI/EBP preserved under reviewed original external contracts; incidental EAX is not a promised result.",
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "provenance": "Pinned complete function 0x0044CF90..0x0044CFDB exclusive; whole boundary, entry, caller/callee ABI and bindings independently audited, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004C4FA0",
+    "name": "sub_004C4FA0",
+    "size": 83,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004C4FA0.c",
+    "known_structures": [],
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004A3404",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 310-byte caller at 004A3380 passes no arguments and ignores the result."
+      },
+      {
+        "address": "0x004BB558",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 106-byte caller at 004BB530 passes no arguments and ignores the result."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004C4A80",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x004C4D60",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "provenance": "Pinned complete function 0x004C4FA0..0x004C4FF3 exclusive; whole boundary, entry, caller/callee ABI and bindings independently audited, with separate coordinator rebuild.",
+    "candidate_symbol": "_sub_004C4FA0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_004C4A80@8": {
+          "address": 4999808,
+          "kind": "code",
+          "evidence": [
+            "Complete450-byte physical callee stack2, RET8, preservedEBX/ESI/EDI/EBP; lowBYTE index additionallyused."
+          ]
+        },
+        "_sub_004C4D60@12": {
+          "address": 5000544,
+          "kind": "code",
+          "evidence": [
+            "Complete540-byte physical callee stack3, RET12, preservedEBX/ESI/EDI/EBP; directtransitivebodiesreviewed."
+          ]
+        },
+        "_data_005971E4": {
+          "address": 5861860,
+          "kind": "data",
+          "evidence": [
+            "Original scaledDWORDread/write base5971E4, unsignedindices0..7, mapped32-byteview; no copiedtablecontents."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "notes": [
+      "Whole83-byte contribution and all loop padding compare exactly, no context excluded.",
+      "Two complete callers310/106 prove no arguments; result ignored. Complete callees450/540 prove stdcall2/3, RET8/12 and ESI preservation across all returns.",
+      "Loop visits eight DWORD entries, clearing only nonzero entries after dependency calls or unsupported mode. BYTE gate observed once; mode WORD reloaded only for nonzero entries.",
+      "Mapped data view5971E4[8] supplies only address binding, no table contents copied; direct transitive bodies saved. No original-process execution.",
+      "The no-argument plain-RET entry is corroborated by complete 310/106-byte callers. It reads one BYTE gate and visits exactly eight existing volatile DWORD entries. For each nonzero value it rereads the WORD mode, calls the original stdcall2 RET8 child for mode4 or stdcall3 RET12 child for mode3, then clears that DWORD even for other modes. Zero values skip the mode read and write. Later entries and mode are reread after external effects. Both complete 450/540-byte children establish their own volatile inputs and preserve nonvolatile registers; immediate transitive contracts are independently reviewed. The 32-byte table contents are not copied or fabricated. Defined C requires valid mapped global/table views and the recorded Win32 i386 widths; fixed-address accesses are implementation-specific. Index increment stays bounded by eight. No whole-game concurrency or external implementation claim is made."
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "calling_convention": "No incoming arguments, plain RET; EBX/ESI/EDI/EBP preserved under reviewed original external contracts; incidental EAX is not a promised result.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004719D0",
+    "name": "sub_004719D0",
+    "size": 113,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004719D0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "confidence": 0.95,
+    "references": [
+      {
+        "address": "0x004F4147",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete 108-byte caller at 004F40F0 passes no arguments, ignores EAX and then examines the phase global."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0044FD30",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x00471270",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "strings": [],
+    "candidate_symbol": "_sub_004719D0",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "excluded_contexts": [],
+      "bindings": {
+        "_sub_0044FD30@4": {
+          "address": 4521264,
+          "kind": "code",
+          "evidence": [
+            "Full432-bytecallee one stack context consumed atFEB6, RET4; EBP/EBX/ESI/EDI saved/restored, otherincomingregs overwrittenbefore use. Firsthelper41A530 needsESI freshlyloadedglobal6D04B0 only."
+          ]
+        },
+        "_sub_00471270": {
+          "address": 4657776,
+          "kind": "code",
+          "evidence": [
+            "Full129-bytecallee, no incomingargs consumed, plainRET; allregisterinputs overwritten beforeuse, no nonvolatilewrites. Allocator/thunk/time dependencies originalonly."
+          ]
+        },
+        "_data_0066FBFC": {
+          "address": 6749180,
+          "kind": "data",
+          "evidence": [
+            "OriginalDWORDcount entryload, decrementstore and reloadsafter externalcalls."
+          ]
+        },
+        "_data_0057F090": {
+          "address": 5763216,
+          "kind": "data",
+          "evidence": [
+            "OriginalDWORDthreshold loadedtwice; arithmeticwraps32."
+          ]
+        },
+        "_data_006D5A30": {
+          "address": 7166512,
+          "kind": "data",
+          "evidence": [
+            "OriginalDWORDpassedto44FD30."
+          ]
+        },
+        "_data_00596888": {
+          "address": 5859464,
+          "kind": "data",
+          "evidence": [
+            "OriginalDWORDgate."
+          ]
+        },
+        "_data_0066FBFA": {
+          "address": 6749178,
+          "kind": "data",
+          "evidence": [
+            "OriginalBYTEstates6/7/8/9store."
+          ]
+        }
+      }
+    },
+    "provenance": "Pinned complete function 0x004719D0..0x00471A41 exclusive; whole boundary, entry, caller/callee ABI and bindings independently audited, with separate coordinator rebuild.",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "No incoming arguments, plain RET; EBX/ESI/EDI/EBP preserved under reviewed original external contracts; incidental EAX is not a promised result.",
+    "notes": [
+      "OriginalDWORDcount guard/decrement and wrappingthreshold arithmetic, BYTEphase6/7/8/9 preserved. Re-readcounteraftereach externalcall and threshold57F090 afterfirstcall; source doesnotassume purecalls.",
+      "Full432-byte44FD30 takesone stackcontextRET4, hasown initialized ESI/EBX/EDI inputs; nested UIcallbackrecords requirevalidoriginalruntimecallbacks and objectstorage, those implementations are not reconstructed/countable.",
+      "Full129-byte471270 noargs/plainRET, noincomingprivate inputs. Complete80-byte41A530 confirms44FD30 firstchildconsumesonly freshlyloadedESI; complete325-byte41CA00 and235-byte41C400 plus57-byteCRTtime helper retained for immediateABIreview.",
+      "One independent sourcevariant MSVC71-o2 yieldswhole113/113 freshexact; genuineexternalcode/data bindingsonly,no contexts. SourceClangcompileisnotoriginalexecution orprivateABIproof. Semantic/CFG/differentialmetricsnull.",
+      "The no-argument plain-RET entry and ignored incidental EAX are corroborated by a complete 108-byte caller. It decrements a nonzero DWORD counter with unsigned wrapping threshold arithmetic; after external calls it reloads the counter and threshold before subsequent decisions. BYTE phase writes 6/7/8/9 retain their original order, including overlapping threshold cases and imported global mutation. The complete 432-byte stdcall1 RET4 child and 129-byte no-argument child preserve nonvolatile registers and establish their own volatile inputs before deeper calls. Reviewed transitive boundaries include corrected extents 424/44/142 bytes; those implementations remain uncounted. All DWORD arithmetic is unsigned and defined modulo 2^32. Valid mapped storage and original external contracts are required; unsynchronized races, imported behavior and differential execution are unmeasured."
+    ],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004CF0F0",
+    "name": "sub_004CF0F0",
+    "size": 103,
+    "status": "exact_match",
+    "boundary_verified": true,
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "match_expectation": "exact",
+    "candidate_source": "src/game/sub_004CF0F0.c",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "known_structures": [],
+    "candidate_symbol": "_sub_004CF0F0@8",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".scmatch",
+      "bindings": {
+        "_sub_004117DE": {
+          "address": 4265950,
+          "kind": "code",
+          "evidence": [
+            "Complete66-byte CRT fread wrapper, caller cleanup16 and standard stack arguments. Dependency only, never copied/countable."
+          ]
+        },
+        "_sub_004C3280@12": {
+          "address": 4993664,
+          "kind": "code",
+          "evidence": [
+            "Complete455-byte body, three DWORD stackargs,RET12; both callers match.",
+            "Transitive closure:4C3190 ECX input+two DWORD stackargs RET8;4C30D0 noargs; CRC410430 cdecl3args. Decoder410470 cdecl4 args stores the fixed read/write callbacks4C3090/4C3040; all callback sites and complete decoder bodies4105F0/4106F0/4108A0/410920/4109B0/4109F0/410AF0 reviewed. No forwarded hidden entry-register input."
+          ]
+        },
+        "_data_00596BB4": {
+          "address": 5860276,
+          "kind": "data",
+          "evidence": [
+            "Target writes DWORD from output+4 on success only."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_004CF0F0",
+          "section": ".scctx"
+        }
+      ]
+    },
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "Private EAX optional output, EDI stream, no stack inputs/plain RET, full EAX Boolean; EBX/ESI/EDI/EBP preserved. Nominal static stdcall suffix is not the actual stack ABI.",
+    "confidence": 0.95,
+    "strings": [],
+    "known_calls": [],
+    "dependencies": [],
+    "proposed_names": [],
+    "notes": [
+      "The complete 441/226-byte callers corroborate the actual EAX/EDI inputs, no stack arguments and Boolean result. A null output selects the original 184-byte temporary buffer in the recorded compiler frame. A cdecl four-stack-argument CRT read must return one four-byte item; its high WORD must be 0x0069. The original stdcall3 RET12 helper then requests 181 decoded bytes, and only success stores the DWORD at output+4 to the global. The full 66-byte CRT wrapper, 59/17-byte SEH mechanics, 233-byte read implementation and lock/unlock contracts are reviewed and uncounted. The complete 455-byte helper and 373-byte decoder use the fixed read/write callbacks 004C3090/004C3040, with three cdecl stack arguments and caller cleanup12; callback bodies and all direct decoder children are reviewed. No runtime or decoder implementation is copied. Defined reasoning requires accessible 181-byte output or the recorded stack fallback, valid original stream/workspace, and the observed i386 raw-storage/alignment/effective-type compiler contract; no arbitrary-host ISO-C theorem is claimed. No capacity, null-stream, retry or malformed-input guards are added. An ordinary 18-byte compiler context induces the private ABI and is excluded."
+    ],
+    "references": [
+      {
+        "address": "0x004CF644",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete441-byte caller at004CF5F0 supplies EAX output/EDI stream and tests full EAX."
+      },
+      {
+        "address": "0x004CFA40",
+        "type": "reviewed_direct_call",
+        "provenance": "Complete226-byte caller at004CFA10 supplies EAX output/EDI stream and tests full EAX."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x004117DE",
+        "type": "reviewed_external_code"
+      },
+      {
+        "address": "0x004C3280",
+        "type": "reviewed_external_code"
+      }
+    ],
+    "provenance": "Pinned complete function0x004CF0F0..0x004CF157 exclusive; independent whole-boundary, caller/CRT/decoder callback ABI audit and separate coordinator final-path rebuild. Private catalog schema omissions normalized publicly without changing C source."
   }
 ]

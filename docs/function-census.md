@@ -13,9 +13,9 @@ The map count must not be labeled a verified total number of functions in the ga
 A Ghidra census with reviewed split/merged boundaries and library classification
 remains outstanding.
 
-**449 verified exact functions / 4,201 community entries ≈ 10.69% by listed-function
+**453 verified exact functions / 4,201 community entries ≈ 10.78% by listed-function
 count.** This is not a code-size, effort or completion percentage. The matches total
-28,189 original bytes and were deliberately selected for low complexity. More complex
+28,563 original bytes and were deliberately selected for low complexity. More complex
 routines, dependencies and linking will have very different costs.
 
 Reproduce the community count without storing the map in the public repository:
@@ -30,13 +30,13 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 456 source candidates: 449 confirmed exact, 4 reviewed
+map entries. There are currently 460 source candidates: 453 confirmed exact, 4 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
-The exact count includes **76 static data initializers / 836 bytes** and **373 other
-reviewed functions / 27,353 bytes**. The initializer destinations have unknown semantics;
+The exact count includes **76 static data initializers / 836 bytes** and **377 other
+reviewed functions / 27,727 bytes**. The initializer destinations have unknown semantics;
 identical copy patterns at distinct referenced entries do not demonstrate 76 distinct
 gameplay systems. The [numeric milestone report](hundred-functions-2026-10-02.md)
 separates the categories and explains the bounded selection.
 
-By measured method, the exact aggregate consists of **367 isolated zero-relocation COFF functions / 21,719 bytes** and **82 standard-linked external-only C functions / 6,470 bytes**. Whole compiler contributions are retained for both methods; linking resolves only reviewed external symbols and counts no dependency implementations or compiler contexts.
+By measured method, the exact aggregate consists of **367 isolated zero-relocation COFF functions / 21,719 bytes** and **86 standard-linked external-only C functions / 6,844 bytes**. Whole compiler contributions are retained for both methods; linking resolves only reviewed external symbols and counts no dependency implementations or compiler contexts.
