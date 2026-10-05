@@ -5,13 +5,15 @@ reviewed function, including internal compiler alignment and reviewed embedded
 branch tables; only reviewed padding outside that function is excluded. The default isolated extractor rejects relocations.
 Explicit external-only and compiled-component profiles use ordinary linking, audit
 all relocations and retain complete compiler contributions. Instruction normalization
-never establishes exact equality. Similarity and CFG metrics remain null.
+never establishes exact equality. [Native MSVC LTCG](native-ltcg.md) separately
+checks complete generated contributions using the native linker map, rejects
+external code and retains all actual C dependencies. Similarity and CFG metrics remain null.
 
-The current proof set has **498 functions / 35,821 bytes**. `make proof` freshly
+The current proof set has **499 functions / 36,420 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
-proprietary input is read locally and never bundled with that checkout. Two
-larger candidates remain non-exact and add no bytes to this proof set.
+proprietary input is read locally and never bundled with that checkout. The
+864-byte path restorer remains non-exact and adds no bytes to this proof set.
 
 **B — differential function testing.** A bounded emulator experiment now compares
 the original rectangle query and its search callee with a linked C component across

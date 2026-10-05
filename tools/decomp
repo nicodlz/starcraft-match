@@ -14,6 +14,7 @@ from analysis.pe import PE, hx
 from matching.compare import coff_function, compare
 from matching.linking import link_external_candidate
 from matching.components import link_component_candidate
+from matching.ltcg import link_ltcg_candidate
 
 
 def read(path):
@@ -128,6 +129,18 @@ def linker_state(r):
         return None
     spec = r['linking']
     config = read(ROOT/'config/linkers.json')[spec['profile']]
+    if config.get('mode') == 'native-msvc71-ltcg-component-v1':
+        required = dict(emulation='i386pe', image_base='0x00400000', section_alignment=16,
+                        file_alignment=16, timestamps=True, base_relocations=False)
+        if any(config.get(k) != v for k, v in required.items()):
+            raise ValueError('Unsupported native LTCG linker configuration')
+        identity = compiler_identity(config)
+        executable = str(Path(config['executable']).resolve())
+        return dict(config=config, executable=executable, sha256=file_digest(executable),
+                    version=identity['version'], emulation='i386pe', identity=identity,
+                    adapter_sha256=file_digest(ROOT/'tools/matching/ltcg.py'),
+                    common_reader_sha256=file_digest(ROOT/'tools/matching/linking.py'),
+                    instruction_reader_sha256=file_digest(ROOT/'tools/matching/compare.py'))
     required = dict(emulation='i386pe', image_base='0x00400000', section_alignment=16,
                     file_alignment=16, timestamps=False, base_relocations=False,
                     mode=config.get('mode'))
@@ -148,6 +161,8 @@ def linker_state(r):
 
 
 def linked_method(state):
+    if state['config']['mode'] == 'native-msvc71-ltcg-component-v1':
+        return 'native-msvc71-ltcg-c-component'
     return ('standard-linked-c-component' if state['config']['mode'] == 'compiled-component-v1'
             else 'standard-linked-c-external')
 
@@ -165,8 +180,11 @@ def linking_record(r, build_manifest, state):
             compiler_identity_sha256=json_digest(build_manifest['compiler_identity']),
             compiler_profile_sha256=json_digest(build_manifest['compiler_profile_config'])),
         linker={k: state[k] for k in ('sha256', 'version', 'emulation')})
-    if state['config']['mode'] == 'compiled-component-v1':
+    if state['config']['mode'] in ('compiled-component-v1', 'native-msvc71-ltcg-component-v1'):
         record['retained_functions'] = spec['retained_functions']
+    if state['config']['mode'] == 'native-msvc71-ltcg-component-v1':
+        record['candidate']['size'] = r['size']
+        record['linker'] = {k: state[k] for k in ('executable', 'sha256', 'version', 'emulation', 'identity')}
     return record
 
 
@@ -209,9 +227,11 @@ def report_is_fresh(r, report):
                 return False
             category = ('component-standard-linked-C-contribution-v1' if mode == 'standard-linked-c-component'
                         else 'external-standard-linked-C-contribution-v1')
+            if mode == 'native-msvc71-ltcg-c-component':
+                category = 'native-msvc71-ltcg-C-contribution-v1'
             if m['record_sha256'] != b['linking_record_sha256'] or m['category'] != category:
                 return False
-            if mode == 'standard-linked-c-component':
+            if mode in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component'):
                 expected_contributions = {r['candidate_symbol']: (r['linking']['section'], int(r['address'], 0), m['whole_input_size'])}
                 expected_contributions.update({h['symbol']: (h['section'], h['address'], h['size'])
                                                for h in r['linking']['retained_functions']})
@@ -236,7 +256,17 @@ def report_is_fresh(r, report):
                     contribution = next(c for c in contributions if c['symbol'] == spec['symbol'])
                     if helper['size'] != spec['size'] or helper['sha256'] != contribution['sha256']:
                         return False
-            for artifact, key in [('candidate.exe', 'linked_image_sha256'), ('layout.ld', 'script_sha256'), ('link-input.obj', 'object_sha256')]:
+            artifacts = [('candidate.exe', 'linked_image_sha256'), ('layout.ld', 'script_sha256'), ('link-input.obj', 'object_sha256')]
+            if mode == 'native-msvc71-ltcg-c-component':
+                artifacts = [('candidate.exe', 'linked_image_sha256'), ('layout.json', 'script_sha256'),
+                             ('link-input.obj', 'object_sha256'), ('layout.obj', 'layout_object_sha256'),
+                             ('native.map', 'map_sha256')]
+                if (m.get('intermediate_format') != 'opaque-msvc71-GL'
+                        or m.get('contribution_extent_source') != 'native-linker-map'
+                        or any(m.get(k) is not False for k in ('normalization', 'object_byte_modification',
+                                                             'original_byte_input', 'placement_space_counted'))):
+                    return False
+            for artifact, key in artifacts:
                 if file_digest(out/'linked'/artifact) != m[key]:
                     return False
         elif b.get('linking') is not None:
@@ -284,6 +314,8 @@ def build(r):
     if linked:
         record = linking_record(r, manifest, linked)
         adapter = link_component_candidate if linked['config']['mode'] == 'compiled-component-v1' else link_external_candidate
+        if linked['config']['mode'] == 'native-msvc71-ltcg-component-v1':
+            adapter = link_ltcg_candidate
         data, evidence = adapter(obj, record, out/'linked', linker=linked['executable'])
         if linker_state(r) != linked:
             raise ValueError('Linker configuration or adapter changed during linking')
@@ -325,7 +357,7 @@ def match(args):
         raise ValueError('Matching requires reviewed boundaries tied to this binary hash')
     data, manifest = build(r)
     dependencies = []
-    if manifest['match_method'] == 'standard-linked-c-component':
+    if manifest['match_method'] in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component'):
         catalog = {entry['address']: entry for entry in read(ROOT/'config/functions.json')}
         for helper in r['linking']['retained_functions']:
             key = hx(helper['address'])

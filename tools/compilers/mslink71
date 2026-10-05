@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+"""Run a locally supplied LINK 7.10.3077 under an explicitly pinned Wine runtime."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def environment():
+    env = dict(os.environ)
+    for name in ('CL', '_CL_', 'INCLUDE', 'LIB', 'LINK', '_LINK_', 'WINEDLLOVERRIDES',
+                 'WINELOADER', 'WINESERVER', 'WINEPRELOADRESERVE', 'WINELOADERNOEXEC'):
+        env.pop(name, None)
+    prefix = Path(env.get('SC_WINE32_PREFIX', str(ROOT / '.local/toolchains/wine-prefix'))).resolve()
+    supplied_private_prefix = ('SC_WINE32_PREFIX' in env
+                               and any(p.name in ('.local', 'build', 'analysis') for p in prefix.parents))
+    if not supplied_private_prefix and not any(prefix.is_relative_to(ROOT / d) for d in ('.local', 'build', 'analysis')):
+        raise ValueError('Wine prefix must remain in a private project directory')
+    env.update(WINEPREFIX=str(prefix), WINEARCH='win32', WINEDEBUG='-all')
+    if env.get('SC_WINE32_DLLPATH'):
+        env['WINEDLLPATH'] = env['SC_WINE32_DLLPATH']
+    if env.get('SC_WINE32_LIBRARY_PATH'):
+        env['LD_LIBRARY_PATH'] = env['SC_WINE32_LIBRARY_PATH']
+    return env
+
+
+def identity():
+    runner_value = os.environ.get('SC_WINE32')
+    runtime_value = os.environ.get('SC_WINE32_RUNTIME_ROOT')
+    bin_dir = Path(os.environ.get('SC_MSVC71_BIN', str(ROOT / '.local/toolchains/msvc71/bin'))).resolve()
+    link = bin_dir / 'link.exe'
+    if not runner_value or not runtime_value:
+        return dict(status='unavailable', reason='Explicit SC_WINE32 and SC_WINE32_RUNTIME_ROOT required'), None
+    runner = Path(runner_value).resolve()
+    runtime = Path(runtime_value).resolve()
+    if not runner.is_file() or not runtime.is_dir() or not link.is_file():
+        return dict(status='misconfigured', reason='Native linker/Wine paths are incomplete'), None
+    env = environment()
+    wine = subprocess.run([str(runner), '--version'], env=env, capture_output=True, text=True, timeout=30)
+    probe = subprocess.run([str(runner), str(link), '/?'], env=env, capture_output=True, text=True, timeout=30)
+    banner = probe.stdout + probe.stderr
+    if wine.returncode or not wine.stdout.strip().startswith('wine-') or not re.search(
+            r'Incremental Linker Version 7\.10\.3077\b', banner) or probe.returncode not in (0, 76):
+        return dict(status='misconfigured', reason='Wine/LINK 7.10.3077 probe failed', diagnostics=banner), None
+    # The runtime tree is immutable tool input, separate from the mutable prefix.
+    if Path(env['WINEPREFIX']).is_relative_to(runtime):
+        raise ValueError('Runtime identity root must exclude the mutable Wine prefix')
+    files = {}
+    for path in sorted(runtime.rglob('*')):
+        if path.is_file():
+            if not path.resolve().is_relative_to(runtime):
+                raise ValueError('Runtime identity tree contains an external file symlink')
+            files[str(path.relative_to(runtime))] = sha(path)
+    if not files:
+        raise ValueError('Empty Wine runtime identity tree')
+    result = dict(schema_version=1, status='available', version='Microsoft LINK 7.10.3077',
+                  target='Windows i386', wine_version=wine.stdout.strip(),
+                  component_sha256={'link.exe': sha(link), 'wine_runner': sha(runner),
+                                    'driver': sha(__file__), 'runtime': files},
+                  environment={k: env.get(k) for k in ('WINEDLLPATH', 'LD_LIBRARY_PATH', 'WINEARCH')})
+    result['identity_sha256'] = hashlib.sha256(json.dumps(result, sort_keys=True).encode()).hexdigest()
+    return result, [str(runner), str(link)]
+
+
+def main(args):
+    item, command = identity()
+    if args == ['--identity-json']:
+        print(json.dumps(item, sort_keys=True))
+    if item['status'] != 'available':
+        if args != ['--identity-json']:
+            print(json.dumps(item, sort_keys=True), file=sys.stderr)
+        return 69 if item['status'] == 'unavailable' else 78
+    if args == ['--identity-json']:
+        return 0
+    if args == ['--version']:
+        print(item['version'])
+        return 0
+    proc = subprocess.run([*command, *args], env=environment(), capture_output=True, text=True)
+    sys.stdout.write(proc.stdout)
+    sys.stderr.write(proc.stderr)
+    return proc.returncode if 0 <= proc.returncode < 126 else 1
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+        print('mslink71-driver: ' + str(error), file=sys.stderr)
+        sys.exit(78)

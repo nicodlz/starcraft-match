@@ -18,5 +18,18 @@
     "timestamps": false,
     "base_relocations": false,
     "mode": "compiled-component-v1"
+  },
+  "msvc71-ltcg-component-v1": {
+    "executable": "./tools/compilers/mslink71",
+    "identity_arguments": [
+      "--identity-json"
+    ],
+    "emulation": "i386pe",
+    "image_base": "0x00400000",
+    "section_alignment": 16,
+    "file_alignment": 16,
+    "timestamps": true,
+    "base_relocations": false,
+    "mode": "native-msvc71-ltcg-component-v1"
   }
 }

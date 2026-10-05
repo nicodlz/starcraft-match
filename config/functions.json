@@ -28320,7 +28320,7 @@
     "confidence": 1,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "boundary_verified": true,
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "references": [
       {
         "from": "0x004E8832",
@@ -28355,7 +28355,7 @@
     "provenance": "Hand-reviewed complete contiguous 599-byte region including 14 internal alignment bytes; Ghidra discovery byte count of 585 excludes two internal gaps and is not the matching extent. See docs/functions/004308A0.md.",
     "candidate_source": "src/game/sub_004308A0.c",
     "candidate_symbol": "_sub_004308A0@4",
-    "compiler_profile": "msvc71-o2-frame",
+    "compiler_profile": "msvc71-o2-frame-ltcg",
     "candidate_abi_compatible": true,
     "calling_convention": "One stack pointer to four 16-bit rectangle fields; EAX pointer-array result, RET 4; EBX/ESI/EDI/EBP preserved",
     "prototype": "unsigned char ** __stdcall sub_004308A0(unsigned short *rect)",
@@ -28365,9 +28365,9 @@
     "known_structures": [
       "src/game/sub_00469B00.c"
     ],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -28382,12 +28382,14 @@
     "notes": [
       "Real C dependency retained at its reviewed address; no external code bindings or original callee bytes inserted.",
       "Original-process execution and whole-program linking remain unestablished.",
-      "Fresh recorded-profile compilation produces599bytes; only22-byte initialization block004308C0..004308D6 differs by instruction order. First32 and last545bytes identical; no span counted separately. Actual83-byte C dependency remains exact,380 emulator comparisons pass. Whole query remains exploratory/non-exact; generic metrics null."
+      "Whole native /GL and /LTCG C contribution is 599/599 exact, retaining the complete 83-byte C search dependency. Native linker map establishes both full emitted contribution sizes; no trimming or byte normalization.",
+      "Zero-only auxiliary placement sections bind reviewed data addresses and place both actual C functions. Placement space is excluded from function counts; no original bytes, function assembly or post-build image/object modifications are used.",
+      "380 bounded native-component emulator comparisons pass; finite fixtures are separate from literal full-function equality. Native LINK/Wine runtime and opaque intermediate provenance are pinned by the new profile."
     ],
     "linking": {
       "schema_version": 1,
-      "profile": "gnu-i386pe-component-v1",
-      "section": ".query",
+      "profile": "msvc71-ltcg-component-v1",
+      "section": ".text$b",
       "bindings": {
         "_g_006BEE64": {
           "address": 7073380,
@@ -28469,20 +28471,11 @@
           ]
         }
       },
-      "excluded_contexts": [
-        {
-          "symbol": "_compiler_anchor_00469B00",
-          "section": ".anchor"
-        },
-        {
-          "symbol": "_unit_at",
-          "section": ".unused"
-        }
-      ],
+      "excluded_contexts": [],
       "retained_functions": [
         {
           "symbol": "@sub_00469B00@12",
-          "section": ".search",
+          "section": ".text$d",
           "address": 4627200,
           "size": 83,
           "evidence": [

@@ -1,6 +1,6 @@
-/* Reviewed rectangle query; byte equality remains an open expectation. */
+/* Reviewed rectangle query; complete native LTCG component. */
 #define SC_FINDER_COMPONENT 1
-#pragma code_seg(".search")
+#pragma code_seg(".text$d")
 #include "sub_00469B00.c"
 
 typedef unsigned int u32;
@@ -24,7 +24,7 @@ static __forceinline Unit *unit_at(u32 index) {
     if (!index) return 0;
     return &g_0059CCA8[index - 1];
 }
-#pragma code_seg(".query")
+#pragma code_seg(".text$b")
 u8 **__stdcall sub_004308A0(u16 *rect)
 {
     u8 **start, **out;

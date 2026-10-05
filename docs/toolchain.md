@@ -22,7 +22,7 @@ third-party libraries may have different compiler histories.
 | Runtime selection | Imports are KERNEL32, USER32, GDI32, ADVAPI32, IMM32, VERSION, SHELL32 and storm; no MSVCRT/MSVCP import | Verified absence in import table; static CRT possible, exact CRT and `/MT` vs alternatives unverified |
 | Preferred image / relocations | Image base 0x00400000, relocations stripped and relocation directory absent | Verified in this specimen |
 | Debug linkage | CodeView RSDS record refers to a 1.16.1 build and `BroodWar.pdb`; no PDB supplied | Verified metadata; not usable debugging symbols |
-| Rich header | Marker present | Verified marker only; product IDs/checksum not decoded |
+| Rich header | Reviewed compiler-mode records compared with independent synthetic 3077 builds; see [native LTCG](native-ltcg.md) | Metadata supports mixed ordinary/LTCG inputs; not source authentication or a function census |
 
 The presentation was downloaded locally and read via `pdftotext`; the web reader
 could not render it. No private Blizzard source snapshot or leaked code was obtained.
@@ -161,3 +161,12 @@ the compiler selects the observed EAX argument. The helper has a separate sectio
 and relocation and is not counted or presented as recovered original code.
 The native test branch remains exported. Earlier Clang-only limitations above
 are historical observations, not the current result for this function.
+
+## Native link-time compilation
+
+The [native LTCG method](native-ltcg.md) resolves the rectangle query’s remaining
+instruction ordering: **599/599 exact**, retaining the actual **83/83 exact** C
+search callee. CL 13.10.3077 produces unchanged opaque `/GL` intermediate input;
+LINK 7.10.3077 under pinned private Wine 9.0 emits the whole native contributions.
+This method has separate map, placement, control-flow and provenance checks.
+It does not change the existing ordinary-COFF compiler profiles.

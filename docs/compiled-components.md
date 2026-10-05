@@ -13,7 +13,7 @@ The pinned specimen remains SHA-256
 | [sub_00403DB0](functions/00403DB0.md), related list initialization | 155 / 155 | Exact | 80 + 80 lifecycle |
 | [sub_00403E50](functions/00403E50.md), 1,000-node list encoder | 915 / 915 | Exact | 80 + 80 chained |
 | [sub_004041F0](functions/004041F0.md), related list restorer | 140 / 140 | Exact | 80 + 80 chained |
-| [sub_004308A0](functions/004308A0.md), rectangle query | 599 / 599 | Non-exact | 380 passed |
+| [sub_004308A0](functions/004308A0.md), rectangle query | 599 / 599 | Exact, native LTCG | 380 passed |
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
 | [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
@@ -25,11 +25,10 @@ The pinned specimen remains SHA-256
 | [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
 
-The query and restoration candidates cover **1,463 reviewed original bytes** but contribute
-**zero new exact functions or bytes**. Their catalog expectations remain exploratory.
-Equal query lengths do not establish byte equality; its remaining 22-byte
-instruction-ordering block is still a whole-function mismatch. Neither fixture
-counts nor a source compilation result are exact-function evidence.
+The rectangle query contributes **599 exact bytes** through the separate
+[native MSVC LTCG method](native-ltcg.md), with its 83-byte C callee counted once.
+The 864-byte path restoration remains exploratory and contributes no exact bytes.
+Fixture counts and source compilation remain distinct from byte equality.
 
 The new packing component contributes **two exact functions / 292 bytes**. Its
 caller and callee both retain their complete original regions, with an actual C
@@ -38,14 +37,14 @@ call between them. The existing restoration candidate is still non-exact.
 ## Actual C dependencies
 
 The `gnu-i386pe-component-v1` profile retains whole compiler-authored function
-contributions at independently reviewed addresses. The first component comprises
+contributions at independently reviewed addresses. The native LTCG component comprises
 the rectangle query and the existing independently written C binary search, compiled
 in one translation unit so MSVC can choose their observed private EDI/EDX/stack ABI.
 The search C source is included directly and tracked in the candidate's hash inventory;
 it is not copied from the game. Every local call targets the actual emitted search
 function. No external code address is substituted for it.
 
-The adapter rejects external code bindings, defined-symbol rebinding, unsupported
+The GNU adapter rejects external code bindings, defined-symbol rebinding, unsupported
 relocations, incomplete helper extents, overlapping placements, unapproved code/data,
 references to discarded contexts, unreachable retained functions, imports and base
 relocations. It checks every DIR32/REL32 result and all nonrelocation bytes after

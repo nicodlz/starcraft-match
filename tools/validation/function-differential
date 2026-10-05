@@ -352,9 +352,24 @@ def main():
     else:
         entry, sections = read_pe(image)
         component_regions = regions[:3] if node44_restore else regions[:1] if linked_single else regions[:2]
-        if entry != address or len(sections) != len(component_regions) or {s['address'] for s in sections} != {a for a, _ in component_regions}:
-            raise ValueError('Candidate must contain exactly the reviewed compiled regions')
-        candidate_code = [(s['address'], image[s['raw_pointer']:s['raw_pointer'] + s['size']]) for s in sections]
+        if address == ENTRY and catalog[address]['linking']['profile'] == 'msvc71-ltcg-component-v1':
+            if (entry != 0x400000 or len(sections) != 1 or sections[0]['name'] != '.text'
+                    or sections[0]['address'] != 0x4001e0
+                    or sections[0]['address'] + sections[0]['size'] != CALLEE + 83):
+                raise ValueError('Unexpected complete native component layout')
+            section = sections[0]
+            text = image[section['raw_pointer']:section['raw_pointer'] + section['size']]
+            cursor = section['address']
+            candidate_code = []
+            for start, size in component_regions:
+                if any(text[cursor - section['address']:start - section['address']]):
+                    raise ValueError('Native placement space must remain zero and uncounted')
+                candidate_code.append((start, text[start - section['address']:start - section['address'] + size]))
+                cursor = start + size
+        else:
+            if entry != address or len(sections) != len(component_regions) or {s['address'] for s in sections} != {a for a, _ in component_regions}:
+                raise ValueError('Candidate must contain exactly the reviewed compiled regions')
+            candidate_code = [(s['address'], image[s['raw_pointer']:s['raw_pointer'] + s['size']]) for s in sections]
         for callee, callee_size in component_regions[1:]:
             if dict(candidate_code)[callee] != original.region(callee, callee_size):
                 raise ValueError('Whole compiled dependency differs from pinned original')

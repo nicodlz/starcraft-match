@@ -109,5 +109,22 @@
     ],
     "optional_portable_profile": "clang-i686-scaffold",
     "purpose": "Historical CL 13.10.3077 O2 with Os instruction selection; independently verified whole-function matches only, not recovered original global switches."
+  },
+  "msvc71-o2-frame-ltcg": {
+    "executable": "./tools/compilers/msvc71-ltcg",
+    "flags": [
+      "/nologo",
+      "/O2",
+      "/Gy",
+      "/Zl",
+      "/G6",
+      "/Oy-",
+      "/GL"
+    ],
+    "identity_arguments": [
+      "--identity-json"
+    ],
+    "optional_portable_profile": "clang-i686-scaffold",
+    "purpose": "Pure C /GL intermediate; whole native LINK 7.10.3077 contributions under a privately supplied pinned Wine runtime. Source-only fallback when native tooling is absent."
   }
 }

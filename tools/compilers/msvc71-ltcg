@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""The ordinary historical C driver, requiring the native LTCG linker as well."""
+import hashlib
+import json
+from pathlib import Path
+import runpy
+import subprocess
+import sys
+
+
+def main(args):
+    directory = Path(__file__).resolve().parent
+    compiler = runpy.run_path(str(directory / 'msvc71'))
+    linker = runpy.run_path(str(directory / 'mslink71'))
+    native, _ = linker['identity']()
+    ordinary, _ = compiler['toolchain']()
+    item = ordinary if ordinary['status'] != 'available' else native
+    if ordinary['status'] == native['status'] == 'available':
+        item = dict(ordinary, native_linker=native, ltcg_driver_sha256=linker['sha'](__file__))
+        item.pop('identity_sha256', None)
+        item['identity_sha256'] = hashlib.sha256(json.dumps(item, sort_keys=True).encode()).hexdigest()
+    if args == ['--identity-json']:
+        print(json.dumps(item, sort_keys=True))
+        return 0 if item['status'] == 'available' else (69 if item['status'] == 'unavailable' else 78)
+    if item['status'] != 'available':
+        print(json.dumps(item, sort_keys=True), file=sys.stderr)
+        return 69 if item['status'] == 'unavailable' else 78
+    return compiler['main'](args)
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+        print('msvc71-ltcg-driver: ' + str(error), file=sys.stderr)
+        sys.exit(78)
