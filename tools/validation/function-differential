@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+"""Bounded original/C component comparison in an optional local x86 emulator."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import random
+import struct
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools'))
+from analysis.pe import PE
+from matching.linking import read_pe
+
+ENTRY = 0x004308A0
+CALLEE = 0x00469B00
+STOP = 0x007F0000
+STACK = 0x008FF000
+RECT = 0x007E0000
+
+
+def fixture(rng, count, rect, width, height):
+    writes = []
+
+    def put(address, fmt, *values):
+        writes.append((address, struct.pack(fmt, *values)))
+
+    put(RECT, '<4h', *rect)
+    put(0x0066FF74, '<I', count)
+    put(0x006BEE64, '<III', 3, width, 2)
+    put(0x006BB930, '<I', height)
+    ids = list(range(1, count + 1))
+    rng.shuffle(ids)
+    # Sorted paired tables deliberately have ties and independent sprite positions.
+    for address in [0x0066FF78, 0x006769B8]:
+        pairs = sorted((rng.randint(-100, 500), index) for index in ids)
+        for slot, (value, index) in enumerate(pairs):
+            put(address + slot * 8, '<Ii', index, value)
+    for index in ids:
+        unit = 0x0059CB58 + index * 336
+        sprite = 0x00710000 + index * 32
+        put(unit + 12, '<I', sprite)
+        put(unit + 100, '<H', 0)
+        put(sprite + 20, '<hh', rng.randint(-100, 500), rng.randint(-100, 500))
+        put(0x006BD3D0 + index * 4, '<I', rng.choice([0, 1, 3, 7]))
+    put(0x006617C8, '<hh', rng.randint(-20, 20), rng.randint(-20, 20))
+    return writes
+
+
+def path_fixture(rng, limit):
+    writes = [(0x006D5BFC, struct.pack('<I', 0x006E0000)), (0x006E0000, struct.pack('<h', limit))]
+    for pool in range(8):
+        base = 0 if rng.randrange(4) == 0 else 0x00700000 + pool * 0x20000
+        writes.append((0x0069A604 + pool * 4, struct.pack('<I', base)))
+    for index in range(1000):
+        next_id = rng.choice([0, 1, 999, 1000, 0xFFFFFFFF])
+        previous_id = rng.choice([0, 1, 999, 1000, 0xFFFFFFFF])
+        unit_id = rng.choice([0, 1, 1700, 0x800, 0xFFFFFFFF])
+        path_id = rng.choice([0, 1, 2500, 2501, 19999, 20000, 640001, 0xFFFFFFFF])
+        writes.append((0x006F0000 + index * 20, struct.pack('<IIIII', next_id, previous_id,
+                                                        rng.getrandbits(32), unit_id, path_id)))
+    writes.append((0x006F0000 + 20000, struct.pack('<I', rng.choice([0, 1, 1000, 0xFFFFFFFF]))))
+    return writes
+
+
+def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False):
+    from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP,
+                                  UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESI,
+                                  UC_X86_REG_ESP)
+    uc = unicorn.Uc(unicorn.UC_ARCH_X86, unicorn.UC_MODE_32)
+    for page in sorted({page for address, data in code
+                        for page in range(address & ~4095, (address + len(data) + 4095) & ~4095, 4096)}):
+        uc.mem_map(page, 4096, unicorn.UC_PROT_READ | unicorn.UC_PROT_EXEC)
+    uc.mem_map(0x00500000, 0x00300000, unicorn.UC_PROT_READ | unicorn.UC_PROT_WRITE)
+    uc.mem_map(0x008E0000, 0x00020000, unicorn.UC_PROT_READ | unicorn.UC_PROT_WRITE)
+    for address, data in code:
+        uc.mem_write(address, data)
+    for address, data in writes:
+        uc.mem_write(address, data)
+    uc.mem_write(STACK, struct.pack('<II', STOP, argument))
+    uc.reg_write(UC_X86_REG_ESP, STACK)
+    preserved = [(UC_X86_REG_EBX, 0x11223344), (UC_X86_REG_ESI, 0x55667788),
+                 (UC_X86_REG_EDI, 0x44332211), (UC_X86_REG_EBP, 0x12345678)]
+    for register, value in preserved:
+        uc.reg_write(register, value)
+    accesses = []
+
+    def memory_hook(machine, kind, address, size, value, _):
+        if 0x00500000 <= address < 0x00800000:
+            observed = value if kind == unicorn.UC_MEM_WRITE else bytes(machine.mem_read(address, size))
+            accesses.append((kind, address, size, observed))
+
+    uc.hook_add(unicorn.UC_HOOK_MEM_READ | unicorn.UC_HOOK_MEM_WRITE, memory_hook)
+    uc.emu_start(entry, STOP, count=2_000_000)
+    if uc.reg_read(UC_X86_REG_EIP) != STOP:
+        raise ValueError('Instruction bound reached before return')
+    if uc.reg_read(UC_X86_REG_ESP) != STACK + 8:
+        raise ValueError('Unexpected stack cleanup')
+    if any(uc.reg_read(register) != value for register, value in preserved):
+        raise ValueError('Nonvolatile register changed')
+    return dict(eax=None if void_result else uc.reg_read(UC_X86_REG_EAX),
+                buffers=bytes(uc.mem_read(0x006BB900, 0x3540)),
+                cursors=bytes(uc.mem_read(0x006BEE64, 0x200)),
+                path_pool=bytes(uc.mem_read(0x006F0000, 20004)) if void_result else None,
+                accesses=accesses)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780'])
+    parser.add_argument('--binary', default='original/StarCraft.exe')
+    parser.add_argument('--out')
+    parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
+    args = parser.parse_args()
+    address = int(args.address, 0)
+    path_restore = address == 0x00403780
+    regions = [(address, 864)] if path_restore else [(ENTRY, 599), (CALLEE, 83)]
+    out = (ROOT / (args.out or f'analysis/differential-{args.address}.json')).resolve()
+    if not any(out.is_relative_to(ROOT / directory) for directory in ['analysis', 'build', '.local']):
+        raise ValueError('Differential evidence must remain in a private research directory')
+    out.unlink(missing_ok=True)
+    try:
+        import unicorn
+    except ImportError:
+        raise ValueError('Optional Unicorn dependency absent; see docs/compiled-components.md') from None
+    original = PE(ROOT / args.binary)
+    target = json.loads((ROOT / 'config/target.json').read_text())['supported_binaries']
+    if original.metadata['sha256'] not in {item['sha256'] for item in target}:
+        raise ValueError('Unsupported original executable hash')
+    catalog = {int(item['address'], 0): item for item in json.loads((ROOT / 'config/functions.json').read_text())}
+    if any(catalog[address]['size'] != size or not catalog[address]['boundary_verified']
+           or catalog[address]['binary_sha256'] != original.metadata['sha256']
+           for address, size in regions):
+        raise ValueError('Reviewed component boundaries/target changed')
+    if args.candidate_image:
+        if path_restore:
+            raise ValueError('Image overrides apply only to the linked rectangle query')
+        image_path = (ROOT / args.candidate_image).resolve()
+        if not any(image_path.is_relative_to(ROOT / d) for d in ['analysis', 'build', '.local']):
+            raise ValueError('Explicit candidate images must remain private')
+        build = None
+    else:
+        subprocess.run([str(ROOT / 'tools/decomp'), 'match', hex(address), '--binary', str(ROOT / args.binary)],
+                       cwd=ROOT, check=True)
+        image_path = ROOT / 'build' / args.address / ('candidate.bin' if path_restore else 'linked/candidate.exe')
+        build = json.loads((ROOT / 'analysis/matches' / (args.address + '.json')).read_text())['build']
+    image = image_path.read_bytes()
+    if path_restore:
+        candidate_code = [(address, image)]
+    else:
+        entry, sections = read_pe(image)
+        if entry != ENTRY or len(sections) != 2 or {s['address'] for s in sections} != {ENTRY, CALLEE}:
+            raise ValueError('Candidate must contain exactly the query and its compiled callee')
+        candidate_code = [(s['address'], image[s['raw_pointer']:s['raw_pointer'] + s['size']]) for s in sections]
+        if dict(candidate_code)[CALLEE] != original.region(CALLEE, 83):
+            raise ValueError('Whole compiled dependency differs from pinned original')
+    original_code = [(entry, original.region(entry, size)) for entry, size in regions]
+    rng = random.Random(1161)
+    cases = []
+    for count in [0, 1, 2, 8, 31, 1700]:
+        for width, height in [(0, 0), (1, 1), (64, 64), (200, 100), (0x10040, 0x10040)]:
+            for rect in [(0, 0, 64, 64), (-100, -100, 500, 500), (40, 50, 40, 50),
+                         (50, 50, 10, 10), (-32768, -32768, 32767, 32767), (0, 0, 32767, 32767)]:
+                cases.append((count, rect, width, height))
+    for _ in range(200):
+        cases.append((rng.randrange(64), tuple(rng.randrange(-32768, 32768) for _ in range(4)),
+                      rng.choice([0, 1, 64, 200, 65535, 65536, 0xFFFFFFFF]),
+                      rng.choice([0, 1, 64, 200, 65535, 65536, 0xFFFFFFFF])))
+    if path_restore:
+        cases = [([0, 1, 2499, 2500, 32767, -1, -32768, 2][i % 8],) for i in range(80)]
+        rng = random.Random(1161)
+    for number, case in enumerate(cases):
+        writes = path_fixture(rng, *case) if path_restore else fixture(rng, *case)
+        argument = 0x006F0000 if path_restore else RECT
+        reference = execute(original_code, writes, unicorn, address, argument, path_restore)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, path_restore)
+        if reference != candidate:
+            differing = [key for key in reference if reference[key] != candidate[key]]
+            raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
+    report = dict(schema_version=1, method='bounded-x86-emulated-component-differential-v1',
+                  binary_sha256=original.metadata['sha256'], candidate_artifact_sha256=hashlib.sha256(image).hexdigest(),
+                  emulator=dict(name='Unicorn', version=unicorn.__version__), seed=1161, cases_passed=len(cases),
+                  regions=[dict(address=hex(a), size=len(code)) for a, code in candidate_code],
+                  exact_byte_match=dict(candidate_code)[address] == dict(original_code)[address],
+                  compiled_dependency_exact=None if path_restore else True, build=build,
+                  checks=([] if path_restore else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
+                          'mutable buffer/cursor snapshots', 'ordered data read/write addresses, widths and values'],
+                  limitations=['Synthetic mapped states; not original-process or full-game execution',
+                               'Private stack temporaries and volatile registers/flags excluded from equivalence',
+                               'Finite fixtures do not establish universal semantic equivalence'])
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps({key: report[key] for key in ['method', 'cases_passed', 'exact_byte_match', 'compiled_dependency_exact']}, indent=2))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (ValueError, OSError, KeyError) as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)

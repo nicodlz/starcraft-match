@@ -59,6 +59,10 @@ original-process execution, differential execution or a playable game.
 
 ## Remaining research
 
+The separate [compiled-component profile](compiled-components.md) now retains and
+checks a real C search dependency for a larger non-exact query. It does not relax
+this external-only adapter or count that existing dependency twice.
+
 Retained synthetic helpers and jump-table contributions are separate private
 experiments. They are not supported by this public external-only adapter and
 contribute no functions or bytes to the counts above. Cross-session addresses stay

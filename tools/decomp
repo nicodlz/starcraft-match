@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from analysis.pe import PE, hx
 from matching.compare import coff_function, compare
 from matching.linking import link_external_candidate
+from matching.components import link_component_candidate
 
 
 def read(path):
@@ -129,7 +130,9 @@ def linker_state(r):
     config = read(ROOT/'config/linkers.json')[spec['profile']]
     required = dict(emulation='i386pe', image_base='0x00400000', section_alignment=16,
                     file_alignment=16, timestamps=False, base_relocations=False,
-                    mode='external-only-whole-contribution-v1')
+                    mode=config.get('mode'))
+    if config.get('mode') not in ('external-only-whole-contribution-v1', 'compiled-component-v1'):
+        raise ValueError('Unsupported standard linker mode')
     if any(config.get(k) != v for k, v in required.items()):
         raise ValueError('Unsupported standard linker configuration')
     executable = shutil.which(config['executable'])
@@ -137,16 +140,23 @@ def linker_state(r):
         raise OSError('Standard linker unavailable: ' + config['executable'])
     executable = str(Path(executable).resolve())
     version = subprocess.check_output([executable, '--version'], text=True).splitlines()[0]
+    adapter = 'components.py' if config['mode'] == 'compiled-component-v1' else 'linking.py'
     return dict(config=config, executable=executable, sha256=file_digest(executable),
                 version=version, emulation='i386pe',
-                adapter_sha256=file_digest(ROOT/'tools/matching/linking.py'))
+                adapter_sha256=file_digest(ROOT/'tools/matching'/adapter),
+                common_reader_sha256=file_digest(ROOT/'tools/matching/linking.py'))
+
+
+def linked_method(state):
+    return ('standard-linked-c-component' if state['config']['mode'] == 'compiled-component-v1'
+            else 'standard-linked-c-external')
 
 
 def linking_record(r, build_manifest, state):
     spec = r['linking']
     if spec.get('schema_version') != 1:
         raise ValueError('Unsupported per-function linking record')
-    return dict(schema_version=1,
+    record = dict(schema_version=1,
         candidate=dict(symbol=r['candidate_symbol'], section=spec['section'],
                        address=int(r['address'], 0), object_sha256=build_manifest['object_sha256']),
         bindings=spec['bindings'], excluded_contexts=spec.get('excluded_contexts', []),
@@ -155,6 +165,9 @@ def linking_record(r, build_manifest, state):
             compiler_identity_sha256=json_digest(build_manifest['compiler_identity']),
             compiler_profile_sha256=json_digest(build_manifest['compiler_profile_config'])),
         linker={k: state[k] for k in ('sha256', 'version', 'emulation')})
+    if state['config']['mode'] == 'compiled-component-v1':
+        record['retained_functions'] = spec['retained_functions']
+    return record
 
 
 def report_is_fresh(r, report):
@@ -177,7 +190,7 @@ def report_is_fresh(r, report):
             and b.get('function_record_sha256') == json_digest(r)
             and b.get('linker_state') == linked):
             return False
-        mode = 'standard-linked-c-external' if linked else 'isolated-coff'
+        mode = linked_method(linked) if linked else 'isolated-coff'
         if b.get('match_method') != mode or report.get('abi_compatible') != r.get('candidate_abi_compatible', False):
             return False
         out = ROOT/'build'/r['address']
@@ -194,8 +207,35 @@ def report_is_fresh(r, report):
                 return False
             if m['linked_function_sha256'] != b['candidate_sha256'] or m['whole_input_size'] != m['linked_size'] or m['address'] != int(r['address'], 0):
                 return False
-            if m['record_sha256'] != b['linking_record_sha256'] or m['category'] != 'external-standard-linked-C-contribution-v1':
+            category = ('component-standard-linked-C-contribution-v1' if mode == 'standard-linked-c-component'
+                        else 'external-standard-linked-C-contribution-v1')
+            if m['record_sha256'] != b['linking_record_sha256'] or m['category'] != category:
                 return False
+            if mode == 'standard-linked-c-component':
+                expected_contributions = {r['candidate_symbol']: (r['linking']['section'], int(r['address'], 0), m['whole_input_size'])}
+                expected_contributions.update({h['symbol']: (h['section'], h['address'], h['size'])
+                                               for h in r['linking']['retained_functions']})
+                contributions = m['contributions']
+                if (len(contributions) != len(expected_contributions)
+                        or {c['symbol']: (c['section'], c['address'], c['size']) for c in contributions} != expected_contributions):
+                    return False
+                for contribution in m['contributions']:
+                    if file_digest(out/'linked'/(contribution['section'][1:] + '.bin')) != contribution['sha256']:
+                        return False
+                helpers = report.get('compiled_dependencies', [])
+                if len(helpers) != len(r['linking']['retained_functions']) or not all(h['exact_byte_match'] for h in helpers):
+                    return False
+                catalog = {entry['address']: entry for entry in read(ROOT/'config/functions.json')}
+                if any(h['catalog_record_sha256'] != json_digest(catalog[h['address']]) for h in helpers):
+                    return False
+                expected_helpers = {hx(h['address']): h for h in r['linking']['retained_functions']}
+                if {h['address'] for h in helpers} != set(expected_helpers):
+                    return False
+                for helper in helpers:
+                    spec = expected_helpers[helper['address']]
+                    contribution = next(c for c in contributions if c['symbol'] == spec['symbol'])
+                    if helper['size'] != spec['size'] or helper['sha256'] != contribution['sha256']:
+                        return False
             for artifact, key in [('candidate.exe', 'linked_image_sha256'), ('layout.ld', 'script_sha256'), ('link-input.obj', 'object_sha256')]:
                 if file_digest(out/'linked'/artifact) != m[key]:
                     return False
@@ -243,10 +283,11 @@ def build(r):
         return obj.read_bytes(), manifest
     if linked:
         record = linking_record(r, manifest, linked)
-        data, evidence = link_external_candidate(obj, record, out/'linked', linker=linked['executable'])
+        adapter = link_component_candidate if linked['config']['mode'] == 'compiled-component-v1' else link_external_candidate
+        data, evidence = adapter(obj, record, out/'linked', linker=linked['executable'])
         if linker_state(r) != linked:
             raise ValueError('Linker configuration or adapter changed during linking')
-        manifest.update(match_method='standard-linked-c-external', linking=evidence,
+        manifest.update(match_method=linked_method(linked), linking=evidence,
                         linking_record_sha256=json_digest(record))
     else:
         data = coff_function(obj, r['candidate_symbol'])
@@ -283,10 +324,29 @@ def match(args):
     if r.get('binary_sha256') != pe.metadata['sha256'] or not r.get('boundary_verified') or not r.get('size'):
         raise ValueError('Matching requires reviewed boundaries tied to this binary hash')
     data, manifest = build(r)
+    dependencies = []
+    if manifest['match_method'] == 'standard-linked-c-component':
+        catalog = {entry['address']: entry for entry in read(ROOT/'config/functions.json')}
+        for helper in r['linking']['retained_functions']:
+            key = hx(helper['address'])
+            entry = catalog.get(key, {})
+            if (entry.get('binary_sha256') != pe.metadata['sha256'] or not entry.get('boundary_verified')
+                    or not entry.get('candidate_abi_compatible') or entry.get('size') != helper['size']
+                    or entry.get('candidate_symbol') != helper['symbol']):
+                raise ValueError('Compiled dependency needs a reviewed catalog region/ABI: ' + key)
+            code = (ROOT/'build'/r['address']/'linked'/(helper['section'][1:] + '.bin')).read_bytes()
+            checked = compare(pe.region(helper['address'], helper['size']), code, helper['address'])
+            dependencies.append(dict(address=key, size=len(code), sha256=file_digest(
+                ROOT/'build'/r['address']/'linked'/(helper['section'][1:] + '.bin')),
+                exact_byte_match=checked['exact_byte_match'], catalog_record_sha256=json_digest(entry)))
+            if not checked['exact_byte_match']:
+                raise ValueError('Whole compiled dependency does not match: ' + key)
     result = compare(pe.region(int(r['address'], 0), r['size']), data, int(r['address'], 0))
     result.update(address=r['address'], binary_sha256=pe.metadata['sha256'], build=manifest,
                   abi_compatible=r.get('candidate_abi_compatible', False),
                   original_region_sha256=hashlib.sha256(pe.region(int(r['address'], 0), r['size'])).hexdigest())
+    if dependencies:
+        result['compiled_dependencies'] = dependencies
     out = private(ROOT/'analysis/matches'/f'{r["address"]}.json')
     write(out, result)
     print(json.dumps({k: result[k] for k in ('address', 'original_size', 'recompiled_size', 'exact_byte_match',

@@ -28311,5 +28311,230 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004308A0",
+    "size": 599,
+    "name": "sub_004308A0",
+    "confidence": 1,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "status": "assembly_partial_match",
+    "references": [
+      {
+        "from": "0x004E8832",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "Reviewed entry at 004E8830: PUSH ESI, PUSH EAX, direct call; result consumed as pointer array"
+      },
+      {
+        "from": "0x0042E25B",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "LEA EDX,[EBP-14], PUSH EDX at 0042E251/254; returned pointer copied into EBX"
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00430942",
+        "to": "0x00469B00"
+      },
+      {
+        "from": "0x00430953",
+        "to": "0x00469B00"
+      },
+      {
+        "from": "0x00430969",
+        "to": "0x00469B00"
+      },
+      {
+        "from": "0x00430979",
+        "to": "0x00469B00"
+      }
+    ],
+    "strings": [],
+    "provenance": "Hand-reviewed complete contiguous 599-byte region including 14 internal alignment bytes; Ghidra discovery byte count of 585 excludes two internal gaps and is not the matching extent. See docs/functions/004308A0.md.",
+    "candidate_source": "src/game/sub_004308A0.c",
+    "candidate_symbol": "_sub_004308A0@4",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "calling_convention": "One stack pointer to four 16-bit rectangle fields; EAX pointer-array result, RET 4; EBX/ESI/EDI/EBP preserved",
+    "prototype": "unsigned char ** __stdcall sub_004308A0(unsigned short *rect)",
+    "dependencies": [
+      "0x00469B00"
+    ],
+    "known_structures": [
+      "src/game/sub_00469B00.c"
+    ],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "FindAllUnits",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": "Community annotation; not an authenticated original symbol"
+      }
+    ],
+    "notes": [
+      "Real C dependency retained at its reviewed address; no external code bindings or original callee bytes inserted.",
+      "Original-process execution and whole-program linking remain unestablished."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".query",
+      "bindings": {
+        "_g_006BEE64": {
+          "address": 7073380,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "DWORD output cursor read at 004308AC and written at 00430AE8"
+          ]
+        },
+        "_g_006BEE6C": {
+          "address": 7073388,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "DWORD nesting depth read at 004308A6 and written at 004308C9"
+          ]
+        },
+        "_g_006BEE70": {
+          "address": 7073392,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "DWORD saved-cursor table store at 004308B1"
+          ]
+        },
+        "_g_006BB938": {
+          "address": 7059768,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "output buffer base in LEA at 004308B8 and subtraction at 00430ADB"
+          ]
+        },
+        "_g_006BEE68": {
+          "address": 7073384,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "WORD extent comparison at 004308F0 and DWORD addition input at 004308FC"
+          ]
+        },
+        "_g_006BB930": {
+          "address": 7059760,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "DWORD extent load at 0043091C; comparison uses low WORD"
+          ]
+        },
+        "_g_0066FF78": {
+          "address": 6750072,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "first paired-index table base supplied in EDI at 0043093D"
+          ]
+        },
+        "_g_006769B8": {
+          "address": 6777272,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "second paired-index table base supplied in EDI at 00430961"
+          ]
+        },
+        "_g_006BD3D0": {
+          "address": 7066576,
+          "kind": "data",
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "DWORD marking-table stores at 004309F7, 00430A04, 00430A6E and 00430AC5"
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_compiler_anchor_00469B00",
+          "section": ".anchor"
+        },
+        {
+          "symbol": "_unit_at",
+          "section": ".unused"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00469B00@12",
+          "section": ".search",
+          "address": 4627200,
+          "size": 83,
+          "evidence": [
+            "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+            "docs/functions/00469B00.md: reviewed EDI/EDX/stack private ABI; four matching caller contracts in sub_004308A0"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403780",
+    "size": 864,
+    "name": "sub_00403780",
+    "confidence": 1,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "status": "assembly_partial_match",
+    "references": [
+      {
+        "from": "0x00439265",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "PUSH 006957E0 at 00439260; direct call; next instruction initializes ESI without consuming EAX"
+      },
+      {
+        "from": "0x0043933B",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "PUSH 006957E0 at 00439336; direct call; following MOV EAX,[EBP-4] discards EAX"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "provenance": "Reviewed contiguous body [00403780,00403AE0), both RET4 exits, previous RET at 00403775, trailing next entry 00403AE0; see docs/functions/00403780.md.",
+    "candidate_source": "src/game/sub_00403780.c",
+    "candidate_symbol": "_sub_00403780@4",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "calling_convention": "One stack DWORD pool pointer; RET 4; preserves EBX/ESI/EDI/EBP; callers establish no meaningful return value",
+    "prototype": "void __stdcall sub_00403780(Entry *entries)",
+    "dependencies": [],
+    "known_structures": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "unpackAllPathingData",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": "Community annotation; not an authenticated original symbol"
+      }
+    ],
+    "notes": [
+      "The signed WORD limit is converted to unsigned exactly as in the original comparison.",
+      "The pool quotient is narrowed to BYTE before subtracting pool*2500; no modern validation added.",
+      "Complete zero-relocation C contribution remains non-exact; no padding/normalization to claim a match."
+    ]
   }
 ]

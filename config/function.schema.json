@@ -42,6 +42,43 @@
           "type": "string",
           "pattern": "^\\.[A-Za-z0-9_]{1,7}$"
         },
+        "retained_functions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "symbol",
+              "section",
+              "address",
+              "size",
+              "evidence"
+            ],
+            "properties": {
+              "symbol": {
+                "type": "string"
+              },
+              "section": {
+                "type": "string",
+                "pattern": "^\\.[A-Za-z0-9_]{1,7}$"
+              },
+              "address": {
+                "type": "integer",
+                "minimum": 4194304,
+                "maximum": 4294967295
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "evidence": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
         "bindings": {
           "type": "object",
           "additionalProperties": {

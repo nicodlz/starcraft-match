@@ -30,7 +30,7 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 490 source candidates: 483 confirmed exact, 4 reviewed
+map entries. There are currently 492 source candidates: 483 confirmed exact, 6 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
 The exact count includes **76 static data initializers / 836 bytes** and **407 other
@@ -44,3 +44,9 @@ By measured method, the exact aggregate consists of **385 isolated zero-relocati
 The 2026-10-05 integration adds 18 isolated functions / 1,953 bytes from the
 [seventh historical lot](historical-seventh-2026-10-02.md) and
 [REA trial](rea-trial-2026-10-04.md), preserving the concurrent linked batches.
+
+Two larger non-exact candidates cover 1,463 additional reviewed original bytes;
+these bytes are excluded from the exact total. One candidate retains the real
+compiled 83-byte search dependency, already counted above. Their 460 bounded
+emulated differential fixtures are a separate result; see
+[compiled components](compiled-components.md).

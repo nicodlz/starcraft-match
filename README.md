@@ -40,6 +40,11 @@ representative whole-game match rate. See the [function census](docs/function-ce
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
 Detailed research reports remain under [docs/](docs/).
 
+Work toward larger components includes a 599-byte rectangle query linked with its
+actual compiled C search dependency and an 864-byte pathfinding reference-restoration
+routine. Both new candidates remain non-exact; together they pass 460 bounded
+original/C emulator fixtures. See [compiled components](docs/compiled-components.md).
+
 Selected reviewed functions:
 
 | Address | Community annotation | Original / compiled | Result |
@@ -83,9 +88,10 @@ Names are community annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Four reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
-[`0x00432180`](docs/functions/00432180.md), [`0x00446D40`](docs/functions/00446D40.md)
-and [`0x0047B210`](docs/functions/0047B210.md). Their complete regions and measured
+Six reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+[`0x00432180`](docs/functions/00432180.md), [`0x00446D40`](docs/functions/00446D40.md),
+[`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md)
+and [`0x004308A0`](docs/functions/004308A0.md). Their complete regions and measured
 compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
@@ -149,7 +155,7 @@ make proof                    # Recompile and require all 483 exact matches
 `make proof` fails on a regression and writes a private aggregate report to
 `analysis/proof-of-concept.json`. A real-binary test deliberately changes a candidate
 in a private source-only checkout to confirm that the failure gate works.
-The 64-test suite includes an original-input proof and deliberate source-regression
+The 80-test suite includes an original-input proof and deliberate source-regression
 test. A source-only checkout skips the real-binary test. With the executable
 present, activate the host-local compiler paths before the full suite:
 
@@ -194,6 +200,11 @@ Instruction similarity and CFG scores are **null**, because reliable scoring for
 those metrics has not been implemented. Unresolved relocations are rejected. An explicit reviewed catalog record can use
 the [external-only standard linker](docs/standard-linking.md), which checks every
 relocation and the complete compiler contribution and reports a separate method.
+
+A [compiled-component profile](docs/compiled-components.md) can instead retain
+reviewed C dependencies and verify their complete original regions. Optional local
+emulator tests compare larger candidates with original function execution on synthetic
+state; they are separate from exact-byte proofs and original-process execution.
 
 Optional headless Ghidra integration is supplied for discovery, disassembly,
 decompiler output, calls, references, strings and symbols:
@@ -249,11 +260,11 @@ Documentation: [Prior art](docs/prior-art.md) · [Toolchain](docs/toolchain.md) 
 
 ## Next milestones
 
-1. The **100 exact-function numeric milestone** is reached. Grow to **100
-   representative functions** beyond repeated static initializers, measuring time,
-   dependencies, exact-match rate and human review needed per function.
-2. Extend the validated local historical compiler experiments to harder routines,
-   linked placement and relocation-aware comparisons; review Ghidra discovery results.
-3. Evaluate larger-scale agent scheduling only after those measurements. Original
-   differential execution, deterministic simulation and replay synchronization
-   remain later validation levels; modernization remains out of scope.
+1. Resolve the remaining byte differences in the larger query and pathfinding
+   candidates, retaining their reviewed ABI and measured data-access behavior.
+2. Expand connected C components with real compiled dependencies, required layouts
+   and reviewed linkage. Measure matched bytes, dependency coverage, iteration time
+   and review effort alongside function counts.
+3. Extend bounded differential tests as components grow. Original-process execution,
+   deterministic simulation, replay synchronization and a complete linked program
+   remain unestablished; modernization remains out of scope.

@@ -28,6 +28,9 @@ SC_00469B00_NOINLINE static unsigned int SC_00469B00_FASTCALL sub_00469B00(
     return upper;
 }
 /* Compiler anchor is not a reconstructed game function. */
+#ifdef SC_FINDER_COMPONENT
+#pragma code_seg(".anchor")
+#endif
 unsigned int compiler_anchor_00469B00(unsigned int *array, unsigned int flag, unsigned int value) {
     return sub_00469B00(array, flag, value);
 }
