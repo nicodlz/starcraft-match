@@ -26,86 +26,21 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-The [fourth-session linked continuation](docs/parallel-fourth-linked-2026-10-02.md)
-adds seven reviewed C contributions / 457 bytes using the shared external-only linker.
-
-The [third-session tenth linked lot](docs/parallel-third-linked-tenth-2026-10-02.md) adds four reviewed C bodies / 847 bytes, including one claim scoped to its corroborated internal caller contract.
-The [third-session eleventh linked lot](docs/parallel-third-linked-eleventh-2026-10-02.md) adds two reviewed C bodies / 314 bytes, with explicit pinned-module API scope and original external runtime limits.
-The [third-session twelfth linked lot](docs/parallel-third-linked-twelfth-2026-10-02.md) adds six reviewed C bodies / 636 bytes, including native companion-DLL ABI corroboration and explicit modulo32 growth arithmetic.
-
 **483 whole functions match exactly, totaling 32,313 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
-an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
-and image-state callbacks. The [100-function milestone batch](docs/hundred-functions-2026-10-02.md)
-added 82 exact functions / 1,063 bytes: 76 static data initializers, four game
-routines and two one-byte no-op callbacks. The 76 initializers account for 836 bytes;
-their destination semantics remain unknown. The numeric milestone does not establish
-100 representative gameplay routines or a representative whole-game match rate.
-A subsequent [continuous research lot](docs/continuous-2026-10-02.md) promoted
-one previously unmatched 20-byte game leaf without changing its C source.
-The [first historical-compiler lot](docs/historical-2026-10-02.md) adds 24 game
-functions / 480 bytes, including list traversals, counting loops and score calculations.
-The [larger historical lot](docs/historical-second-2026-10-02.md) adds another
-20 game functions / 881 bytes and validates one C-generated EAX/ECX contract.
+list operations, AI state updates and image-state callbacks.
 
-The [third historical lot](docs/historical-third-2026-10-02.md) adds 43 game
-functions / 2,963 bytes, including list maintenance, searches, option updates,
-resource refunds and parser callbacks. Several private register contracts are
-selected by the historical compiler from ordinary C compilation contexts.
+The aggregate separates **385 isolated COFF matches / 23,672 bytes** from
+**98 matches / 8,641 bytes** using the reviewed
+[external-only standard linker](docs/standard-linking.md).
+Of the 483 functions, 76 are static data initializers totaling 836 bytes;
+their destination semantics remain unknown. The count does not establish a
+representative whole-game match rate. See the [function census](docs/function-census.md)
+for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
+Detailed research reports remain under [docs/](docs/).
 
-The [reviewed-mismatch lot](docs/historical-fourth-2026-10-02.md) promotes
-15 existing candidates / 377 bytes to exact, including the initial unit predicate.
-Four reviewed source candidates remain non-exact.
-
-The [fifth historical lot](docs/historical-fifth-2026-10-02.md) adds 14 functions /
-1,277 bytes, including grid writes, two-stage searches, image-list updates and a
-map-format callback.
-
-The [sixth historical lot](docs/historical-sixth-2026-10-02.md) adds 13 functions /
-1,428 bytes, including AI-list cleanup, region predicates, a random selector,
-rectangle clipping, a trigger callback, a pixel fill and visibility masks.
-
-
-The [seventh historical lot](docs/historical-seventh-2026-10-02.md) adds
-14 reviewed functions / 1,809 bytes. The [REA/Ghidra trial](docs/rea-trial-2026-10-04.md)
-adds four further functions / 144 bytes. Integration on 2026-10-05 preserves
-all concurrent main-branch entries; the aggregate separates 385 isolated COFF
-matches from 98 matches using the reviewed external-only standard linker.
-
-The [fourth parallel lot](docs/parallel-fourth-2026-10-02.md) adds 57 reviewed
-functions / 5,911 bytes, independently rebuilt by the coordinator.
-The [bounded continuation](docs/parallel-fourth-continuation-2026-10-02.md) adds
-nine further functions / 776 bytes after fresh independent validation.
-
-The [third-session ninth linked lot](docs/parallel-third-linked-ninth-2026-10-02.md) adds four reviewed C functions / 374 bytes, preserving counter wrapping, volatile table traversal and the decoded-output wrapper.
-
-The [third-session eighth linked lot](docs/parallel-third-linked-eighth-2026-10-02.md) adds six reviewed C functions / 389 bytes, including an external CRT character loop and packet-field forwarding.
-
-The [third-session seventh linked lot](docs/parallel-third-linked-seventh-2026-10-02.md) adds four reviewed C functions / 538 bytes, including a native compiler-generated stack allocation.
-
-The [third-session sixth linked lot](docs/parallel-third-linked-sixth-2026-10-02.md) adds five reviewed C functions / 887 bytes while preserving observed failure behavior.
-
-The [third-session fifth linked lot](docs/parallel-third-linked-fifth-2026-10-02.md) adds five reviewed C functions / 745 bytes after the main-branch merge.
-
-The [third-session fourth linked lot](docs/parallel-third-linked-fourth-2026-10-02.md) adds six reviewed C functions / 621 bytes while reconciling five further concurrent main-branch functions.
-
-The [third-session third linked lot](docs/parallel-third-linked-third-2026-10-02.md) adds 11 reviewed C functions / 828 bytes while preserving the concurrent main-branch continuation.
-
-The [third-session second linked lot](docs/parallel-third-linked-second-2026-10-02.md) adds 15 reviewed whole C functions / 979 bytes, after the independently validated main-branch merge.
-
-The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 385 isolated COFF matches / 23,672 bytes from 98 standard-linked matches / 8,641 bytes.
-
-The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
-
-The [second third-session lot](docs/parallel-third-second-2026-10-02.md) adds another 25 reviewed C functions / 2,784 bytes.
-
-The [third-session lot](docs/parallel-third-2026-10-02.md) adds 22 reviewed C functions /
-1,998 bytes, including indirect callbacks and fixed-IAT import callers.
-
-The table lists the 34 earlier non-initializer functions; the 143 historical-toolchain
-additions and promotions are listed in the seven reports linked above. The 76 initializer entries, their
-destinations and startup slots are listed in the milestone report linked above.
+Selected reviewed functions:
 
 | Address | Community annotation | Original / compiled | Result |
 | --- | --- | ---: | --- |
