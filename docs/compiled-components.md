@@ -10,6 +10,8 @@ The pinned specimen remains SHA-256
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
 | [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
+| [sub_00404620](functions/00404620.md), 100-record pool packing caller | 165 / 165 | Exact | 80 passed |
+| [sub_00403AE0](functions/00403AE0.md), compiled list/unit encoder | 450 / 450 | Exact, counted once | Included in 100-record pool fixtures |
 | [sub_00403650](functions/00403650.md), pool initialization | 127 / 127 | Exact | 80 + 80 lifecycle |
 | [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
@@ -41,6 +43,10 @@ ordinary GNU linking. Each linked function keeps its whole virtual extent; file
 alignment never counts as original code. The matcher separately requires every
 retained dependency to equal its complete pinned region and match a reviewed ABI
 record. A dependency is not counted again as a new function.
+
+The second serialization component retains the complete 450-byte list/unit encoder
+and its 165-byte caller. A paired Header C view reproduces the observed ordering
+without volatile qualifiers. It has one external data symbol and no code binding.
 
 The query binds nine external **data** declarations to observed addresses. The
 packing component has one external data binding and no external code binding.
@@ -84,6 +90,7 @@ source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x00437290
 .local/components-venv/bin/python tools/validation/function-differential 0x00403650
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --initialize --roundtrip
+.local/components-venv/bin/python tools/validation/function-differential 0x00404620
 ```
 
 The deterministic seed is 1161. Query fixtures include empty tables, tied coordinates,
@@ -96,6 +103,10 @@ An additional 80 comparisons execute packing then restoration in each emulator.
 `all_regions_exact` remains false for that chain because restoration is non-exact;
 its build and code hash are recorded separately. The roundtrip checks original/C
 results, not identity of arbitrary input before and after serialization.
+The 100-record component adds 80 comparisons over a separate 46,004-byte pool,
+with free-list lengths 0..100, unit serial BYTE values, wrapping subtraction and
+unaligned heads. Its EBX argument is checked for preservation like the other
+nonvolatile registers, and the complete compiled child must match before execution.
 The initializer adds 80 complete-pool comparisons and 80 lifecycle comparisons
 (initialization, packing, restoration). Its independent build is recorded for the
 chain. Initialization replaces the initial free list with all 1,000 entries;
@@ -114,6 +125,10 @@ actually detects changes in the C candidate. A separately compiled packing mutat
 in the complete pool and access trace. The explicit private `--candidate-image`
 override supports linked-component regression experiments and records that no fresh build was
 requested for the override. Reports and all generated artifacts stay ignored.
+
+A separately compiled 100-record packing mutation processing only 99 records
+fails fixture 0 in the complete pool and access trace; its unchanged compiled
+450-byte dependency is still required to match before executing the mutation.
 
 These finite mapped states provide a bounded differential result. They do not prove
 universal semantic equivalence, arbitrary invalid-pointer behavior, native Windows ABI

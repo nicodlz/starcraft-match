@@ -95,6 +95,31 @@ def packed_path_fixture(rng, limit, free_count):
     writes.append((pool + 20000, struct.pack('<I', pool + free[0] * 20 if free else 0)))
     return writes
 
+def state_pool_fixture(rng, free_count, serial):
+    pool = 0x006F0000
+    free = rng.sample(range(100), free_count)
+    successors = {slot: pool + free[i + 1] * 460 if i + 1 < len(free) else 0
+                  for i, slot in enumerate(free)}
+    writes = []
+    for slot in range(100):
+        fields = [rng.getrandbits(32) for _ in range(115)]
+        fields[0] = successors.get(slot, rng.choice([0, pool, pool + 99 * 460]))
+        fields[1] = rng.choice([0, pool, pool + 99 * 460])
+        for base_field, stride, base in [(2, 24, 0x006B5448), (4, 44, 0x0069F468)]:
+            fields[base_field] = base
+            fields[base_field + 1] = rng.choice([0, base, base + stride,
+                                                base + 999 * stride, base - 1, base + 1])
+        for field in [11, 12, 13, 14, 10, 9]:
+            unit_id = rng.choice([0, 1, 2, 1700, 1701])
+            unit = 0x0059CB58 + unit_id * 336 if unit_id else 0
+            if unit:
+                writes.append((unit + 165, struct.pack('<B', serial)))
+            fields[field] = unit
+        writes.append((pool + slot * 460, struct.pack('<115I', *fields)))
+    writes.append((pool + 46000, struct.pack('<I', pool + free[0] * 460 if free else 0)))
+    return writes
+
+
 def decoded_path_fixture(limit, null_base):
     return [(0x006D5BFC, struct.pack('<I', 0x006E0000)),
             (0x006E0000, struct.pack('<h', limit))] + [
@@ -102,7 +127,7 @@ def decoded_path_fixture(limit, null_base):
             for pool in range(8)]
 
 
-def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None):
+def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None, pool_size=20004):
     from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP,
                                   UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESI, UC_X86_REG_ECX,
                                   UC_X86_REG_ESP)
@@ -124,7 +149,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
             accesses.append((kind, address, size, observed))
 
     uc.hook_add(unicorn.UC_HOOK_MEM_READ | unicorn.UC_HOOK_MEM_WRITE, memory_hook)
-    register_arguments = {'ESI': UC_X86_REG_ESI, 'EDI': UC_X86_REG_EDI, 'ECX': UC_X86_REG_ECX}
+    register_arguments = {'ESI': UC_X86_REG_ESI, 'EDI': UC_X86_REG_EDI, 'ECX': UC_X86_REG_ECX, 'EBX': UC_X86_REG_EBX}
     for call_entry, call_argument, argument_register in steps or [(entry, argument, None)]:
         uc.mem_write(STACK, struct.pack('<II', STOP, call_argument))
         uc.reg_write(UC_X86_REG_ESP, STACK)
@@ -147,13 +172,13 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
     return dict(eax=None if void_result else uc.reg_read(UC_X86_REG_EAX),
                 buffers=bytes(uc.mem_read(0x006BB900, 0x3540)),
                 cursors=bytes(uc.mem_read(0x006BEE64, 0x200)),
-                path_pool=bytes(uc.mem_read(0x006F0000, 20004)) if void_result else None,
+                path_pool=bytes(uc.mem_read(0x006F0000, pool_size)) if void_result else None,
                 accesses=accesses)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -163,6 +188,8 @@ def main():
     address = int(args.address, 0)
     path_restore = address == 0x00403780
     path_pack = address == 0x004036D0
+    state_pack = address == 0x00404620
+    pool_void = path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
     isolated = path_restore or path_decode or path_init
@@ -170,7 +197,7 @@ def main():
         raise ValueError('Initialization chain requires the linked pool packer')
     if args.roundtrip and not path_pack:
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         regions.append((0x00403780, 864))
@@ -257,8 +284,16 @@ def main():
                  for null_base in [False, True]]
         cases += [(rng.randrange(-32768, 32768), rng.getrandbits(32), bool(rng.randrange(2)))
                   for _ in range(200)]
+    if state_pack:
+        cases = [(count, serial) for count in [0, 1, 2, 8, 31, 50, 75, 98, 99, 100]
+                 for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
+        rng = random.Random(1161)
     for number, case in enumerate(cases):
-        if path_decode:
+        if state_pack:
+            writes = state_pool_fixture(rng, *case)
+            argument = 0x006F0000
+            steps = [(address, argument, 'EBX')]
+        elif path_decode:
             writes = decoded_path_fixture(case[0], case[2])
             argument = case[1]
             steps = [(address, argument, 'ECX')]
@@ -278,8 +313,8 @@ def main():
             steps.insert(0, (0x00403650, argument, 'ECX'))
         if args.roundtrip:
             steps.append((0x00403780, argument, None))
-        reference = execute(original_code, writes, unicorn, address, argument, path_restore or path_pack or path_init, steps)
-        candidate = execute(candidate_code, writes, unicorn, address, argument, path_restore or path_pack or path_init, steps)
+        reference = execute(original_code, writes, unicorn, address, argument, pool_void, steps, 46004 if state_pack else 20004)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void, steps, 46004 if state_pack else 20004)
         if reference != candidate:
             differing = [key for key in reference if reference[key] != candidate[key]]
             raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
@@ -293,8 +328,8 @@ def main():
                   compiled_dependency_exact=None if isolated else True, build=build,
                   roundtrip=args.roundtrip, restoration_build=restoration_build,
                   initialize=args.initialize, initialization_build=initialization_build,
-                  checks=([] if path_restore or path_pack or path_init else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + (['complete 20,004-byte pool'] if path_restore or path_pack or path_init else []) + [
+                  checks=([] if pool_void else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
+                          'mutable buffer/cursor snapshots'] + ([f'complete {46004 if state_pack else 20004:,}-byte pool'] if pool_void else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
                                'Private stack temporaries and volatile registers/flags excluded from equivalence',
