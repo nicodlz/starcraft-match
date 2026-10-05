@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![465 exact functions](https://img.shields.io/badge/verified-465%20exact%20functions-287d67)
+![483 exact functions](https://img.shields.io/badge/verified-483%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -33,7 +33,7 @@ The [third-session tenth linked lot](docs/parallel-third-linked-tenth-2026-10-02
 The [third-session eleventh linked lot](docs/parallel-third-linked-eleventh-2026-10-02.md) adds two reviewed C bodies / 314 bytes, with explicit pinned-module API scope and original external runtime limits.
 The [third-session twelfth linked lot](docs/parallel-third-linked-twelfth-2026-10-02.md) adds six reviewed C bodies / 636 bytes, including native companion-DLL ABI corroboration and explicit modulo32 growth arithmetic.
 
-**465 whole functions match exactly, totaling 30,360 original bytes.** The independent
+**483 whole functions match exactly, totaling 32,313 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 an indexed unit-property predicate, pointer-link insertion, conditional AI state updates
@@ -66,6 +66,13 @@ The [sixth historical lot](docs/historical-sixth-2026-10-02.md) adds 13 function
 1,428 bytes, including AI-list cleanup, region predicates, a random selector,
 rectangle clipping, a trigger callback, a pixel fill and visibility masks.
 
+
+The [seventh historical lot](docs/historical-seventh-2026-10-02.md) adds
+14 reviewed functions / 1,809 bytes. The [REA/Ghidra trial](docs/rea-trial-2026-10-04.md)
+adds four further functions / 144 bytes. Integration on 2026-10-05 preserves
+all concurrent main-branch entries; the aggregate separates 385 isolated COFF
+matches from 98 matches using the reviewed external-only standard linker.
+
 The [fourth parallel lot](docs/parallel-fourth-2026-10-02.md) adds 57 reviewed
 functions / 5,911 bytes, independently rebuilt by the coordinator.
 The [bounded continuation](docs/parallel-fourth-continuation-2026-10-02.md) adds
@@ -87,7 +94,7 @@ The [third-session third linked lot](docs/parallel-third-linked-third-2026-10-02
 
 The [third-session second linked lot](docs/parallel-third-linked-second-2026-10-02.md) adds 15 reviewed whole C functions / 979 bytes, after the independently validated main-branch merge.
 
-The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 367 isolated COFF matches / 21,719 bytes from 98 standard-linked matches / 8,641 bytes.
+The [third-session linked lot](docs/parallel-third-linked-2026-10-02.md) adds 23 reviewed whole C functions / 1,026 bytes using the reused external-only linker. The combined aggregate separates 385 isolated COFF matches / 23,672 bytes from 98 standard-linked matches / 8,641 bytes.
 
 The [third-session callback and pool lot](docs/parallel-third-callbacks-2026-10-02.md) adds 15 reviewed C functions / 1,400 bytes.
 
@@ -96,8 +103,8 @@ The [second third-session lot](docs/parallel-third-second-2026-10-02.md) adds an
 The [third-session lot](docs/parallel-third-2026-10-02.md) adds 22 reviewed C functions /
 1,998 bytes, including indirect callbacks and fixed-IAT import callers.
 
-The table lists the 34 earlier non-initializer functions; the 129 historical-toolchain
-additions and promotions are listed in the six reports linked above. The 76 initializer entries, their
+The table lists the 34 earlier non-initializer functions; the 143 historical-toolchain
+additions and promotions are listed in the seven reports linked above. The 76 initializer entries, their
 destinations and startup slots are listed in the milestone report linked above.
 
 | Address | Community annotation | Original / compiled | Result |
@@ -148,8 +155,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 465 matches are
-about **11.07% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 483 matches are
+about **11.50% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -199,7 +206,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 465 exact matches
+make proof                    # Recompile and require all 483 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
@@ -207,8 +214,14 @@ make proof                    # Recompile and require all 465 exact matches
 `make proof` fails on a regression and writes a private aggregate report to
 `analysis/proof-of-concept.json`. A real-binary test deliberately changes a candidate
 in a private source-only checkout to confirm that the failure gate works.
-The 64-test suite passes with the executable and required local compiler profiles.
-A source-only checkout skips the real-binary test.
+The 64-test suite includes an original-input proof and deliberate source-regression
+test. A source-only checkout skips the real-binary test. With the executable
+present, activate the host-local compiler paths before the full suite:
+
+```sh
+source .local/tools/activate.sh
+make
+```
 
 Install the local commit guard in a fresh clone:
 
@@ -254,7 +267,10 @@ decompiler output, calls, references, strings and symbols:
 GHIDRA_HOME=/path/to/ghidra ./tools/ghidra/run-headless
 ```
 
-Ghidra/Java were absent on the initial host, so this integration remains unvalidated.
+The local integration was validated on 2026-10-02 with Ghidra 12.1.4 and Temurin
+JDK 21.0.12.1+1. Import, auto-analysis and the Java exporter completed against the
+pinned executable, producing 4,644 function hypotheses with decompiler output.
+These are discovery results, not reviewed boundaries or additional exact matches.
 See [Ghidra instructions](tools/ghidra/README.md). The strongest original-compiler
 hypothesis is **MSVC 7.1 / VS .NET 2003**; simple matches with modern Clang do not
 establish broad compiler equivalence.
@@ -302,7 +318,7 @@ Documentation: [Prior art](docs/prior-art.md) · [Toolchain](docs/toolchain.md) 
    representative functions** beyond repeated static initializers, measuring time,
    dependencies, exact-match rate and human review needed per function.
 2. Extend the validated local historical compiler experiments to harder routines,
-   linked placement and relocation-aware comparisons; validate headless Ghidra.
+   linked placement and relocation-aware comparisons; review Ghidra discovery results.
 3. Evaluate larger-scale agent scheduling only after those measurements. Original
    differential execution, deterministic simulation and replay synchronization
    remain later validation levels; modernization remains out of scope.

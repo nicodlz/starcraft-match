@@ -24,7 +24,8 @@ if digest not in {b['sha256'] for b in json.loads((ROOT/'config/target.json').re
 headless = Path(a.ghidra_home)/'support/analyzeHeadless'
 if not headless.is_file():
     p.exit(1, f'error: missing {headless}\n')
-projects = ROOT/'.local/ghidra/projects'
+# Ghidra rejects project paths containing dot-prefixed directory components.
+projects = ROOT/'analysis/ghidra/projects'
 exports = ROOT/'analysis/ghidra'/digest
 projects.mkdir(parents=True, exist_ok=True)
 exports.mkdir(parents=True, exist_ok=True)

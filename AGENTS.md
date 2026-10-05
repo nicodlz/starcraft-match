@@ -45,8 +45,9 @@ instructions authorizing that action; existing session authorization remains val
    stay null; a source-only test is not original differential execution.
 
 A compiler/profile/source/header change invalidates old evidence. The coordinator
-must rebuild; do not trust a sub-agent's cached success report. Ghidra integration
-is currently optional and unvalidated on the initial host.
+must rebuild; do not trust a sub-agent's cached success report. Optional Ghidra
+integration was validated locally with Ghidra 12.1.4 and JDK 21 on 2026-10-02;
+its discovery results still require independent boundary and ABI review.
 
 ## Parallel work
 
