@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![489 exact functions](https://img.shields.io/badge/verified-489%20exact%20functions-287d67)
+![490 exact functions](https://img.shields.io/badge/verified-490%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,17 +26,17 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**489 whole functions match exactly, totaling 33,420 original bytes.** The independent
+**490 whole functions match exactly, totaling 33,668 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 list operations, AI state updates and image-state callbacks.
 
 The aggregate separates **387 isolated COFF matches / 23,872 bytes** from
-**100 matches / 9,217 bytes** using the reviewed
+**101 matches / 9,465 bytes** using the reviewed
 [external-only standard linker](docs/standard-linking.md), plus
 **two compiled-component matches / 331 bytes** with their actual C dependencies
-(counted once among the 100 external-only matches).
-Of the 489 functions, 76 are static data initializers totaling 836 bytes;
+(counted once among the 101 external-only matches).
+Of the 490 functions, 76 are static data initializers totaling 836 bytes;
 their destination semantics remain unknown. The count does not establish a
 representative whole-game match rate. See the [function census](docs/function-census.md)
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
@@ -50,50 +50,25 @@ The 127-byte initializer is exact too, extending the reconstructed pool lifecycl
 80 comparisons cover initialization followed by packing and restoration.
 A second **615-byte component** serializes a 100-record pool and retains its exact
 450-byte list/unit encoder; 80 comparisons cover its complete 46,004-byte state.
+Its related 248-byte record restoration is exact and passes 80 record comparisons.
 
 Work toward larger components also includes a 599-byte rectangle query linked with its
 actual compiled C search dependency and an 864-byte pathfinding reference-restoration
 routine. Both candidates remain non-exact; together they pass 460 bounded
 original/C emulator fixtures. See [compiled components](docs/compiled-components.md).
 
-Selected reviewed functions:
+Selected reviewed regions:
 
-| Address | Community annotation | Original / compiled | Result |
+| Address | Reviewed operation | Original / compiled | Result |
 | --- | --- | ---: | --- |
-| [0x00402C40](docs/functions/00402C40.md) | getHPGainForRepair | 20 / 20 | Exact |
-| [0x004180C0](docs/functions/004180C0.md) | DLG_nextEntry | 13 / 13 | Exact |
-| [0x00423180](docs/functions/00423180.md) | BTNSACT_DoNothing | 1 / 1 | Exact |
-| [0x00427E40](docs/functions/00427E40.md) | BRFACT_NoAct_fn | 6 / 6 | Exact |
-| [0x004282D0](docs/functions/004282D0.md) | BTNSCOND_Always | 8 / 8 | Exact |
-| [0x0042C680](docs/functions/0042C680.md) | TRGCND_Always | 6 / 6 | Exact |
-| [0x00446BA0](docs/functions/00446BA0.md) | AI_SetTargetExpansion_Off_SubAttacks | 32 / 32 | Exact |
-| [0x00455650](docs/functions/00455650.md) | OrderAcquire_Nothing | 8 / 8 | Exact |
-| [0x00473490](docs/functions/00473490.md) | unitIsResourceContainer | 18 / 18 | Exact |
-| [0x0047A070](docs/functions/0047A070.md) | image_Insert | 25 / 25 | Exact |
-| [0x0047CCB0](docs/functions/0047CCB0.md) | saveMinimapCounts | 23 / 23 | Exact |
-| [0x0047D160](docs/functions/0047D160.md) | nullsub_gameloop | 1 / 1 | Exact |
-| [0x00484350](docs/functions/00484350.md) | NullInput | 1 / 1 | Exact |
-| [0x00488780](docs/functions/00488780.md) | isGamePaused | 6 / 6 | Exact |
-| [0x00496FF0](docs/functions/00496FF0.md) | EnableVisibilityHashUpdate | 11 / 11 | Exact |
-| [0x00498150](docs/functions/00498150.md) | Sprite_SetVerticalOffset | 22 / 22 | Exact |
-| [0x0049DCE0](docs/functions/0049DCE0.md) | CListPushBackHiddenUnitEntry | 55 / 55 | Exact |
-| [0x004B2AF0](docs/functions/004B2AF0.md) | structureScoreCalc | 60 / 60 | Exact |
-| [0x004B2B30](docs/functions/004B2B30.md) | unitScoreCalc | 60 / 60 | Exact |
-| [0x004C5000](docs/functions/004C5000.md) | Trigger: enable debug mode | 18 / 18 | Exact |
-| [0x004C5020](docs/functions/004C5020.md) | Trigger: disable debug mode | 18 / 18 | Exact |
-| [0x004C50C0](docs/functions/004C50C0.md) | Trigger: unpause timer | 16 / 16 | Exact |
-| [0x004C51B0](docs/functions/004C51B0.md) | TRGACT_SetMissionObjectives_fn | 22 / 22 | Exact |
-| [0x004C52A0](docs/functions/004C52A0.md) | TRGACT_PreserveTrigger_fn | 18 / 18 | Exact |
-| [0x004C5350](docs/functions/004C5350.md) | TRGACT_NoAct_fn | 6 / 6 | Exact |
-| [0x004CB550](docs/functions/004CB550.md) | CHK_TYPE | 8 / 8 | Exact |
-| [0x004CE6B0](docs/functions/004CE6B0.md) | SetMapStartStatus | 8 / 8 | Exact |
-| [0x004CE6C0](docs/functions/004CE6C0.md) | getMapStartStatus | 6 / 6 | Exact |
-| [0x004D0910](docs/functions/004D0910.md) | Unnamed DWORD getter | 6 / 6 | Exact |
-| [0x004D55F0](docs/functions/004D55F0.md) | ImageUpdate_Null | 1 / 1 | Exact |
-| [0x004D5900](docs/functions/004D5900.md) | Unnamed conditional byte-state update | 21 / 21 | Exact |
-| [0x004DBC00](docs/functions/004DBC00.md) | setSinglePlayerValue | 22 / 22 | Exact |
-| [0x004DC540](docs/functions/004DC540.md) | SetInGameLoop | 12 / 12 | Exact |
-| [0x004E1220](docs/functions/004E1220.md) | MenuGenericBtnInitChildren | 50 / 50 | Exact |
+| [0x004BDB30](docs/functions/004BDB30.md) | Masked palette distance scan | 519 / 519 | Exact |
+| [0x00483960](docs/functions/00483960.md) | Grid and coordinate scanning | 492 / 492 | Exact |
+| [0x00403AE0](docs/functions/00403AE0.md) | List/unit reference encoding | 450 / 450 | Exact |
+| [0x00403CB0](docs/functions/00403CB0.md) | List/unit reference restoration | 248 / 248 | Exact |
+| [0x00404620](docs/functions/00404620.md) | 100-record serialization with actual C encoder | 165 / 165 | Exact |
+| [0x004036D0](docs/functions/004036D0.md) | 1,000-entry serialization with actual C encoder | 166 / 166 | Exact |
+| [0x004308A0](docs/functions/004308A0.md) | Rectangle query with actual C search dependency | 599 / 598 | Non-exact |
+| [0x00403780](docs/functions/00403780.md) | 1,000-entry reference restoration | 864 / 788 | Non-exact |
 
 Names are community annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
@@ -107,8 +82,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 489 matches are
-about **11.64% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 490 matches are
+about **11.66% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -158,7 +133,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 489 exact matches
+make proof                    # Recompile and require all 490 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```

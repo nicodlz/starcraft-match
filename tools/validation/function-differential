@@ -149,7 +149,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
             accesses.append((kind, address, size, observed))
 
     uc.hook_add(unicorn.UC_HOOK_MEM_READ | unicorn.UC_HOOK_MEM_WRITE, memory_hook)
-    register_arguments = {'ESI': UC_X86_REG_ESI, 'EDI': UC_X86_REG_EDI, 'ECX': UC_X86_REG_ECX, 'EBX': UC_X86_REG_EBX}
+    register_arguments = {'ESI': UC_X86_REG_ESI, 'EDI': UC_X86_REG_EDI, 'ECX': UC_X86_REG_ECX, 'EBX': UC_X86_REG_EBX, 'EAX': UC_X86_REG_EAX}
     for call_entry, call_argument, argument_register in steps or [(entry, argument, None)]:
         uc.mem_write(STACK, struct.pack('<II', STOP, call_argument))
         uc.reg_write(UC_X86_REG_ESP, STACK)
@@ -178,7 +178,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -189,7 +189,8 @@ def main():
     path_restore = address == 0x00403780
     path_pack = address == 0x004036D0
     state_pack = address == 0x00404620
-    pool_void = path_restore or path_pack or address == 0x00403650 or state_pack
+    state_record = address == 0x00403CB0
+    pool_void = state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
     isolated = path_restore or path_decode or path_init
@@ -197,7 +198,7 @@ def main():
         raise ValueError('Initialization chain requires the linked pool packer')
     if args.roundtrip and not path_pack:
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         regions.append((0x00403780, 864))
@@ -239,12 +240,12 @@ def main():
     else:
         entry, sections = read_pe(image)
         component_regions = regions[:2]
-        if entry != address or len(sections) != 2 or {s['address'] for s in sections} != {a for a, _ in component_regions}:
-            raise ValueError('Candidate must contain exactly the root and its compiled callee')
+        if entry != address or len(sections) != len(component_regions) or {s['address'] for s in sections} != {a for a, _ in component_regions}:
+            raise ValueError('Candidate must contain exactly the reviewed compiled regions')
         candidate_code = [(s['address'], image[s['raw_pointer']:s['raw_pointer'] + s['size']]) for s in sections]
-        callee, callee_size = component_regions[1]
-        if dict(candidate_code)[callee] != original.region(callee, callee_size):
-            raise ValueError('Whole compiled dependency differs from pinned original')
+        for callee, callee_size in component_regions[1:]:
+            if dict(candidate_code)[callee] != original.region(callee, callee_size):
+                raise ValueError('Whole compiled dependency differs from pinned original')
     restoration_build = None
     if args.roundtrip:
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', '0x00403780', '--binary', str(ROOT / args.binary)],
@@ -288,8 +289,22 @@ def main():
         cases = [(count, serial) for count in [0, 1, 2, 8, 31, 50, 75, 98, 99, 100]
                  for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
         rng = random.Random(1161)
+    if state_record:
+        cases = [(head, serial) for head in [0, 1, 2, 999, 1000, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF, 12345, 0x10000000]
+                 for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
+        rng = random.Random(1161)
+    pool_size = 460 if state_record else 46004 if state_pack else 20004
     for number, case in enumerate(cases):
-        if state_pack:
+        if state_record:
+            fields = [rng.getrandbits(32) for _ in range(115)]
+            for field in [3, 5]:
+                fields[field] = case[0]
+            for field in [11, 12, 13, 14, 10, 9]:
+                fields[field] = (case[1] << 11) | rng.choice([0, 1, 2, 1700, 1701, 2047])
+            writes = [(0x006F0000, struct.pack('<115I', *fields))]
+            argument = 0x006F0000
+            steps = [(address, argument, 'EAX')]
+        elif state_pack:
             writes = state_pool_fixture(rng, *case)
             argument = 0x006F0000
             steps = [(address, argument, 'EBX')]
@@ -313,8 +328,8 @@ def main():
             steps.insert(0, (0x00403650, argument, 'ECX'))
         if args.roundtrip:
             steps.append((0x00403780, argument, None))
-        reference = execute(original_code, writes, unicorn, address, argument, pool_void, steps, 46004 if state_pack else 20004)
-        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void, steps, 46004 if state_pack else 20004)
+        reference = execute(original_code, writes, unicorn, address, argument, pool_void, steps, pool_size)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void, steps, pool_size)
         if reference != candidate:
             differing = [key for key in reference if reference[key] != candidate[key]]
             raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
@@ -325,11 +340,11 @@ def main():
                            for a, code in candidate_code],
                   exact_byte_match=dict(candidate_code)[address] == dict(original_code)[address],
                   all_regions_exact=all(dict(original_code)[a] == code for a, code in candidate_code),
-                  compiled_dependency_exact=None if isolated else True, build=build,
+                  compiled_dependency_exact=None if isolated or state_record else True, build=build,
                   roundtrip=args.roundtrip, restoration_build=restoration_build,
                   initialize=args.initialize, initialization_build=initialization_build,
                   checks=([] if pool_void else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + ([f'complete {46004 if state_pack else 20004:,}-byte pool'] if pool_void else []) + [
+                          'mutable buffer/cursor snapshots'] + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
                                'Private stack temporaries and volatile registers/flags excluded from equivalence',

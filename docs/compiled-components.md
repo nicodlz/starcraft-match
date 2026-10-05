@@ -12,6 +12,7 @@ The pinned specimen remains SHA-256
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
 | [sub_00404620](functions/00404620.md), 100-record pool packing caller | 165 / 165 | Exact | 80 passed |
 | [sub_00403AE0](functions/00403AE0.md), compiled list/unit encoder | 450 / 450 | Exact, counted once | Included in 100-record pool fixtures |
+| [sub_00403CB0](functions/00403CB0.md), related list/unit restoration | 248 / 248 | Exact | 80 passed |
 | [sub_00403650](functions/00403650.md), pool initialization | 127 / 127 | Exact | 80 + 80 lifecycle |
 | [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
@@ -91,6 +92,7 @@ source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x00403650
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --initialize --roundtrip
 .local/components-venv/bin/python tools/validation/function-differential 0x00404620
+.local/components-venv/bin/python tools/validation/function-differential 0x00403CB0
 ```
 
 The deterministic seed is 1161. Query fixtures include empty tables, tied coordinates,
@@ -107,6 +109,10 @@ The 100-record component adds 80 comparisons over a separate 46,004-byte pool,
 with free-list lengths 0..100, unit serial BYTE values, wrapping subtraction and
 unaligned heads. Its EBX argument is checked for preservation like the other
 nonvolatile registers, and the complete compiled child must match before execution.
+The related 248-byte record restoration adds 80 complete 460-byte comparisons
+with an explicitly assigned EAX input, null and wrapping heads, and masked unit
+indices including zero under a nonzero serial. Its 115-byte pool caller remains
+non-exact in private research and is excluded from component totals.
 The initializer adds 80 complete-pool comparisons and 80 lifecycle comparisons
 (initialization, packing, restoration). Its independent build is recorded for the
 chain. Initialization replaces the initial free list with all 1,000 entries;

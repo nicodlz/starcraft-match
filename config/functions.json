@@ -28951,5 +28951,85 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403CB0",
+    "size": 248,
+    "name": "sub_00403CB0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004046E2",
+        "type": "direct_call",
+        "provenance": "Whole pinned115-byte caller4046D0..404743: MOV EAX,ESI at4046E0 then CALL403CB0 at4046E2, EAX overwritten4046E7;100-iteration loop advances ESI460; no stack arguments or cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Complete pinned248-byte region403CB0..403DA8 reviewed; previous403CA1 RET then14 traps, both403DA1/A7 RET exits included,8 traps before403DB0; whole115-byte caller4046D0 corroborates entry and EAX argument.",
+    "calling_convention": "Private EAX record pointer; no stack arguments, plain RET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00403CB0(State *state /* EAX */)",
+    "candidate_source": "src/game/sub_00403CB0.c",
+    "candidate_symbol": "@sub_00403CB0@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".restore",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Six original LEA0059CB58 after masked336-byte indexing;0059CCA8 is first record, one-based array indexing supplies relocation addend -336."
+          ]
+        },
+        "_g_0069F468": {
+          "address": 6943848,
+          "kind": "data",
+          "evidence": [
+            "Original stores0069F468 as44-byte list base and computes LEA0069F43C after44-byte indexing; first-record binding supplies -44 relocation addend."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_decode_list24",
+          "section": ".l24"
+        },
+        {
+          "symbol": "_decode_list44",
+          "section": ".l44"
+        },
+        {
+          "symbol": "_decode_unit",
+          "section": ".uunit"
+        },
+        {
+          "symbol": "_compiler_anchor_00403CB0@4",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "notes": [
+      "Header DWORD pairs8/12 and16/20 restore bases006B5448 and0069F468; nonzero heads use unsigned one-based24/44-byte indexing. Unit DWORDs44,48,52,56,40,36 restore0059CB58+(id&2047)*336 ornull; serial bits ignored, no added range checks.",
+      "Fresh recorded-profile whole-contribution linking matches248bytes with only external data bindings. Optional Unicorn2.1.4 runner passes80 complete460-byte record comparisons, ordered accesses, nonvolatile registers and stack cleanup. No original Windows execution; generic semantic and CFG measurements remain unavailable."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
