@@ -232,3 +232,12 @@ the second coordinate to preserved EBX and checks one-stack-DWORD RET4 cleanup,
 full EAX, memory snapshots and ordered accesses. A compiled wrong-marker-bit
 mutation fails fixture0. Run `0x0047DD60`; `all_regions_exact` remains false,
 and its already-counted dependencies add no new exact bytes.
+
+The eight-record WORD mask accumulator matches its complete 319-byte external-only
+C contribution and passes 1,280 comparisons. Its private EAX input is assigned
+explicitly; no return value is established. All256 selection masks, full inputs
+outside BYTE range, initial mask bits and i386 shift-count boundaries are covered.
+Record and WORD-mask snapshots and ordered accesses agree. A compiled shifted-bit
+mutation fails fixture5. Counts outside0..31 are checked as compiled target-machine
+behavior, not portable ISO C shift semantics. Run `0x0048FC70`; its whole region
+is exact and has no retained game dependency.

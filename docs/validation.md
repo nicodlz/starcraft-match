@@ -9,7 +9,7 @@ never establishes exact equality. [Native MSVC LTCG](native-ltcg.md) separately
 checks complete generated contributions using the native linker map, rejects
 external code and retains all actual C dependencies. Similarity and CFG metrics remain null.
 
-The current proof set has **501 functions / 36,878 bytes**. `make proof` freshly
+The current proof set has **502 functions / 37,197 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
 proprietary input is read locally and never bundled with that checkout. The

@@ -242,6 +242,16 @@ def neighbors_fixture(rng, width, height, x, y, mask):
             (0x00700000, struct.pack('<' + 'H' * len(values), *values))]
 
 
+def player_mark_fixture(rng, mask, group):
+    data = bytearray(rng.randbytes(288))
+    for i in range(8):
+        shift = rng.choice([0, 1, 7, 8, 15, 16, 31, 32, 63, 255, 0xFFFFFFFF])
+        struct.pack_into('<I', data, i * 36, shift)
+        data[i * 36 + 4] = 2 if mask & (1 << i) else rng.choice([0, 1, 3, 255])
+        data[i * 36 + 6] = group if group <= 255 else rng.randrange(256)
+    return [(0x57EEE4, bytes(data)), (0x57F1DA, struct.pack('<H', rng.randrange(65536)))]
+
+
 def node_move_cases(rng):
     cases = [(3, 3, 1, 1, mask, 9, 1, mode) for mask in range(256) for mode in range(3)]
     for width, height, x, y in [(0, 0, 0, 0), (1, 1, 0, 0), (2, 2, 1, 1),
@@ -346,7 +356,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -354,6 +364,7 @@ def main():
     parser.add_argument('--initialize', action='store_true', help='For pool packing, initialize the pool before serialization')
     args = parser.parse_args()
     address = int(args.address, 0)
+    player_mark = address == 0x0048FC70
     node_move = address == 0x0047DD60
     neighbors = address == 0x00414290
     path_restore = address == 0x00403780
@@ -369,7 +380,7 @@ def main():
     node44_decode = address == 0x00432810
     node44_pack = address == 0x00404350
     node44_record = address == 0x004328E0
-    linked_single = neighbors or node44_record or state_record or node_pack or node_restore
+    linked_single = player_mark or neighbors or node44_record or state_record or node_pack or node_restore
     pool_void = node44_init or node44_restore or node44_decode or node44_pack or node44_record or state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
@@ -378,7 +389,7 @@ def main():
         raise ValueError('Initialization chain requires a reviewed pool packer')
     if args.roundtrip and not (path_pack or node_pack or node44_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         if node44_pack:
@@ -540,6 +551,9 @@ def main():
             cases.extend((width, height, x, y, mask) for x, y in points
                          for mask in [0, 1, 2, 4, 8, 16, 32, 64, 128, 255])
         rng = random.Random(1161)
+    if player_mark:
+        cases = [(mask, group) for mask in range(256) for group in [0, 1, 255, 256, 0xFFFFFFFF]]
+        rng = random.Random(1161)
     if node_move:
         rng = random.Random(1161)
         cases = node_move_cases(rng)
@@ -547,7 +561,12 @@ def main():
     for number, case in enumerate(cases):
         extra_register_arguments = None
         snapshots = ()
-        if node_move:
+        if player_mark:
+            writes = player_mark_fixture(rng, *case)
+            argument = case[1]
+            steps = [(address, argument, 'EAX')]
+            snapshots = [(0x57EEE4, 288), (0x57F1DA, 2)]
+        elif node_move:
             from unicorn.x86_const import UC_X86_REG_EBX
             writes = node_move_fixture(rng, *case)
             argument = case[2]
@@ -629,8 +648,8 @@ def main():
         if args.roundtrip:
             steps = steps or [(address, argument, None)]
             steps.append((0x00404410, argument, 'ESI') if node44_pack else (0x004041F0, argument, 'EDX') if node_pack else (0x00403780, argument, None))
-        reference = execute(original_code, writes, unicorn, address, argument, pool_void, steps, pool_size, extra_register_arguments, snapshots)
-        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void, steps, pool_size, extra_register_arguments, snapshots)
+        reference = execute(original_code, writes, unicorn, address, argument, pool_void or player_mark, steps, pool_size, extra_register_arguments, snapshots)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void or player_mark, steps, pool_size, extra_register_arguments, snapshots)
         if reference != candidate:
             differing = [key for key in reference if reference[key] != candidate[key]]
             raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
@@ -644,8 +663,8 @@ def main():
                   compiled_dependency_exact=None if isolated or linked_single else True, build=build,
                   roundtrip=args.roundtrip, restoration_build=restoration_build,
                   initialize=args.initialize, initialization_build=initialization_build,
-                  checks=([] if pool_void else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
+                  checks=([] if pool_void or player_mark else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
+                          'mutable buffer/cursor snapshots'] + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
                                'Private stack temporaries and volatile registers/flags excluded from equivalence',

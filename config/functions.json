@@ -30035,5 +30035,83 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x0048FC70",
+    "size": 319,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "@sub_0048FC70@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".mark",
+      "bindings": {
+        "_g_0057EEE4": {
+          "address": 5762788,
+          "kind": "data",
+          "evidence": [
+            "Reviewed data operands."
+          ]
+        },
+        "_g_0057F1DA": {
+          "address": 5763546,
+          "kind": "data",
+          "evidence": [
+            "Reviewed WORD mask operand."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "@compiler_anchor_0048FC70@4",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048FC70.c",
+    "schema_version": 1,
+    "name": "sub_0048FC70",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "calling_convention": "Private fullDWORD EAX input, no stack arguments, plainRET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_0048FC70(unsigned int group /* compiler allocates EAX */)",
+    "references": [
+      {
+        "address": "0x0048FDEA",
+        "type": "direct_call",
+        "provenance": "Fresh aligned352-byte caller48FDB0..48FF10: MOVZXEAX,BYTE[ESI]48FDE7 thenCALL48FC70; no stack argument or cleanup."
+      },
+      {
+        "address": "0x0048FFB0",
+        "type": "direct_call",
+        "provenance": "Fresh aligned233-byte caller48FF10..48FFF9: MOVZXEAX,BYTE[player-table+6] at48FFA8 thenCALL48FC70; no argument pushes or cleanup."
+      },
+      {
+        "address": "0x0048FFBC",
+        "type": "tail_call",
+        "provenance": "Same reviewed caller MOVZXEAX,BYTE[581D60]48FFB5 thenJMP48FC70 at48FFBC."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "provenance": "Whole319-byte48FC70..48FDAF independently reviewed including soleRET48FDAE, all internal branches and no calls. Preceding alignedRET4 at48FC60 ends48FC63 followed13 traps; singletrap48FDAF before48FDB0. Independentcallers establishEAXinput.",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Eight explicitly ordered36-byte records: BYTE4 equals2 and zero-extendedBYTE6 equals fullEAX input; then readDWORD0, shift1 with target SHL behavior and OR narrowedWORD into57F1DA. FullDWORD accesses retained. Source shift relies on pinned i386 compiler behavior outside ISO C shift-count range; actual emitted wholefunction is compared without normalization.",
+      "Fresh msvc71-o2 external-only standard-linked319-byte wholeC contribution exact. Optional Unicorn2.1.4 passes1280 comparisons covering all256 selection masks, out-of-BYTE input, WORD masks and target shift count boundaries. ActualC changing1u to2u rejectedfixture5 on mask snapshot/accesses. No established EAX return; genericsemantic/CFG metrics null."
+    ]
   }
 ]
