@@ -30,7 +30,7 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 524 source candidates: 510 confirmed exact, 11 reviewed
+map entries. There are currently 526 source candidates: 510 confirmed exact, 13 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
 The exact count includes **76 static data initializers / 836 bytes** and **434 other
@@ -93,3 +93,10 @@ outside this reconstructed chain and the exact total.
 Its active-to-free record transfer contributes **147 exact bytes**, passing
 1,600 comparisons across all 100 record positions, nonzero field 12 early exits,
 empty/nonempty insertion positions, link aliases and DWORD count wrapping.
+
+The player relation initializer remains non-exact at **532 / 532 bytes**. Its
+complete 1,013-byte original parent/callee chain passes 4,096 emulator comparisons
+against actual C contributions and an independent matrix/mask oracle. The
+366-byte peer mask routine passes another 11,232 comparisons, including dirty
+upper flag bytes. The existing 115-byte matrix callee remains literally exact;
+these two new reviewed mismatches add no exact functions or bytes.

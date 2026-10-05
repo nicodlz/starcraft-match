@@ -78,6 +78,8 @@ Selected reviewed regions:
 | [0x00404620](docs/functions/00404620.md) | 100-record serialization with actual C encoder | 165 / 165 | Exact |
 | [0x004036D0](docs/functions/004036D0.md) | 1,000-entry serialization with actual C encoder | 166 / 166 | Exact |
 | [0x004308A0](docs/functions/004308A0.md) | Rectangle query with actual C search dependency | 599 / 599 | Exact with native LTCG |
+| [0x004C3ED0](docs/functions/004C3ED0.md) | Player relations initialization with both actual C callees | 532 / 532 | Non-exact; 4,096 complete-chain comparisons and independent oracle pass |
+| [0x0045A9B0](docs/functions/0045A9B0.md) | Group-selected DWORD peer masks | 366 / 366 | Non-exact; 11,232 comparisons and independent oracle pass |
 | [0x0048FDB0](docs/functions/0048FDB0.md) | Selector-driven player mask with actual C callee | 352 / 352 | Exact; 5,120 comparisons pass |
 | [0x0048FC70](docs/functions/0048FC70.md) | Eight-record WORD mask accumulation | 319 / 319 | Exact; 1,280 comparisons pass |
 | [0x0042FF80](docs/functions/0042FF80.md) | Generation-marked rectangle query with actual C search | 339 / 338 | Non-exact; 400 comparisons pass |
@@ -101,7 +103,7 @@ catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Eleven reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Thirteen reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
 [`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
 [`0x00404280`](docs/functions/00404280.md),
@@ -109,8 +111,10 @@ Eleven reviewed functions remain unmatched: [`0x00401120`](docs/functions/004011
 [`0x0042FF80`](docs/functions/0042FF80.md),
 [`0x0047DC10`](docs/functions/0047DC10.md),
 [`0x0048C770`](docs/functions/0048C770.md),
-[`0x0048C7D0`](docs/functions/0048C7D0.md) and
-[`0x0048A720`](docs/functions/0048A720.md).
+[`0x0048C7D0`](docs/functions/0048C7D0.md),
+[`0x0048A720`](docs/functions/0048A720.md),
+[`0x0045A9B0`](docs/functions/0045A9B0.md) and
+[`0x004C3ED0`](docs/functions/004C3ED0.md).
 Their complete regions and measured compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded

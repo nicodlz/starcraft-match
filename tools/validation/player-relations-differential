@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+"""Compare complete reviewed player-relation C routines in an optional x86 emulator."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import random
+import runpy
+import struct
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'tools'))
+from analysis.pe import PE
+from matching.linking import read_pe
+
+
+def load_candidate(address, original, binary, override=None, require_exact=False):
+    if override:
+        image = Path(override).read_bytes()
+        build = None
+    else:
+        command = [str(ROOT / 'tools/decomp'), 'match', address, '--binary', str(binary)]
+        if require_exact:
+            command.append('--require-exact')
+        subprocess.run(command, cwd=ROOT, check=True)
+        report = json.loads((ROOT / 'analysis/matches' / (address + '.json')).read_text())
+        build = report['build']
+        if build['match_method'] == 'isolated-coff':
+            data = (ROOT / 'build' / address / 'candidate.bin').read_bytes()
+            if data != original.region(int(address, 0), len(data)) or len(data) != 115:
+                raise ValueError('Matrix callee must retain its complete exact 115-byte C body')
+            return [(int(address, 0), data)], build, hashlib.sha256(data).hexdigest()
+        image = (ROOT / 'build' / address / 'linked/candidate.exe').read_bytes()
+    entry, sections = read_pe(image)
+    if entry != int(address, 0) or len(sections) != 1 or sections[0]['address'] != entry:
+        raise ValueError('Expected one whole C contribution at its reviewed address')
+    section = sections[0]
+    code = image[section['raw_pointer']:section['raw_pointer'] + section['size']]
+    if require_exact and code != original.region(entry, len(code)):
+        raise ValueError('Required C contribution is not literally exact')
+    return [(entry, code)], build, hashlib.sha256(image).hexdigest()
+
+
+def mask_cases():
+    flags = [0, 1, 2, 0x100, 0x101, 0x80000000, 0x80000001, 0xFFFFFFFF]
+    return ([(group, subset, flag) for group in range(1, 5)
+             for subset in range(256) for flag in flags]
+            + [(group, 255, flag) for group in range(256)
+               if not 1 <= group <= 4 for flag in flags]
+            + [(group, 0xA5, flag) for group in range(1, 5) for flag in range(256)])
+
+
+def mask_fixture(rng, number, case):
+    from unicorn.x86_const import UC_X86_REG_EDX, UC_X86_REG_ECX
+    group, subset, flag = case
+    players = bytearray(rng.randbytes(320))
+    masks = bytearray(rng.randbytes(64))
+    values = []
+    for slot in range(8):
+        offset = 16 + slot * 36
+        if subset & (1 << slot):
+            players[offset], players[offset + 2] = 2, group
+        elif (number + slot) % 2:
+            players[offset], players[offset + 2] = rng.choice([0, 1, 3, 255]), group
+        else:
+            players[offset], players[offset + 2] = 2, (group + 1) % 256
+        value = [0, 0xFFFFFFFF, 0xAAAAAAAA, 0x55555555, 0x80000000,
+                 0x7FFFFFFF, 0xFFFFFF00, rng.getrandbits(32)][(number + slot) % 8]
+        values.append(value)
+        struct.pack_into('<I', masks, 16 + slot * 4, value)
+    selected = [slot for slot in range(8) if 1 <= group <= 4
+                and players[16 + slot * 36] == 2 and players[18 + slot * 36] == group]
+    selected_bits = sum(1 << slot for slot in selected)
+    expected = bytearray(masks)
+    for owner in selected:
+        peer_bits = selected_bits & ~(1 << owner)
+        value = values[owner] | peer_bits if flag & 255 else values[owner] & ~peer_bits
+        struct.pack_into('<I', expected, 16 + owner * 4, value)
+    writes = [(0x57EED8, bytes(players)), (0x57F1DC, bytes(masks))]
+    registers = {UC_X86_REG_EDX: [0, 0x12345600, 0xFFFFFF00, 0x80000000][number % 4] | group,
+                 UC_X86_REG_ECX: rng.getrandbits(32)}
+    return writes, (flag,), registers, [bytes(players), bytes(expected)]
+
+
+def relations_fixture(rng, number):
+    players = bytearray(rng.randbytes(464))
+    flags = bytearray(rng.randbytes(48))
+    groups = bytearray(rng.randbytes(32))
+    masks = rng.randbytes(80)
+    matrix = rng.randbytes(176)
+    for slot in range(12):
+        players[16 + slot * 36] = (2 if number < 32 else rng.choice([0, 1, 2, 3, 7, 255]))
+        players[18 + slot * 36] = (1 + number % 4 if number < 32
+                                  else rng.choice([0, 1, 2, 3, 4, 5, 255]))
+    for address, bit in [(0x596865, 0), (0x59686D, 1), (0x596871, 2),
+                         (0x596874, 3), (0x596877, 4)]:
+        if number < 32:
+            value = [0, 15][number & 1] if bit == 0 else int(bool(number & (1 << bit)))
+        elif bit == 0:
+            value = 15 if number & 1 else rng.choice([0, 1, 14, 16, 255])
+        else:
+            value = rng.choice([1, 2, 128, 255]) if number & (1 << bit) else 0
+        flags[address - 0x596858] = value
+    for slot in range(4):
+        groups[16 + slot] = rng.randrange(256)
+    writes = [(0x57EED8, bytes(players)), (0x596858, bytes(flags)), (0x58D5A8, bytes(groups)),
+              (0x57F1DC, masks), (0x58D624, matrix)]
+    expected_matrix = bytearray(matrix)
+    expected_matrix[16:160] = bytes(144)
+    expected_masks = bytearray(masks)
+    kinds = [players[16 + slot * 36] for slot in range(12)]
+    player_groups = [players[18 + slot * 36] for slot in range(12)]
+
+    def put(owner, peer, value):
+        expected_matrix[16 + owner * 12 + peer] = value
+
+    for slot in range(8):
+        put(slot, slot, 1)
+    for owner in range(11, -1, -1):
+        put(11, owner, 1)
+        put(owner, 11, 1)
+        if flags[0x596874 - 0x596858] == 1 and flags[0x596877 - 0x596858] == 0:
+            for peer in range(7, -1, -1):
+                if owner != peer and kinds[owner] == 1 and kinds[peer] == 1:
+                    put(owner, peer, 2)
+                    put(peer, owner, 2)
+    mask_values = [1 << slot for slot in range(12)]
+    for owner in range(12):
+        if kinds[owner] in [3, 7]:
+            for peer in range(12):
+                put(owner, peer, 1)
+                put(peer, owner, 1)
+    if not any(flags[address - 0x596858] for address in [0x59686D, 0x596871, 0x596877]):
+        for group in range(1, 5):
+            flag = groups[15 + group]
+            value = 1 + bool(flag & 4) if flag & 2 else 0
+            selected = [slot for slot in range(8) if kinds[slot] == 2 and player_groups[slot] == group]
+            selected_bits = sum(1 << slot for slot in selected)
+            for owner in selected:
+                for peer in selected:
+                    if value or owner != peer:
+                        put(owner, peer, int(value))
+                peer_bits = selected_bits & ~(1 << owner)
+                mask_values[owner] = (mask_values[owner] | peer_bits if flag & 8
+                                      else mask_values[owner] & ~peer_bits)
+    if flags[0x596865 - 0x596858] == 15:
+        for owner in range(11):
+            selected = [peer for peer in range(11) if kinds[peer]
+                        and player_groups[peer] == player_groups[owner]]
+            if kinds[owner]:
+                for peer in range(11):
+                    if kinds[peer]:
+                        put(owner, peer, 2 if peer in selected else 0)
+                mask_values[owner] |= sum(1 << peer for peer in selected)
+    for slot, value in enumerate(mask_values):
+        struct.pack_into('<I', expected_masks, 16 + slot * 4, value)
+    return writes, (), {}, [bytes(players), bytes(flags), bytes(groups),
+                            bytes(expected_masks), bytes(expected_matrix)]
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('address', choices=['0x0045A9B0', '0x004C3ED0'])
+    parser.add_argument('--binary', default='original/StarCraft.exe')
+    parser.add_argument('--out')
+    parser.add_argument('--candidate-image', help='Private compiled-image override for regression probes')
+    args = parser.parse_args()
+    try:
+        import unicorn
+    except ImportError:
+        raise ValueError('Install the optional local Unicorn emulator to run these comparisons')
+    binary = ROOT / args.binary
+    original = PE(binary)
+    target = json.loads((ROOT / 'config/target.json').read_text())
+    if original.metadata['sha256'] not in {item['sha256'] for item in target['supported_binaries']}:
+        raise ValueError('Original executable differs from pinned SHA-256')
+    candidate, build, artifact_sha = load_candidate(args.address, original, binary, args.candidate_image)
+    address = int(args.address, 0)
+    relations = address == 0x004C3ED0
+    original_code = [(address, original.region(address, 532 if relations else 366))]
+    dependency_builds = []
+    if relations:
+        for child, size, exact in [('0x0045A9B0', 366, False), ('0x0045AB20', 115, True)]:
+            code, child_build, child_sha = load_candidate(child, original, binary, require_exact=exact)
+            candidate.extend(code)
+            original_code.append((int(child, 0), original.region(int(child, 0), size)))
+            dependency_builds.append(dict(address=child, build=child_build, artifact_sha256=child_sha))
+    runner_sha = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    execute_path = ROOT / 'tools/validation/function-differential'
+    execute_sha = hashlib.sha256(execute_path.read_bytes()).hexdigest()
+    execute = runpy.run_path(str(execute_path))['execute']
+    rng = random.Random(1161)
+    cases = list(range(4096)) if relations else mask_cases()
+    for number, case in enumerate(cases):
+        writes, argument, registers, expected = (relations_fixture(rng, number) if relations
+                                                  else mask_fixture(rng, number, case))
+        options = dict(entry=address, argument=argument, void_result=True,
+                       extra_register_arguments=registers,
+                       snapshots=[(start, len(data)) for start, data in writes])
+        reference = execute(original_code, writes, unicorn, **options)
+        result = execute(candidate, writes, unicorn, **options)
+        if reference != result:
+            differences = [key for key in reference if reference[key] != result[key]]
+            raise ValueError(f'Differential mismatch in fixture {number}: {differences}; inputs={case}')
+        if reference['state_snapshots'] != expected:
+            raise ValueError(f'Independent matrix/mask oracle failed in fixture {number}')
+    if (runner_sha != hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+            or execute_sha != hashlib.sha256(execute_path.read_bytes()).hexdigest()):
+        raise ValueError('Validation source changed during comparison')
+    report = dict(runner_sha256=runner_sha, shared_execute_sha256=execute_sha,
+                  schema_version=1, method='bounded-x86-emulated-component-differential-v1',
+                  binary_sha256=original.metadata['sha256'], address=args.address,
+                  candidate_artifact_sha256=artifact_sha, build=build, dependency_builds=dependency_builds,
+                  emulator=dict(name='Unicorn', version=unicorn.__version__), seed=1161,
+                  cases_passed=len(cases), independent_oracle=True,
+                  regions=[dict(address=hex(start), size=len(data), sha256=hashlib.sha256(data).hexdigest())
+                           for start, data in candidate],
+                  exact_byte_match=candidate[0][1] == original_code[0][1],
+                  compiled_dependency_exact=(all(dict(original_code)[start] == data
+                                                 for start, data in candidate[1:]) if relations else None),
+                  all_regions_exact=all(dict(original_code)[start] == data for start, data in candidate),
+                  checks=(['complete guarded 12-player, matrix, mask and mode storage',
+                           'complete parent with both actual C callees',
+                           '12-player initialization, 8-player group helpers, 11-player special pass',
+                           'plain RET and EBX/ESI/EDI/EBP preservation'] if relations else [
+                          'complete guarded player and DWORD mask storage',
+                          'DL BYTE input with dirty upper EDX bits', 'stack BYTE flag with dirty DWORD upper bytes',
+                          'RET4 and EBX/ESI/EDI/EBP preservation']) + [
+                          'ordered data reads/writes', 'independent matrix/mask oracle'],
+                  limitations=['Finite synthetic mapped states; not original-process or full-game execution',
+                               'Private stack temporaries and unconsumed volatile-register values excluded',
+                               'Successful comparisons do not establish universal equivalence or byte equality'])
+    out = runpy.run_path(str(ROOT / 'tools/decomp'))['private'](
+        ROOT / (args.out or ('analysis/player-relations-' + args.address + '.json')))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(report, indent=2) + '\n')
+    print(json.dumps({key: report[key] for key in
+                      ['cases_passed', 'independent_oracle', 'exact_byte_match', 'compiled_dependency_exact']}, indent=2))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (ValueError, OSError, KeyError) as error:
+        print(str(error), file=sys.stderr)
+        sys.exit(1)
