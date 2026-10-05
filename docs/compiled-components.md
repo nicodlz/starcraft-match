@@ -13,6 +13,7 @@ The pinned specimen remains SHA-256
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
 | [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
+| [sub_00404550](functions/00404550.md), 100-record pool initialization | 205 / 205 | Exact | 80 + 80 initialization/encoding |
 | [sub_00404620](functions/00404620.md), 100-record pool packing caller | 165 / 165 | Exact | 80 passed |
 | [sub_00403AE0](functions/00403AE0.md), compiled list/unit encoder | 450 / 450 | Exact, counted once | Included in 100-record pool fixtures |
 | [sub_00403CB0](functions/00403CB0.md), related list/unit restoration | 248 / 248 | Exact | 80 passed |
@@ -96,6 +97,8 @@ source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x00403650
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --initialize --roundtrip
 .local/components-venv/bin/python tools/validation/function-differential 0x00404620
+.local/components-venv/bin/python tools/validation/function-differential 0x00404550
+.local/components-venv/bin/python tools/validation/function-differential 0x00404620 --initialize
 .local/components-venv/bin/python tools/validation/function-differential 0x00403CB0
 .local/components-venv/bin/python tools/validation/function-differential 0x00403E50
 .local/components-venv/bin/python tools/validation/function-differential 0x004041F0
@@ -118,6 +121,10 @@ The 100-record component adds 80 comparisons over a separate 46,004-byte pool,
 with free-list lengths 0..100, unit serial BYTE values, wrapping subtraction and
 unaligned heads. Its EBX argument is checked for preservation like the other
 nonvolatile registers, and the complete compiled child must match before execution.
+Its 205-byte initializer adds 80 complete-pool comparisons and 80 initialization/
+encoding comparisons, with the initializer and both component regions exact.
+Restoration is excluded while the pool restorer remains non-exact. A compiled
+97-middle-record initialization mutation is detected in fixture 0.
 The related 1,000-node list contributes 915-byte encoding and 140-byte restoration
 functions, each independently linked with two external data symbols. They pass 80
 comparisons each and 80 sequential encoding/restoration comparisons over 24,004

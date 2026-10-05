@@ -29243,5 +29243,47 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404550",
+    "size": 205,
+    "name": "sub_00404550",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0043262A",
+        "type": "direct_call",
+        "provenance": "Independently reviewed complete133-byte caller432610..432695 setsESI006AA090 at432625 thenCALL404550 at43262A. No stack arguments or cleanup; EAX explicitly zeroed43262F before use."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete205-byte region404550..40461D. PreviousRET404547 followed8 traps; soleRET40461C followed3 traps before404620. Whole caller corroborates private ESI contract.",
+    "calling_convention": "Private ESI pool pointer, no stack arguments, plainRET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00404550(State *states /* ESI */)",
+    "candidate_source": "src/game/sub_00404550.c",
+    "candidate_symbol": "@sub_00404550@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Exactly100 records460bytes plus headDWORD46000. First/last and98 middle records form null-terminated doubly linked free list; each436-byte payload clears via intrinsic REPSTOSD and list headers receive006B5448/0069F468 bases withnull heads.",
+      "Fresh recorded-profile complete205-byte isolated COFF extraction haszero relocations and exact bytes. Paired Header C view preserves observed initialization ordering; ordinary C anchor induces privateESI contract. Generic semantic/CFG metrics null.",
+      "Optional Unicorn2.1.4 passes80 complete46004-byte pool comparisons and80 initialization/encoding chain comparisons retaining the actual450-byte C child, all three whole C regions exact. Ordered accesses, snapshots and ABI agree;97-middle-record mutation detected in fixture0. No original Windows execution or restored-pool chain claim."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

@@ -7,7 +7,7 @@ Explicit external-only and compiled-component profiles use ordinary linking, aud
 all relocations and retain complete compiler contributions. Instruction normalization
 never establishes exact equality. Similarity and CFG metrics remain null.
 
-The current proof set has **493 functions / 34,878 bytes**. `make proof` freshly
+The current proof set has **494 functions / 35,083 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
 proprietary input is read locally and never bundled with that checkout. Two new
@@ -24,7 +24,9 @@ passes another 1,240 fixtures, the exact initializer passes 80, and 80 more exec
 initialization, packing and restoration. A mutation rejecting equality at the path
 limit changes EAX and is detected. The 615-byte 100-record serialization component
 passes 80 further comparisons of all 46,004 pool bytes. The related exact
-248-byte restoration passes 80 complete 460-byte record comparisons. The exact 915/140-byte list functions pass 80 comparisons each and 80 sequential
+248-byte restoration passes 80 complete 460-byte record comparisons. The exact
+205-byte initializer passes 80 complete 46,004-byte comparisons and 80 initialization/
+encoding comparisons with the retained C encoder, all three regions exact. The exact 915/140-byte list functions pass 80 comparisons each and 80 sequential
 encoding/restoration comparisons, with both whole contributions exact. The
 155-byte initializer passes 80 more cases and 80 initialization/encoding/restoration
 comparisons, with all three whole contributions exact. Result checks cover the reviewed ABI, mutable

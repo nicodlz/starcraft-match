@@ -213,7 +213,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -224,25 +224,26 @@ def main():
     path_restore = address == 0x00403780
     path_pack = address == 0x004036D0
     state_pack = address == 0x00404620
+    state_init = address == 0x00404550
     state_record = address == 0x00403CB0
     node_pack = address == 0x00403E50
     node_init = address == 0x00403DB0
     node_restore = address == 0x004041F0
     linked_single = state_record or node_pack or node_restore
-    pool_void = node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
+    pool_void = state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
-    isolated = node_init or path_restore or path_decode or path_init
-    if args.initialize and not (path_pack or node_pack):
+    isolated = state_init or node_init or path_restore or path_decode or path_init
+    if args.initialize and not (path_pack or node_pack or state_pack):
         raise ValueError('Initialization chain requires a reviewed pool packer')
     if args.roundtrip and not (path_pack or node_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         regions.append((0x004041F0, 140) if node_pack else (0x00403780, 864))
     if args.initialize:
-        regions.append((0x00403DB0, 155) if node_pack else (0x00403650, 127))
+        regions.append((0x00404550, 205) if state_pack else (0x00403DB0, 155) if node_pack else (0x00403650, 127))
     default_out = f'analysis/differential-{args.address}' + ('-initialize' if args.initialize else '') + ('-roundtrip' if args.roundtrip else '') + '.json'
     out = (ROOT / (args.out or default_out)).resolve()
     if not any(out.is_relative_to(ROOT / directory) for directory in ['analysis', 'build', '.local']):
@@ -302,7 +303,7 @@ def main():
             candidate_code.append((0x00403780, (ROOT / 'build/0x00403780/candidate.bin').read_bytes()))
     initialization_build = None
     if args.initialize:
-        init_address = '0x00403DB0' if node_pack else '0x00403650'
+        init_address = '0x00404550' if state_pack else '0x00403DB0' if node_pack else '0x00403650'
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', init_address, '--require-exact', '--binary', str(ROOT / args.binary)],
                        cwd=ROOT, check=True)
         candidate_code.append((int(init_address, 0), (ROOT / 'build' / init_address / 'candidate.bin').read_bytes()))
@@ -334,7 +335,7 @@ def main():
                  for null_base in [False, True]]
         cases += [(rng.randrange(-32768, 32768), rng.getrandbits(32), bool(rng.randrange(2)))
                   for _ in range(200)]
-    if state_pack:
+    if state_pack or state_init:
         cases = [(count, serial) for count in [0, 1, 2, 8, 31, 50, 75, 98, 99, 100]
                  for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
         rng = random.Random(1161)
@@ -350,9 +351,13 @@ def main():
         cases = [(head, serial) for head in [0, 1, 2, 999, 1000, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF, 12345, 0x10000000]
                  for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
         rng = random.Random(1161)
-    pool_size = 24004 if node_pack or node_restore or node_init else 460 if state_record else 46004 if state_pack else 20004
+    pool_size = 24004 if node_pack or node_restore or node_init else 460 if state_record else 46004 if state_pack or state_init else 20004
     for number, case in enumerate(cases):
-        if node_init:
+        if state_init:
+            writes = state_pool_fixture(rng, *case)
+            argument = 0x006F0000
+            steps = [(address, argument, 'ESI')]
+        elif node_init:
             writes = node24_pool_fixture(rng, *case)
             argument = 0x006F0000
             steps = [(address, argument, 'ECX')]
@@ -395,7 +400,7 @@ def main():
             steps = None
         if args.initialize:
             steps = steps or [(address, argument, None)]
-            steps.insert(0, (0x00403DB0 if node_pack else 0x00403650, argument, 'ECX'))
+            steps.insert(0, (0x00404550 if state_pack else 0x00403DB0 if node_pack else 0x00403650, argument, 'ESI' if state_pack else 'ECX'))
         if args.roundtrip:
             steps = steps or [(address, argument, None)]
             steps.append((0x004041F0, argument, 'EDX') if node_pack else (0x00403780, argument, None))
