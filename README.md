@@ -78,6 +78,7 @@ Selected reviewed regions:
 | [0x00404620](docs/functions/00404620.md) | 100-record serialization with actual C encoder | 165 / 165 | Exact |
 | [0x004036D0](docs/functions/004036D0.md) | 1,000-entry serialization with actual C encoder | 166 / 166 | Exact |
 | [0x004308A0](docs/functions/004308A0.md) | Rectangle query with actual C search dependency | 599 / 599 | Exact with native LTCG |
+| [0x0047DD60](docs/functions/0047DD60.md) | Node reclassification with both actual C callees | 216 / 208 | Non-exact; 1,848 comparisons pass |
 | [0x00404280](docs/functions/00404280.md) | Typed 1,000-record pool initialization | 198 / 198 | Non-exact |
 | [0x00403780](docs/functions/00403780.md) | 1,000-entry reference restoration | 864 / 788 | Non-exact |
 
@@ -86,10 +87,11 @@ catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Five reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Six reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
-[`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md)
-and [`0x00404280`](docs/functions/00404280.md).
+[`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
+[`0x00404280`](docs/functions/00404280.md) and
+[`0x0047DD60`](docs/functions/0047DD60.md).
 Their complete regions and measured compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded

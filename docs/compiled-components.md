@@ -199,9 +199,8 @@ CFG metrics remain null.
 
 ## Remaining byte work
 
-The query still differs in register selection and instruction scheduling despite
-identical data-access traces in the tested states. Restoration still differs in loop
-induction and compiler allocation despite identical restored pools. The next byte
+The query now matches through the reviewed native LTCG profile. Restoration still
+differs in loop induction and compiler allocation despite identical restored pools. The next byte
 experiments should resolve these specific compiler/source layouts, preserve the
 compiled search ABI, and add reviewed caller/callee dependencies. Enlarging these
 connected components takes priority over collecting unrelated trivial leaves.
@@ -223,3 +222,13 @@ mutation testing `0020` instead of `0010` fails fixture 0 on the full EAX result
 Run it with `tools/validation/function-differential 0x00414290` in the optional
 emulator environment. This is a whole external-only C contribution with no
 retained game callee.
+
+The 216-byte node reclassification caller retains the complete 431-byte neighbor
+counter and 99-byte hash insertion C functions. Its root recompiles to 208 bytes
+and remains non-exact; both dependencies match literally. It passes 1,848 bounded
+comparisons covering all neighbor masks, link configurations, ordinal aliases,
+WORD counter wrapping and narrowed versus full coordinates. The runner assigns
+the second coordinate to preserved EBX and checks one-stack-DWORD RET4 cleanup,
+full EAX, memory snapshots and ordered accesses. A compiled wrong-marker-bit
+mutation fails fixture0. Run `0x0047DD60`; `all_regions_exact` remains false,
+and its already-counted dependencies add no new exact bytes.

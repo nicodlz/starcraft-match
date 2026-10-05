@@ -29875,5 +29875,165 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x0047DD60",
+    "size": 216,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_0047DD60.c",
+    "candidate_symbol": "_sub_0047DD60@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".move",
+      "bindings": {
+        "_g_006D0F08": {
+          "address": 7147272,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned width load414299 and subsequent comparisons/index multiplication."
+          ]
+        },
+        "_g_006D0C6C": {
+          "address": 7146604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned height comparisons and final-row load4143AF."
+          ]
+        },
+        "_g_006D0E84": {
+          "address": 7147140,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD WORD-table base load4142AA; bounds-accepted coordinates perform WORD reads at base+2*(width*y+x)."
+          ]
+        },
+        "_g_00658B0C": {
+          "address": 6654732,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0065EB26": {
+          "address": 6679334,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_00658AE8": {
+          "address": 6654696,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0065EB14": {
+          "address": 6679316,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0057F1D4": {
+          "address": 5763540,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_006D1260": {
+          "address": 7148128,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_qualifies",
+          "section": ".test"
+        },
+        {
+          "symbol": "_compiler_anchor_0047DD60@8",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "_sub_00414290@8",
+          "section": ".near",
+          "address": 4276880,
+          "size": 431,
+          "evidence": [
+            "Reviewed directCALL47DDCD pushes twoDWORD coordinates; public C whole431-byte neighbor function retained."
+          ]
+        },
+        {
+          "symbol": "@sub_0047D5F0@4",
+          "section": ".hash",
+          "address": 4707824,
+          "size": 99,
+          "evidence": [
+            "Reviewed directCALL47DE06 sets ECX=ESI node at47DDFD; actual public99-byte C hash insertion retained."
+          ]
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_0047DD60",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0047DF2E",
+        "type": "direct_call",
+        "provenance": "Fresh whole327-byte caller extent47DE40..47DF87, including internal traps: PUSHESI47DF2B, MOVEBX,EDI47DF2C, CALL47DD6047DF2E, TESTEAX47DF33; no caller cleanup."
+      },
+      {
+        "address": "0x0047E09E",
+        "type": "direct_call",
+        "provenance": "Fresh whole359-byte caller extent47DF90..47E0F7, including internal traps: PUSHESI47E09B, MOVEBX,EDI47E09C, CALL47DD6047E09E, TESTEAX47E0A3; no caller cleanup."
+      }
+    ],
+    "calls": [
+      {
+        "to": "0x00414290",
+        "from": "0x0047DDCD"
+      },
+      {
+        "to": "0x0047D5F0",
+        "from": "0x0047DE06"
+      }
+    ],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "provenance": "Reviewed complete216-byte47DD60..47DE38: precedingRET8 at47DD4E ends47DD51 followed15 traps; bothRET4 exits47DD70/47DE35 included; eight traps before47DE40. All branches internal. Two independent whole aligned caller extents corroborate entry and private ABI.",
+    "calling_convention": "One fullDWORD stack x plus preserved EBX y; RET4; fullEAX0/1; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "static unsigned int __stdcall sub_0047DD60(unsigned int x, unsigned int y /* compiler allocates EBX */)",
+    "known_structures": [
+      "src/game/sub_0047D5F0.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x00414290",
+      "0x0047D5F0"
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Relinks one selected20-byte node through count-indexed heads and WORD counters, stores BYTE coordinates, invokes actual431-byte C neighbor count and99-byte C hash insertion, then marks a DWORD using full coordinates and WORD width. Head/counter arrays are unchecked; selected/guard scalars physically adjoin them. No inferred array bounds or extra checks.",
+      "Fresh whole208-byte C root remains non-exact against216 original bytes: direct count-byte addressing omits EDI setup/save/restore and final marker OR folds into a memory operand. Both actual C callees match literally. 1848 bounded Unicorn2.1.4 comparisons pass including preserved EBX input, RET4, fullEAX, snapshots and ordered accesses; wrong-marker-bit C mutation rejected fixture0. No universal semantic claim; metrics null."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
