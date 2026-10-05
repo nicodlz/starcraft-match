@@ -4848,31 +4848,44 @@
     ],
     "calls": [],
     "strings": [],
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "boundary_verified": true,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "provenance": "Fresh PE extraction reviewed entry, two returns at 0x00432186/0x0043219A, following trap padding 0x0043219B..0x0043219F and direct caller at 0x004E2D6F. Independently authored pure C.",
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "candidate_source": "src/game/sub_00432180.c",
     "candidate_symbol": "@sub_00432180@4",
     "candidate_abi_compatible": true,
-    "compiler_profile": "clang-i686-scaffold",
+    "compiler_profile": "msvc71-o2",
     "calling_convention": "ECX 32-bit input; EAX 32-bit result; plain ret; EAX/ECX/EDX caller-saved",
-    "prototype": "unsigned int sub_00432180(unsigned int value /* ECX */)",
+    "prototype": "unsigned int __fastcall sub_00432180(unsigned int value /* ECX */)",
     "dependencies": [],
     "known_structures": [],
     "known_calls": [],
     "notes": [
-      "27 original bytes versus 29 recompiled bytes; strict isolated COFF extraction rejects relocations, candidate has none. Full byte comparison is false.",
-      "Observed null case and unsigned wrapped subtraction/division by 44/add-one. Index semantics and record identity remain hypotheses.",
-      "Four private source variants and size profile tested without equality. No original differential execution.",
-      "Coordinator independently rebuilt with recorded profile and compared entire pinned region: 27 original / 29 candidate bytes; literal equality false. No original differential execution."
+      "Fresh complete27-byte equality under MSVC13.10.3077 with one ordinary DIR32 data relocation at offset9 resolved to reviewed base0069F468. Standard fastcall ECX input and fullEAX result match reviewed caller. No excluded compiler contexts or modified compiler bytes.",
+      "Null input returns0; otherwise unsigned wrapped subtraction, division44 andadd1. The extern base preserves SUB selection; no bounds or alignment check added. Generic semantic/CFG/similarity metrics null; no original-process or emulator measurements for this function."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
+    },
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".index",
+      "bindings": {
+        "_g_0069F468": {
+          "address": 6943848,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original SUB ECX,0069F468 at00432187; the complete27-byte function contains no memory access. Existing reviewed44-byte pool consumers corroborate this address as a base binding."
+          ]
+        }
+      },
+      "excluded_contexts": []
     }
   },
   {
@@ -29783,6 +29796,81 @@
     ],
     "match": {
       "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00414290",
+    "size": 431,
+    "name": "sub_00414290",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00414790",
+        "type": "direct_call",
+        "provenance": "Reviewed aligned caller context: PUSH EDI at41478E, PUSH ESI at41478F, CALL414290 at414790; subsequent DEC EAX, JS and CMP EAX,7 consume fullDWORD result."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Fresh complete431-byte region414290..41443F reviewed: precedingRET20 at414281 ends414284 followed12 traps; bothRET8 exits41442F/41443C included; one trap41443F before414440. All branches internal and no calls. Independent direct caller corroborates entry.",
+    "calling_convention": "Two fullDWORD stack coordinates x,y; RET8; fullEAX count0..8; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "unsigned int __stdcall sub_00414290(unsigned int x, unsigned int y)",
+    "candidate_source": "src/game/sub_00414290.c",
+    "candidate_symbol": "_sub_00414290@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".near",
+      "bindings": {
+        "_g_006D0F08": {
+          "address": 7147272,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned width load414299 and subsequent comparisons/index multiplication."
+          ]
+        },
+        "_g_006D0C6C": {
+          "address": 7146604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned height comparisons and final-row load4143AF."
+          ]
+        },
+        "_g_006D0E84": {
+          "address": 7147140,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD WORD-table base load4142AA; bounds-accepted coordinates perform WORD reads at base+2*(width*y+x)."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_qualifies",
+          "section": ".test"
+        }
+      ]
+    },
+    "notes": [
+      "Eight neighbors in row order, excluding center; each accepted unsigned coordinate checks WORD masked7FF0 equals10. Coordinate and index arithmetic wrap32bits; no new dimension/alignment check. Inlined helper is excluded and not counted.",
+      "Fresh strict ordinary external-only link retains the complete431-byte C contribution with8 genuine DIR32 relocations to3 reviewed data symbols. Optional Unicorn2.1.4 passes976 cases covering all256 center masks, empty and boundary dimensions, unsigned coordinate wrap and ignored WORD bits;20 instead10 predicate mutation failsfixture0 EAX. FullDWORD EAX, RET8, nonvolatile registers and ordered read/write addresses/widths/values agree. Generic semantic/CFG metrics null."
+    ],
+    "match": {
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null

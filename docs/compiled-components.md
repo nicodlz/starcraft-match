@@ -6,6 +6,7 @@ The pinned specimen remains SHA-256
 
 | Reviewed region | Original / compiled bytes | Literal result | Emulated fixtures |
 | --- | ---: | --- | ---: |
+| [sub_00414290](functions/00414290.md), unsigned eight-neighbor WORD count | 431 / 431 | Exact external-only link | 976 passed |
 | [sub_00404410](functions/00404410.md), typed 1,000-record pool restorer | 92 / 92 | Exact with both C dependencies | 80 + 80 chained |
 | [sub_00432810](functions/00432810.md), typed record decoder with complete switch table | 196 / 196 | Exact with actual C path decoder | 80 passed |
 | [sub_00404350](functions/00404350.md), typed 1,000-record pool encoder | 187 / 187 | Exact with actual C callee | 80 passed |
@@ -214,3 +215,11 @@ order. A compiled 997-middle-record mutation fails fixture 0 in both memory and
 access order. Run the chain with `0x00404350 --initialize --roundtrip`; its
 `all_regions_exact` remains false. No complete initialization or save caller is
 claimed from these sequential component executions.
+
+The eight-neighbor WORD counter passes 976 cases, including all 256 center
+predicate masks, zero dimensions, grid boundaries and unsigned coordinate wrap.
+Its two stack DWORD arguments and RET8 cleanup are checked explicitly. A source
+mutation testing `0020` instead of `0010` fails fixture 0 on the full EAX result.
+Run it with `tools/validation/function-differential 0x00414290` in the optional
+emulator environment. This is a whole external-only C contribution with no
+retained game callee.

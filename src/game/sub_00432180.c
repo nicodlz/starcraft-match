@@ -1,7 +1,8 @@
-/* Independently reconstructed from the pinned 1.16.1 specimen. */
-unsigned int __attribute__((fastcall)) sub_00432180(unsigned int value)
-{
-    if (value == 0)
-        return 0;
-    return (value - 0x0069F468u) / 44u + 1u;
+typedef unsigned int u32;
+/* Reviewed base binding; unsigned subtraction intentionally wraps. */
+extern unsigned char g_0069F468[];
+#pragma code_seg(".index")
+u32 __fastcall sub_00432180(u32 value) {
+    if (!value) return 0;
+    return (value - (u32)g_0069F468) / 44u + 1u;
 }
