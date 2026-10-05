@@ -30234,5 +30234,163 @@
       "Resets WORD mask57F1DA. If BYTE57F0B4 and BYTE596875 are nonzero, scans8 selector flags at58D634+12*DWORD512684, invoking actual319-byte C group accumulator with corresponding BYTE player+6. Otherwise explicitly ORs selected fullDWORD player IDs into narrowedWORD mask. DWORD indexwrap, signed loop-pointer comparison and targetSHL count behavior retained.",
       "Fresh msvc71-o2 ordinary retained-component compilation matches352-byte root and319-byte actualCcallee literally (671 total). Optional Unicorn2.1.4 passes5120 cases with all256 flagmasks, bothflagbranches, five normal/wrapping indices, fullrecord/table/mask snapshots, plainRET and orderedaccesses. ActualC omittinglast selector rejectedfixture0 on access trace whilecomplete319-bytecallee remains exact. No established return; genericmetrics null."
     ]
+  },
+  {
+    "address": "0x0042FF80",
+    "size": 339,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_0042FF80.c",
+    "candidate_symbol": "@sub_0042FF80@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".query",
+      "bindings": {
+        "_g_006BEE64": {
+          "address": 7073380,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006BEE6C": {
+          "address": 7073388,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006D63EC": {
+          "address": 7169004,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_0066FF74": {
+          "address": 6750068,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006BEE70": {
+          "address": 7073392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006BD3D0": {
+          "address": 7066576,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_0066FF78": {
+          "address": 6750072,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006769B8": {
+          "address": 6777272,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_006BB938": {
+          "address": 7059768,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_0059CB58": {
+          "address": 5884760,
+          "kind": "data",
+          "evidence": [
+            "Reviewed original data operand."
+          ]
+        },
+        "_g_0059CCA0": {
+          "address": 5885088,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD indexed336*id at42FF80 root upper load."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_compiler_anchor_00469B00",
+          "section": ".anchor"
+        },
+        {
+          "symbol": "@compiler_anchor_0042FF80@4",
+          "section": ".root"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00469B00@12",
+          "section": ".find",
+          "address": 4627200,
+          "size": 83,
+          "evidence": [
+            "Reviewed originalCALL42FFDE with actual public C search retained."
+          ]
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_0042FF80",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "assembly_partial_match",
+    "calling_convention": "Private EAX pointer to four signedWORD coordinates; no stack arguments, plainRET; fullEAX result buffer pointer; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "static QueryUnit **__fastcall sub_0042FF80(short *rect /* compiler allocates EAX */)",
+    "references": [
+      {
+        "address": "0x00430B7B",
+        "type": "direct_call",
+        "provenance": "Fresh aligned141-byte caller430B50..430BDD constructs8-byte localrect and LEAEAX,EBP-8 at430B75, then CALL42FF80 at430B7B; moves fullreturnedEAX toEBX and reads resultlist. No arguments pushed or cleanup."
+      },
+      {
+        "address": "0x004737E1",
+        "type": "direct_call",
+        "provenance": "Fresh aligned506-byte caller473720..47391A: LEAEAX,EBP-20 at4737D6; writes finalWORD coordinates and CALL42FF80 at4737E1 without stackarguments or cleanup; storesfullEAX at4737E6."
+      }
+    ],
+    "calls": [
+      {
+        "to": "0x00469B00",
+        "from": "0x0042FFDE"
+      }
+    ],
+    "strings": [],
+    "provenance": "Reviewed whole339-byte42FF80..4300D3 throughsoleRET4300D2. PrecedingRET42FF75 followedten traps; thirteen traps afterrootbefore4300E0. Allbranchesinternal; direct83-bytecalleeABI and two complete alignedcallers corroborated.",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [
+      "0x00469B00"
+    ],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Appends zero-terminated336-byte-stride record pointers to fixedbuffer, records nesting cursor, advances nonzero DWORD generation with wrap0to1, uses actual83-byte C search on Ypairs plus inline unsignedbounds/signeddoubled-coordinate Xsearch, tests recordboundDWORDs324/328 and deduplicates through generation marks. IDs/index/cursor arithmetic unchecked; signedWORD rectangle inputs preserved.",
+      "Fresh msvc71-o2-frame retained-component build produces338-byte root vs339original, non-exact in register allocation and indexed record-field access. Actual83-byteCcallee remains exact. 400 boundedUnicorn2.1.4 comparisons pass fullEAX/privateEAXinput, plainRET, nonvolatile registers, unit/generation/mark snapshots, buffers/cursors and ordered accesses including conditional countreload. ActualC wrap-to2 mutation rejectedfixture40 on generation/accesses. Metrics null."
+    ]
   }
 ]

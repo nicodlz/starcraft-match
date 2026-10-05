@@ -80,6 +80,7 @@ Selected reviewed regions:
 | [0x004308A0](docs/functions/004308A0.md) | Rectangle query with actual C search dependency | 599 / 599 | Exact with native LTCG |
 | [0x0048FDB0](docs/functions/0048FDB0.md) | Selector-driven player mask with actual C callee | 352 / 352 | Exact; 5,120 comparisons pass |
 | [0x0048FC70](docs/functions/0048FC70.md) | Eight-record WORD mask accumulation | 319 / 319 | Exact; 1,280 comparisons pass |
+| [0x0042FF80](docs/functions/0042FF80.md) | Generation-marked rectangle query with actual C search | 339 / 338 | Non-exact; 400 comparisons pass |
 | [0x0047DD60](docs/functions/0047DD60.md) | Node reclassification with both actual C callees | 216 / 208 | Non-exact; 1,848 comparisons pass |
 | [0x00404280](docs/functions/00404280.md) | Typed 1,000-record pool initialization | 198 / 198 | Non-exact |
 | [0x00403780](docs/functions/00403780.md) | 1,000-entry reference restoration | 864 / 788 | Non-exact |
@@ -89,11 +90,12 @@ catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Six reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Seven reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
 [`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
-[`0x00404280`](docs/functions/00404280.md) and
-[`0x0047DD60`](docs/functions/0047DD60.md).
+[`0x00404280`](docs/functions/00404280.md),
+[`0x0047DD60`](docs/functions/0047DD60.md) and
+[`0x0042FF80`](docs/functions/0042FF80.md).
 Their complete regions and measured compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded

@@ -250,3 +250,11 @@ Zero arguments and plain RET are represented with an empty argument tuple.
 A source omitting the final selector fails fixture0 on ordered accesses while
 the whole C callee still matches. Run `0x0048FDB0`; both regions are exact and
 the already-counted callee adds no duplicate exact bytes.
+
+A related generation-marked rectangle query retains the complete83-byte C search
+and passes400 comparisons over signed rectangles, empty/tied tables, duplicate IDs,
+record bounds, old marks and generation wrapping. Its339-byte original root
+recompiles to338 bytes and remains non-exact. A source changing wrapped generation
+replacement1 to2 fails fixture40 on snapshots/accesses. The private EAX input,
+full pointer result, plain RET and conditional count reload are checked explicitly.
+Run `0x0042FF80`; `all_regions_exact` remains false and no new exact bytes are counted.

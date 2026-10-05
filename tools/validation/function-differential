@@ -242,6 +242,24 @@ def neighbors_fixture(rng, width, height, x, y, mask):
             (0x00700000, struct.pack('<' + 'H' * len(values), *values))]
 
 
+def generation_query_fixture(rng, count, generation, rect):
+    writes = [(RECT, struct.pack('<4h', *rect)), (0x66FF74, struct.pack('<I', count)),
+              (0x6D63EC, struct.pack('<I', generation)),
+              (0x6BEE64, struct.pack('<III', rng.choice([0, 3, 17, 50]),
+                                    rng.getrandbits(32), rng.choice([0, 2, 15, 63])))]
+    for address in [0x66FF78, 0x6769B8]:
+        pairs = sorted((rng.randint(-100, 500), rng.randrange(8)) for _ in range(count))
+        writes.append((address, b''.join(struct.pack('<Ii', ident, value) for value, ident in pairs)))
+    new_generation = ((generation + 1) & 0xFFFFFFFF) or 1
+    for ident in range(8):
+        unit = bytearray(rng.randbytes(336))
+        struct.pack_into('<ii', unit, 324, rng.randint(-1, count + 1), rng.randint(-1, count + 1))
+        writes += [(0x59CB58 + ident * 336, bytes(unit)),
+                   (0x6BD3D0 + ident * 4, struct.pack('<I', rng.choice([
+                       0, generation, new_generation, rng.getrandbits(32)])))]
+    return writes
+
+
 def player_selection_fixture(rng, mask, first, second, index):
     data = bytearray(rng.randbytes(288))
     for i in range(8):
@@ -372,7 +390,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0', '0x0042FF80'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -380,6 +398,7 @@ def main():
     parser.add_argument('--initialize', action='store_true', help='For pool packing, initialize the pool before serialization')
     args = parser.parse_args()
     address = int(args.address, 0)
+    generation_query = address == 0x0042FF80
     player_select = address == 0x0048FDB0
     player_mark = address == 0x0048FC70
     node_move = address == 0x0047DD60
@@ -406,7 +425,7 @@ def main():
         raise ValueError('Initialization chain requires a reviewed pool packer')
     if args.roundtrip and not (path_pack or node_pack or node44_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 339), (0x00469B00, 83)] if generation_query else [(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         if node44_pack:
@@ -568,6 +587,14 @@ def main():
             cases.extend((width, height, x, y, mask) for x, y in points
                          for mask in [0, 1, 2, 4, 8, 16, 32, 64, 128, 255])
         rng = random.Random(1161)
+    if generation_query:
+        rectangles = [(-100, -100, 500, 500), (0, 0, 0, 0), (100, 100, 200, 200),
+                      (200, 200, 100, 100), (-1, -1, 1, 1), (500, 500, 700, 700),
+                      (-32768, -32768, 32767, 32767), (32767, 32767, -32768, -32768),
+                      (1, -100, 2, 500), (-100, 1, 500, 2)]
+        cases = [(count, generation, rect) for count in [0, 1, 2, 3, 7, 16, 24, 32]
+                 for generation in [0, 1, 7, 0xFFFFFFFE, 0xFFFFFFFF] for rect in rectangles]
+        rng = random.Random(1161)
     if player_select:
         cases = [(mask, first, second, index) for mask in range(256)
                  for first, second in [(0, 0), (0, 1), (1, 0), (1, 1)]
@@ -583,7 +610,12 @@ def main():
     for number, case in enumerate(cases):
         extra_register_arguments = None
         snapshots = ()
-        if player_select:
+        if generation_query:
+            writes = generation_query_fixture(rng, *case)
+            argument = RECT
+            steps = [(address, argument, 'EAX')]
+            snapshots = [(0x6D63EC, 4), (0x6BD3D0, 32), (0x59CB58, 336 * 8)]
+        elif player_select:
             writes = player_selection_fixture(rng, *case)
             argument = ()
             steps = None
@@ -691,7 +723,7 @@ def main():
                   roundtrip=args.roundtrip, restoration_build=restoration_build,
                   initialize=args.initialize, initialization_build=initialization_build,
                   checks=([] if pool_void or player_mark or player_select else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
+                          'mutable buffer/cursor snapshots'] + (['generation/mark/unit snapshots', 'explicit private EAX input'] if generation_query else []) + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
                                'Private stack temporaries and volatile registers/flags excluded from equivalence',
