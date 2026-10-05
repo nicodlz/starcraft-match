@@ -8,12 +8,18 @@ The pinned specimen remains SHA-256
 | --- | ---: | --- | ---: |
 | [sub_004308A0](functions/004308A0.md), rectangle query | 599 / 598 | Non-exact | 380 passed |
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
+| [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
+| [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
 
-The two new candidates cover **1,463 reviewed original bytes** but contribute
+The query and restoration candidates cover **1,463 reviewed original bytes** but contribute
 **zero new exact functions or bytes**. Their catalog expectations remain exploratory.
 The query's length difference is not a measure of byte similarity. Neither fixture
 counts nor a source compilation result are exact-function evidence.
+
+The new packing component contributes **two exact functions / 292 bytes**. Its
+caller and callee both retain their complete original regions, with an actual C
+call between them. The existing restoration candidate is still non-exact.
 
 ## Actual C dependencies
 
@@ -34,19 +40,23 @@ alignment never counts as original code. The matcher separately requires every
 retained dependency to equal its complete pinned region and match a reviewed ABI
 record. A dependency is not counted again as a new function.
 
-Nine external **data** declarations still bind original observed addresses. The
-component is not a complete program and does not reconstruct initialized game data.
-Two uncounted compiler contexts remain outside the image. Jump tables, retained
+The query binds nine external **data** declarations to observed addresses. The
+packing component has one external data binding and no external code binding.
+These components do not reconstruct a complete program or initialized game data.
+Uncounted compiler contexts remain outside each image. Jump tables, retained
 data contributions and arbitrary runtime dependencies are still unsupported.
 
 ```sh
 source .local/tools/activate.sh  # Host-local paths, when installed
 ./tools/decomp match 0x004308A0
 ./tools/decomp match 0x00403780
+./tools/decomp match 0x004036D0 --require-exact
+./tools/decomp match 0x00438240 --require-exact
 ```
 
-Both commands currently report `exact_byte_match: false`; the first additionally
-records its freshly checked compiled dependency. Existing isolated and external-only
+The query/restoration commands report `exact_byte_match: false`; the query also
+records its freshly checked compiled dependency. Packing and its encoder report
+`exact_byte_match: true`. Existing isolated and external-only
 matches retain their distinct methods and strict extraction gates.
 
 ## Local emulator comparison
@@ -67,12 +77,20 @@ python3 -m venv .local/components-venv
 source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x004308A0
 .local/components-venv/bin/python tools/validation/function-differential 0x00403780
+.local/components-venv/bin/python tools/validation/function-differential 0x004036D0
+.local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --roundtrip
 ```
 
 The deterministic seed is 1161. Query fixtures include empty tables, tied coordinates,
 single entries, 1,700 entries, reversed/degenerate/signed rectangles, extent expansion
 and nonzero upper global bits. Restoration fixtures include 80 complete pools with
 1,000 entries each, signed limits, absent bases and encoded-width/wrapping cases.
+Packing fixtures cover shuffled free lists of 0..1,000 entries, unit serial bytes,
+out-of-range unit pointers, unchecked BYTE pool selectors 8/255 and signed limits.
+An additional 80 comparisons execute packing then restoration in each emulator.
+`all_regions_exact` remains false for that chain because restoration is non-exact;
+its build and code hash are recorded separately. The roundtrip checks original/C
+results, not identity of arbitrary input before and after serialization.
 The runner compares return values when established, nonvolatile registers, stack
 cleanup, mutable memory snapshots and ordered data-access addresses, widths and
 values. Private stack temporaries, volatile registers and flags are outside equivalence.
@@ -80,8 +98,9 @@ An instruction bound rejects nontermination instead of treating it as a return.
 
 A separately compiled query mutation changing `mark == 3` to `mark == 2` fails fixture
 31 with different output memory, cursor and access trace. This checks that the runner
-actually detects changes in the C candidate. The explicit private `--candidate-image`
-override supports such regression experiments and records that no fresh build was
+actually detects changes in the C candidate. A separately compiled packing mutation omitting the final entry fails fixture 0
+in the complete pool and access trace. The explicit private `--candidate-image`
+override supports linked-component regression experiments and records that no fresh build was
 requested for the override. Reports and all generated artifacts stay ignored.
 
 These finite mapped states provide a bounded differential result. They do not prove

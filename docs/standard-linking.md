@@ -18,7 +18,8 @@ make
 ```
 
 The aggregate proof includes `verified_by_method`: `isolated-coff` and
-`standard-linked-c-external`. Portable builds without the optional historical
+`standard-linked-c-external`, and now `standard-linked-c-component` for exact
+callers retaining real compiled dependencies. Portable builds without the optional historical
 compiler compile fallback objects only; they do not link or compare those objects
 and cannot supply exact evidence. Synthetic linker tests use Clang and GNU ld;
 all generated objects/images are temporary.

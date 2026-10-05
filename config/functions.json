@@ -28536,5 +28536,176 @@
       "The pool quotient is narrowed to BYTE before subtracting pool*2500; no modern validation added.",
       "Complete zero-relocation C contribution remains non-exact; no padding/normalization to claim a match."
     ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00438240",
+    "size": 126,
+    "name": "sub_00438240",
+    "confidence": 1,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "status": "exact_match",
+    "references": [
+      {
+        "type": "UNCONDITIONAL_CALL",
+        "from": "0x00403701"
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "provenance": "Manually reviewed pinned whole body, neighbors and caller register ABI; see docs/functions/00438240.md.",
+    "candidate_source": "src/game/sub_00438240.c",
+    "candidate_symbol": "@sub_00438240@4",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "calling_convention": "Private EDI entry pointer; no stack arguments, RET; preserves EBX/ESI/EDI/EBP; no established return value",
+    "prototype": "void sub_00438240(Entry *entry /* EDI */)",
+    "dependencies": [],
+    "known_structures": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "packAIPathingData",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": "Community annotation; not an authenticated original symbol"
+      }
+    ],
+    "notes": [
+      "Independent C only; compiler helpers and ABI anchor are separately inventoried, discarded and not counted.",
+      "BYTE pool selector remains unchecked; unsigned division and signed WORD-to-unsigned limit comparisons preserved."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".encode",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Reviewed unit encoding subtracts 0059CCA8 at 0043824E, the first 336-byte unit record at 0059CB58+336; external data address only."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".uunit"
+        },
+        {
+          "symbol": "_encode_path",
+          "section": ".upath"
+        },
+        {
+          "symbol": "_compiler_anchor_00438240@4",
+          "section": ".anchor"
+        }
+      ]
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004036D0",
+    "size": 166,
+    "name": "sub_004036D0",
+    "confidence": 1,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "status": "exact_match",
+    "references": [
+      {
+        "from": "0x0043931A",
+        "type": "UNCONDITIONAL_CALL",
+        "provenance": "MOV ESI,006957E0 at 00439312; direct call 0043931A; caller overwrites EAX at 00439325."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00403701",
+        "to": "0x00438240"
+      }
+    ],
+    "strings": [],
+    "provenance": "Manually reviewed pinned whole body, neighbors and caller register ABI; see docs/functions/004036D0.md.",
+    "candidate_source": "src/game/sub_004036D0.c",
+    "candidate_symbol": "@sub_004036D0@4",
+    "compiler_profile": "msvc71-o2-frame",
+    "candidate_abi_compatible": true,
+    "calling_convention": "Private ESI pool pointer; no stack arguments, RET; preserves EBX/ESI/EDI/EBP; no established return value",
+    "prototype": "void sub_004036D0(Entry *entries /* ESI */)",
+    "dependencies": [
+      "0x00438240"
+    ],
+    "known_structures": [
+      "src/game/sub_00438240.c"
+    ],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [
+      {
+        "name": "packPathingData",
+        "source": "https://github.com/bwapi/bwapi/blob/d727fed68558c506163048ea889131d8cbb33915/Release_Binary/Starcraft/bwapi-data/data/Broodwar.map",
+        "confidence": "Community annotation; not an authenticated original symbol"
+      }
+    ],
+    "notes": [
+      "Independent C only; compiler helpers and ABI anchor are separately inventoried, discarded and not counted.",
+      "BYTE pool selector remains unchecked; unsigned division and signed WORD-to-unsigned limit comparisons preserved."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".pack",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Reviewed unit encoding subtracts 0059CCA8 at 0043824E, the first 336-byte unit record at 0059CB58+336; external data address only."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".uunit"
+        },
+        {
+          "symbol": "_encode_path",
+          "section": ".upath"
+        },
+        {
+          "symbol": "_encode_link",
+          "section": ".ulink"
+        },
+        {
+          "symbol": "_compiler_anchor_004036D0@4",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00438240@4",
+          "section": ".encode",
+          "address": 4424256,
+          "size": 126,
+          "evidence": [
+            "Reviewed whole dependency [00438240,004382BE), EDI argument set by caller at 004036F8 and advanced by 20 at 0040373D."
+          ]
+        }
+      ]
+    }
   }
 ]

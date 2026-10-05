@@ -7,7 +7,7 @@ Explicit external-only and compiled-component profiles use ordinary linking, aud
 all relocations and retain complete compiler contributions. Instruction normalization
 never establishes exact equality. Similarity and CFG metrics remain null.
 
-The current proof set has **483 functions / 32,313 bytes**. `make proof` freshly
+The current proof set has **485 functions / 32,605 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
 proprietary input is read locally and never bundled with that checkout. Two new
@@ -16,9 +16,12 @@ larger candidates remain non-exact and add no bytes to this proof set.
 **B — differential function testing.** A bounded emulator experiment now compares
 the original rectangle query and its search callee with a linked C component across
 380 synthetic fixtures, and original pool restoration with its C candidate across
-80 complete 1,000-entry fixtures. Result checks cover the reviewed ABI, mutable
-memory and ordered data-access addresses, widths and values. A deliberate C query
-regression is rejected. See [scope and reproduction](compiled-components.md).
+80 complete 1,000-entry fixtures. The exact packing component additionally passes
+80 complete-pool fixtures and 80 packing-then-restoration comparisons. The latter
+reuse packing inputs and check the resulting serialized/restored state, without
+asserting that serialization preserves arbitrary input unchanged. Result checks cover the reviewed ABI, mutable
+memory and ordered data-access addresses, widths and values. Deliberate C query
+and omitted-final-entry packing regressions are rejected. See [scope and reproduction](compiled-components.md).
 
 These tests execute reviewed original regions in Unicorn x86-32, with synthetic
 mapped state. They do not launch or call an original Windows process, initialize the
