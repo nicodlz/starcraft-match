@@ -288,3 +288,18 @@ conversion changed to unsigned division also fails on ordered accesses.
 Run `0x0048C770` or `0x0048C7D0`, with `--roundtrip` and optionally
 `--initialize`. Only the already-counted initializer is exact: these sequential
 chains add no exact bytes and do not reconstruct the larger I/O callers.
+
+The related 112-byte record encoder and checked restorer now retain their actual
+162/85-byte shared C dependencies. The roots match **224/224 and 199/199 bytes**,
+for **670 exact bytes across four functions**, each counted once. The shared
+conversions pass 160 comparisons each; the record encoder and restorer pass 480
+each, with a further 480 complete encoding/restoration chains. All four C
+contributions are exact in the chain. Flags include 0, 1, 2 and signed/wrapping
+DWORD values. The decoder checks preserved ECX, RET4 and its full EAX machine
+value, without claiming a consumed semantic return. Its mapped indexed arena
+exercises all masked indices, live/dead sprite fields, state combinations, serials
+and corrupt tags, including unchecked indices above 1700. Compiled serial, mask
+and flag mutations are rejected; decoder tag/state/index mutations additionally
+produce actual snapshot differences. Run `0x00479E60`, `0x00479EC0`,
+`0x0048A8D0` or `0x0048A9A0 --roundtrip`. The larger pool initializer/restorer
+and I/O callers remain outside this exact record chain.

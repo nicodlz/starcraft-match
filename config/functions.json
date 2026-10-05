@@ -30790,5 +30790,378 @@
       "Measured 161-byte C contribution vs158 original, non-exact in four-byte cursor rebasing and final address comparison. Finite whole-pool and lifecycle comparisons are separate from exact matching.",
       "80 standalone comparisons for each conversion, 80 encoding/restoration chains, and 80 initialization/encoding/restoration chains pass with complete pool, unit arena, adjacent globals and ordered accesses. Decoder EDX preservation checked; serial-shift, decoder-mask and compiler register-preservation regressions rejected. No new exact bytes."
     ]
+  },
+  {
+    "address": "0x00479E60",
+    "size": 85,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "@sub_00479E60@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".restore",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Observed unit base plus one stride; masked index decoded one-based."
+          ]
+        },
+        "_g_00629D98": {
+          "address": 6462872,
+          "kind": "data",
+          "evidence": [
+            "Observed sprite base plus one stride, 36-byte records."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_unpack_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_compiler_anchor_00479E60@4",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_00479E60.c",
+    "schema_version": 1,
+    "name": "sub_00479E60",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "strings": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "known_structures": [],
+    "calling_convention": "ECX points to the record prefix; no stack arguments, plain RET; ECX/EDX and EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00479E60(View *state)",
+    "provenance": "Complete85-byte [00479E60,00479EB5), two plain RETs at00479EAE/00479EB4; prior soleRET at00479E50 plus15 traps; eleven following traps before00479EC0. All branches internal; fresh complete199-byte48A8D0 and1518-byte4E2E20 callers corroborate ECX input.",
+    "calls": [],
+    "dependencies": [],
+    "references": [
+      {
+        "address": "0x0048A8D4",
+        "type": "direct_call",
+        "provenance": "Complete199-byte caller [0048A8D0,0048A997) directly calls with ECX and uses unchanged ECX after return; no arguments/cleanup/result consumption."
+      },
+      {
+        "address": "0x004E2E28",
+        "type": "direct_call",
+        "provenance": "Complete1518-byte caller [004E2E20,004E340E) setsECX=ESI at004E2E26, then calls without arguments/cleanup and overwrites EAX."
+      }
+    ],
+    "notes": [
+      "Always converts DWORD offsets12,20,92 in order. Nonzero sprite index becomes index*36+00629D74 with wrapping; nonzero unit DWORD becomes (value&7FF)*336+0059CB58. Whole nonzero values with zero low bits remain non-null. No bounds or serial validation.",
+      "Whole85-byte external-only C contribution matches literally. Genuine typed data symbols reproduce LEA address construction.160 bounded comparisons pass full record/pool/unit snapshots, ordered accesses and ECX/EDX preservation. No original-process claim.",
+      "Compiled7FF-to3FF mask mutation rejected fixture2 on full snapshots and ordered accesses."
+    ]
+  },
+  {
+    "address": "0x00479EC0",
+    "size": 162,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_00479EC0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".encode",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Observed first unit base for unsigned336-byte reference conversion."
+          ]
+        },
+        "_g_00629D98": {
+          "address": 6462872,
+          "kind": "data",
+          "evidence": [
+            "Observed first sprite base for unsigned36-byte reference conversion."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_encode_sprite",
+          "section": ".sprite"
+        },
+        {
+          "symbol": "_compiler_anchor_00479EC0",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_00479EC0.c",
+    "schema_version": 1,
+    "name": "sub_00479EC0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "strings": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "known_structures": [],
+    "calling_convention": "Private EDI record pointer; no stack arguments, plain RET; EBX/ESI/EDI/EBP preserved; EAX/ECX/EDX scratch, no established return value.",
+    "prototype": "static void sub_00479EC0(unsigned char *record /* compiler allocates EDI */)",
+    "provenance": "Complete162-byte [00479EC0,00479F62), plain RETs at00479F4C/00479F61; prior reviewed decoder RET00479EB4 plus11 traps; fourteen following traps before00479F70. All branches internal; complete224-byte48A9A0 and2471-byte4E3410 callers corroborate privateEDI input.",
+    "calls": [],
+    "dependencies": [],
+    "references": [
+      {
+        "address": "0x0048A9A7",
+        "type": "direct_call",
+        "provenance": "Complete224-byte caller [0048A9A0,0048AA80) moves its EAX record pointer into EDI at0048A9A5 before call; no child arguments or cleanup."
+      },
+      {
+        "address": "0x004E3D90",
+        "type": "direct_call",
+        "provenance": "Complete2471-byte caller [004E3410,004E3DB7) setsEDI=ESI at004E3D8B before call and returns through restored nonvolatile registers."
+      },
+      {
+        "address": "0x004E3DAC",
+        "type": "direct_call",
+        "provenance": "Same complete2471-byte caller setsEDI=ESI at004E3DAA before direct call without arguments/cleanup."
+      }
+    ],
+    "notes": [
+      "Encodes full DWORD unit pointers at92 then20 using unsigned wrapped difference from0059CCA8 divided by336 plus1, accepts IDs<=1700 and includes full BYTE serial at+165 shifted11. Sprite pointer12 uses unsigned difference from00629D98 divided36 plus1, without range checks. All fields stored including zero.",
+      "Whole162-byte C contribution matches literally under msvc71-o2 external-only linking. Ordinary excluded C caller induces reviewed privateEDI ABI; genuine data bindings force observed MOV/SUB instructions.160 bounded comparisons pass full snapshots, ordered accesses and preservedEDI input.",
+      "Compiled serial shift11-to10 mutation rejected fixture3 on full snapshots and ordered accesses."
+    ]
+  },
+  {
+    "address": "0x0048A9A0",
+    "size": 224,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048A9A0@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".record",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Observed first unit base for unsigned336-byte conversion."
+          ]
+        },
+        "_g_00629D98": {
+          "address": 6462872,
+          "kind": "data",
+          "evidence": [
+            "Observed sprite base for36-byte conversion."
+          ]
+        },
+        "_g_0064B2E8": {
+          "address": 6599400,
+          "kind": "data",
+          "evidence": [
+            "Observed first112-byte node pool record."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_encode_sprite",
+          "section": ".sprite"
+        },
+        {
+          "symbol": "_pack_link",
+          "section": ".link"
+        },
+        {
+          "symbol": "_compiler_anchor_0048A9A0@8",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "_sub_00479EC0",
+          "section": ".encode",
+          "address": 4693696,
+          "size": 162,
+          "evidence": [
+            "Original direct CALL0048A9A7 uses privateEDI with actual162-byte C callee retained."
+          ]
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048A9A0.c",
+    "known_structures": [
+      "src/game/sub_00479EC0.c"
+    ],
+    "schema_version": 1,
+    "name": "sub_0048A9A0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "strings": [],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "Private EAX record pointer plus one full DWORD stack links flag; RET4; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __stdcall sub_0048A9A0(unsigned char *record, unsigned int links /* optimized private EAX plus stack */)",
+    "provenance": "Complete224-byte [0048A9A0,0048AA80), RET4 at0048AA5D/0048AA7D; priorRET4 at0048A994 ends0048A997 plus9 traps. Nextentry0048AA80 follows complete body. All branches internal; complete279-byte48AEB0 caller independently reviewed.",
+    "calls": [
+      {
+        "to": "0x00479EC0",
+        "from": "0x0048A9A7"
+      }
+    ],
+    "dependencies": [
+      "0x00479EC0"
+    ],
+    "references": [
+      {
+        "address": "0x0048AEC6",
+        "type": "direct_call",
+        "provenance": "Complete279-byte caller [0048AEB0,0048AFC7) PUSH1 at0048AEC2, MOVEAX=ESI at0048AEC4, CALL0048AEC6, then advances ESI by112 and decrements EDI; no argument cleanup or result consumption."
+      }
+    ],
+    "notes": [
+      "Retains actual162-byte shared C encoder, then encodes unit pointers at100/104. Any nonzero full DWORD flag also converts links0/4 with unsigned wrapped112-byte pool difference plus1. Zero flag leaves links untouched. No additional unit alignment or link bounds checks.",
+      "Complete224-byte C root and actual162-byte C dependency both match literally using ordinary retained-component linker and msvc71-o2-frame.480 bounded comparisons pass privateEAX input, oneDWORD stack argument, RET4, full112-byte record/pool/unit snapshots and ordered accesses across six flag values. Dependency counted once.",
+      "Compiled nonzero-flag-to-equals1 mutation rejected fixture160; retained162-byte C callee still literal exact."
+    ]
+  },
+  {
+    "address": "0x0048A8D0",
+    "size": 199,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "@sub_0048A8D0@12",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".record",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Observed unit base plus one336-byte stride."
+          ]
+        },
+        "_g_00629D98": {
+          "address": 6462872,
+          "kind": "data",
+          "evidence": [
+            "Observed sprite base plus one36-byte stride."
+          ]
+        },
+        "_g_0064B2E8": {
+          "address": 6599400,
+          "kind": "data",
+          "evidence": [
+            "Observed one-based112-byte pool conversion."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_unpack_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_decode_checked",
+          "section": ".checked"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00479E60@4",
+          "section": ".restore",
+          "address": 4693600,
+          "size": 85,
+          "evidence": [
+            "Original direct CALL0048A8D4; independently written actual85-byte C callee."
+          ]
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048A8D0.c",
+    "schema_version": 1,
+    "name": "sub_0048A8D0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "strings": [],
+    "known_structures": [
+      "src/game/sub_00479E60.c"
+    ],
+    "known_calls": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calls": [
+      {
+        "to": "0x00479E60",
+        "from": "0x0048A8D4"
+      }
+    ],
+    "dependencies": [
+      "0x00479E60"
+    ],
+    "references": [
+      {
+        "address": "0x0048AFB2",
+        "type": "direct_call",
+        "provenance": "Fresh complete279-byte caller [0048AEB0,0048AFC7) setsECX=0064B2E8, loopsPUSH1/CALL0048AFB2 thenADDECX112 andDECEDI; no cleanup or result consumption. ECX must be preserved."
+      }
+    ],
+    "provenance": "Complete199-byte [0048A8D0,0048A997), RET4 at0048A984/0048A994. Prior420-byte functionRET at0048A8C3 plus12 traps; nine following traps before0048A9A0. All branches internal; complete279-byte directcaller reviewed.",
+    "calling_convention": "ECX record pointer plus one full DWORD stack flag; RET4; ECX and EBX/ESI/EDI/EBP preserved, EDX scratch. EAX machine value is zero for flagzero, otherwise last decodedlink; caller ignores it and no semantic return role is established.",
+    "prototype": "unsigned int __fastcall sub_0048A8D0(Node *node, unsigned int unused_edx, unsigned int links /* ECX plus one stack DWORD */)",
+    "notes": [
+      "Actual85-byte C shared decoder first restores sprite12/unit20/unit92. Units100/104 additionally require whole nonzero handle, nonzero DWORD sprite12 in masked336-byte record, BYTE77 nonzero orBYTE78!=1, and BYTE165 equal to full arithmetic-shifted signed handle>>11. No masked-index bounds check or tag narrowing. Optional nonzeroDWORD flag restores link0/4 with full wrapped112-byte indexing.",
+      "Whole199-byte root and actual85-byte C callee match literally under msvc71-o2-frame retained-component linking. Checked112-byte layout and fullEAX machine-value modeling restore original terminal register and both RET4 paths.480 private whole-record comparisons and480 encoding/restoration chains pass with actual C encoder224/162, ordered accesses, EAX and ECX preservation. Finite mapped synthetic state, not original-process execution.",
+      "Public480 restoration comparisons and480 full-record encoding/restoration chains pass with all four C contributions literalexact. Compiled tag narrowing, wrong state condition and inserted1700-bound mutations rejected on accesses; actual snapshot divergences independently confirmed at fixtures40/6/2. EAX modeled machine state, no consumed original return role asserted."
+    ]
   }
 ]
