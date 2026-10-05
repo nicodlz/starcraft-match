@@ -413,7 +413,37 @@ def pool20_fixture(rng, number):
     return [(0x641690, bytes(data))]
 
 
-def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None, pool_size=20004, extra_register_arguments=None, snapshots=()):
+def pool20_reference_fixture(rng, number, packed=False):
+    base = 0x6416A0
+    unit_base = 0x59CCA8
+    data = bytearray(rng.randbytes(40032))
+    units = bytearray(rng.randbytes(336 * 1700 + 256))
+    serial = [0, 1, 7, 31, 127, 128, 254, 255][number % 8]
+    for slot in range(1700):
+        units[slot * 336 + 165] = serial
+    links = ([0, 1, 2, 1999, 2000, 2001, 0xFFFFFFFF, 0x80000000,
+              0x40000000, 0xCCCCCCCD] if packed else
+             [0, base, base + 20, base + 39980, base - 1, base - 19,
+              base - 20, base - 21, base + 1, base + 19, base + 21,
+              0xFFFFFFFF, 0x80000000, 0x10000000])
+    references = ([0, 1, 1700, 1701, 2047, 2048, 0xF800, 0xFFFFFFFF,
+                   0x80000000, 0x80000001, 0x3FF800] if packed else
+                  [0, unit_base, unit_base + 336 * 1699, unit_base + 1,
+                   unit_base + 335, unit_base - 1, unit_base - 336,
+                   unit_base + 336 * 1700, 0xFFFFFFFF, 0x80000000])
+    for slot in range(2000):
+        a, b, reference = rng.choice(links), rng.choice(links), rng.choice(references)
+        if number == 0:
+            a = b = reference = 0
+        elif number == 1:
+            a, b = links[slot % len(links)], links[(slot + 1) % len(links)]
+            reference = references[slot % len(references)]
+        struct.pack_into('<II', data, 16 + slot * 20, a, b)
+        struct.pack_into('<I', data, 16 + slot * 20 + 16, reference)
+    return [(base - 16, bytes(data)), (unit_base, bytes(units))]
+
+
+def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None, pool_size=20004, extra_register_arguments=None, snapshots=(), preserved_registers_by_entry=None):
     from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP,
                                   UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESI, UC_X86_REG_ECX, UC_X86_REG_EDX,
                                   UC_X86_REG_ESP)
@@ -455,13 +485,15 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
             uc.reg_write(argument_id, call_argument)
         for register, value in (extra_register_arguments or {}).items():
             uc.reg_write(register, value)
+        preserved.extend((register, uc.reg_read(register)) for register in
+                         (preserved_registers_by_entry or {}).get(call_entry, ()))
         uc.emu_start(call_entry, STOP, count=2_000_000)
         if uc.reg_read(UC_X86_REG_EIP) != STOP:
             raise ValueError('Instruction bound reached before return')
         if uc.reg_read(UC_X86_REG_ESP) != STACK + 4 + (0 if argument_register else 4 * len(stack_arguments)):
             raise ValueError('Unexpected stack cleanup')
         if any(uc.reg_read(register) != value for register, value in preserved):
-            raise ValueError('Nonvolatile register changed')
+            raise ValueError('Reviewed register preservation failed')
     return dict(eax=None if void_result else uc.reg_read(UC_X86_REG_EAX),
                 buffers=bytes(uc.mem_read(0x006BB900, 0x3540)),
                 cursors=bytes(uc.mem_read(0x006BEE64, 0x200)),
@@ -472,7 +504,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0', '0x0042FF80', '0x0047DC10', '0x0048C590'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0', '0x0042FF80', '0x0047DC10', '0x0048C590', '0x0048C770', '0x0048C7D0'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -484,6 +516,8 @@ def main():
     player_select = address == 0x0048FDB0
     player_mark = address == 0x0048FC70
     pool20_init = address == 0x0048C590
+    pool20_pack = address == 0x0048C7D0
+    pool20_decode = address == 0x0048C770
     node_update = address == 0x0047DC10
     node_move = address == 0x0047DD60
     neighbors = address == 0x00414290
@@ -500,24 +534,26 @@ def main():
     node44_decode = address == 0x00432810
     node44_pack = address == 0x00404350
     node44_record = address == 0x004328E0
-    linked_single = pool20_init or player_mark or neighbors or node44_record or state_record or node_pack or node_restore
-    pool_void = pool20_init or node_update or node44_init or node44_restore or node44_decode or node44_pack or node44_record or state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
+    linked_single = pool20_pack or pool20_decode or pool20_init or player_mark or neighbors or node44_record or state_record or node_pack or node_restore
+    pool_void = pool20_pack or pool20_decode or pool20_init or node_update or node44_init or node44_restore or node44_decode or node44_pack or node44_record or state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
     isolated = node44_init or state_init or node_init or path_restore or path_decode or path_init
-    if args.initialize and not (path_pack or node_pack or state_pack or node44_pack):
+    if args.initialize and not (pool20_pack or path_pack or node_pack or state_pack or node44_pack):
         raise ValueError('Initialization chain requires a reviewed pool packer')
-    if args.roundtrip and not (path_pack or node_pack or node44_pack):
+    if args.roundtrip and not (pool20_pack or path_pack or node_pack or node44_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 394)] if pool20_init else [(address, 321), (0x00414290, 431), (0x0047D2C0, 57)] if node_update else [(address, 339), (0x00469B00, 83)] if generation_query else [(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 158)] if pool20_pack else [(address, 86)] if pool20_decode else [(address, 394)] if pool20_init else [(address, 321), (0x00414290, 431), (0x0047D2C0, 57)] if node_update else [(address, 339), (0x00469B00, 83)] if generation_query else [(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
-        if node44_pack:
+        if pool20_pack:
+            regions.append((0x0048C770, 86))
+        elif node44_pack:
             regions.extend([(0x00404410, 92), (0x00432810, 196), (0x00437290, 73)])
         else:
             regions.append((0x004041F0, 140) if node_pack else (0x00403780, 864))
     if args.initialize:
-        regions.append((0x00404280, 198) if node44_pack else (0x00404550, 205) if state_pack else (0x00403DB0, 155) if node_pack else (0x00403650, 127))
+        regions.append((0x0048C590, 394) if pool20_pack else (0x00404280, 198) if node44_pack else (0x00404550, 205) if state_pack else (0x00403DB0, 155) if node_pack else (0x00403650, 127))
     default_out = f'analysis/differential-{args.address}' + ('-initialize' if args.initialize else '') + ('-roundtrip' if args.roundtrip else '') + '.json'
     out = (ROOT / (args.out or default_out)).resolve()
     if not any(out.is_relative_to(ROOT / directory) for directory in ['analysis', 'build', '.local']):
@@ -577,7 +613,7 @@ def main():
                 raise ValueError('Whole compiled dependency differs from pinned original')
     restoration_build = None
     if args.roundtrip:
-        restore_address = '0x00404410' if node44_pack else '0x004041F0' if node_pack else '0x00403780'
+        restore_address = '0x0048C770' if pool20_pack else '0x00404410' if node44_pack else '0x004041F0' if node_pack else '0x00403780'
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', restore_address, '--binary', str(ROOT / args.binary)],
                        cwd=ROOT, check=True)
         restoration_build = json.loads((ROOT / 'analysis/matches' / (restore_address + '.json')).read_text())['build']
@@ -592,10 +628,10 @@ def main():
                 if code != original.region(section['address'], section['size']):
                     raise ValueError('Restoration C contribution differs from pinned original')
                 candidate_code.append((section['address'], code))
-        elif node_pack:
+        elif node_pack or pool20_pack:
             restore_image = (ROOT / 'build' / restore_address / 'linked/candidate.exe').read_bytes()
             restore_entry, restore_sections = read_pe(restore_image)
-            if restore_entry != 0x004041F0 or len(restore_sections) != 1 or restore_sections[0]['address'] != restore_entry:
+            if restore_entry != int(restore_address, 0) or len(restore_sections) != 1 or restore_sections[0]['address'] != restore_entry:
                 raise ValueError('Restoration image must contain exactly its reviewed C contribution')
             section = restore_sections[0]
             candidate_code.append((restore_entry, restore_image[section['raw_pointer']:section['raw_pointer'] + section['size']]))
@@ -603,7 +639,7 @@ def main():
             candidate_code.append((0x00403780, (ROOT / 'build/0x00403780/candidate.bin').read_bytes()))
     initialization_build = None
     if args.initialize:
-        init_address = '0x00404280' if node44_pack else '0x00404550' if state_pack else '0x00403DB0' if node_pack else '0x00403650'
+        init_address = '0x0048C590' if pool20_pack else '0x00404280' if node44_pack else '0x00404550' if state_pack else '0x00403DB0' if node_pack else '0x00403650'
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', init_address] +
                        (['--require-exact'] if catalog[int(init_address, 0)]['match']['exact'] else []) +
                        ['--binary', str(ROOT / args.binary)],
@@ -690,7 +726,7 @@ def main():
     if node_move:
         rng = random.Random(1161)
         cases = node_move_cases(rng)
-    if pool20_init:
+    if pool20_init or pool20_pack or pool20_decode:
         rng = random.Random(1161)
         cases = [(i,) for i in range(80)]
     if node_update:
@@ -700,7 +736,18 @@ def main():
     for number, case in enumerate(cases):
         extra_register_arguments = None
         snapshots = ()
-        if pool20_init:
+        preserved_registers_by_entry = None
+        if pool20_pack or pool20_decode:
+            from unicorn.x86_const import UC_X86_REG_EDX
+            writes = pool20_reference_fixture(rng, *case, packed=pool20_decode)
+            argument = ()
+            steps = None
+            snapshots = [(0x641690, 40032), (0x59CCA8, 336 * 1700 + 256)]
+            edx = [0, 1, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF, 0xA5A50000,
+                   0x12345678, 0x87654321][case[0] % 8]
+            extra_register_arguments = {UC_X86_REG_EDX: edx}
+            preserved_registers_by_entry = {0x0048C770: (UC_X86_REG_EDX,)}
+        elif pool20_init:
             writes = pool20_fixture(rng, *case)
             argument = ()
             steps = None
@@ -804,12 +851,12 @@ def main():
             steps = None
         if args.initialize:
             steps = steps or [(address, argument, None)]
-            steps.insert(0, (0x00404280 if node44_pack else 0x00404550 if state_pack else 0x00403DB0 if node_pack else 0x00403650, argument, 'ESI' if state_pack else 'ECX'))
+            steps.insert(0, (0x0048C590 if pool20_pack else 0x00404280 if node44_pack else 0x00404550 if state_pack else 0x00403DB0 if node_pack else 0x00403650, argument, None if pool20_pack else 'ESI' if state_pack else 'ECX'))
         if args.roundtrip:
             steps = steps or [(address, argument, None)]
-            steps.append((0x00404410, argument, 'ESI') if node44_pack else (0x004041F0, argument, 'EDX') if node_pack else (0x00403780, argument, None))
-        reference = execute(original_code, writes, unicorn, address, argument, pool_void or player_mark or player_select, steps, pool_size, extra_register_arguments, snapshots)
-        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void or player_mark or player_select, steps, pool_size, extra_register_arguments, snapshots)
+            steps.append((0x0048C770, argument, None) if pool20_pack else (0x00404410, argument, 'ESI') if node44_pack else (0x004041F0, argument, 'EDX') if node_pack else (0x00403780, argument, None))
+        reference = execute(original_code, writes, unicorn, address, argument, pool_void or player_mark or player_select, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, pool_void or player_mark or player_select, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry)
         if reference != candidate:
             differing = [key for key in reference if reference[key] != candidate[key]]
             raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
@@ -824,10 +871,10 @@ def main():
                   roundtrip=args.roundtrip, restoration_build=restoration_build,
                   initialize=args.initialize, initialization_build=initialization_build,
                   checks=([] if pool_void or player_mark or player_select else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + (['complete 40,000-byte pool and adjacent globals', 'zero arguments and plain RET'] if pool20_init else []) + (['head/hash/counter/node/grid/marker snapshots', 'two stack DWORDs and RET8'] if node_update else []) + (['generation/mark/unit snapshots', 'explicit private EAX input'] if generation_query else []) + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void else []) + [
+                          'mutable buffer/cursor snapshots'] + (['complete 40,000-byte pool and adjacent globals', 'zero arguments and plain RET'] if pool20_init or pool20_pack or pool20_decode else []) + (['unit arena including serial BYTEs'] if pool20_pack or pool20_decode else []) + (['decoder preserves caller EDX'] if pool20_decode or (pool20_pack and args.roundtrip) else []) + (['head/hash/counter/node/grid/marker snapshots', 'two stack DWORDs and RET8'] if node_update else []) + (['generation/mark/unit snapshots', 'explicit private EAX input'] if generation_query else []) + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void and not (pool20_init or pool20_pack or pool20_decode) else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
-                               'Private stack temporaries and volatile registers/flags excluded from equivalence',
+                               'Private stack temporaries, flags and volatile registers without a reviewed preservation contract excluded from equivalence',
                                'Finite fixtures do not establish universal semantic equivalence'])
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2) + '\n')

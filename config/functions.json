@@ -30632,5 +30632,163 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x0048C770",
+    "size": 86,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048C770",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_006416A0": {
+          "address": 6559392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed pool base comparison and one-based reference conversion."
+          ]
+        },
+        "_g_0064B2E0": {
+          "address": 6599392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed one-past-pool address for descending traversal."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_unpack_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_unpack_link",
+          "section": ".link"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048C770.c",
+    "schema_version": 1,
+    "name": "sub_0048C770",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "assembly_partial_match",
+    "prototype": "void sub_0048C770(void)",
+    "calls": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "No arguments; plain RET; no established return value; EBX/ESI/EDI/EBP preserved. EDX additionally preserved; caller keeps writer status there across the call.",
+    "references": [
+      {
+        "address": "0x0048C927",
+        "type": "direct_call",
+        "provenance": "Fresh complete 224-byte caller [0048C910,0048C9F0) uses no arguments or cleanup; decoder call at 0048C927 preserves the writer result placed in EDX at 0048C925 and tested at 0048C92C."
+      },
+      {
+        "address": "0x0048C884",
+        "type": "direct_call",
+        "provenance": "Fresh complete 155-byte caller [0048C870,0048C90B) calls without arguments or cleanup; return EAX is not consumed."
+      }
+    ],
+    "provenance": "Complete 86-byte [0048C770,0048C7C6), sole RET at 0048C7C5; preceding RET at 0048C764 plus 11 traps; ten following traps before 0048C7D0. All branches internal; whole caller independently reviewed against pinned executable.",
+    "notes": [
+      "Decodes whole nonzero unit DWORD as low-11-bit index*336+0059CB58, including nonzero values with zero low bits. Node references use full DWORD index*20+0064168C with wrap and no range check. Stores all three fields including zero values; other payload fields and adjacent globals untouched.",
+      "Measured 83-byte C contribution vs86 original, non-exact. Actual generated code naturally preserves EDX. Finite whole-pool and lifecycle comparisons are separate from exact matching.",
+      "80 standalone comparisons for each conversion, 80 encoding/restoration chains, and 80 initialization/encoding/restoration chains pass with complete pool, unit arena, adjacent globals and ordered accesses. Decoder EDX preservation checked; serial-shift, decoder-mask and compiler register-preservation regressions rejected. No new exact bytes."
+    ]
+  },
+  {
+    "address": "0x0048C7D0",
+    "size": 158,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048C7D0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_006416A0": {
+          "address": 6559392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed pool base comparison and one-based reference conversion."
+          ]
+        },
+        "_g_0064B2E0": {
+          "address": 6599392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed one-past-pool address for descending traversal."
+          ]
+        },
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original subtracts first336-byte record data address at0048C7E7."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_pack_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_pack_link",
+          "section": ".link"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048C7D0.c",
+    "schema_version": 1,
+    "name": "sub_0048C7D0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "assembly_partial_match",
+    "prototype": "void sub_0048C7D0(void)",
+    "calls": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "No arguments; plain RET; no established return value; EBX/ESI/EDI/EBP preserved.",
+    "references": [
+      {
+        "address": "0x0048C910",
+        "type": "direct_call",
+        "provenance": "Fresh complete 224-byte caller [0048C910,0048C9F0) uses no arguments or cleanup; decoder call at 0048C927 preserves the writer result placed in EDX at 0048C925 and tested at 0048C92C."
+      }
+    ],
+    "provenance": "Complete 158-byte [0048C7D0,0048C86E), sole RET at 0048C86D; preceding reviewed decoder RET at 0048C7C5 plus ten traps; two trailing traps before 0048C870. All branches internal; whole caller independently reviewed against pinned executable.",
+    "notes": [
+      "Encodes unit references using unsigned difference from 0059CCA8 divided by336 plus1, rejects IDs above1700, reads BYTE serial at+165 only for accepted references, and retains full serial<<11 DWORD. Link conversion uses signed wrapped difference from006416A0 divided by20 truncating toward zero plus1; zero input remainszero.",
+      "Measured 161-byte C contribution vs158 original, non-exact in four-byte cursor rebasing and final address comparison. Finite whole-pool and lifecycle comparisons are separate from exact matching.",
+      "80 standalone comparisons for each conversion, 80 encoding/restoration chains, and 80 initialization/encoding/restoration chains pass with complete pool, unit arena, adjacent globals and ordered accesses. Decoder EDX preservation checked; serial-shift, decoder-mask and compiler register-preservation regressions rejected. No new exact bytes."
+    ]
   }
 ]

@@ -274,3 +274,17 @@ adjacent pointer/scalar globals, plain RET, preserved registers and ordered data
 accesses agree. A compiled 399-batch mutation is rejected in fixture 0, detecting
 five missing records. Run `0x0048C590`; all regions are exact. The inlined C helper
 and memset do not add separate function counts or external game-code bindings.
+
+The same 2,000-record pool now has independently reconstructed whole C encoder
+and decoder candidates: **158/161 and 86/83 original/compiled bytes**, both
+non-exact. Each passes 80 complete-pool comparisons; another 80 cover encoding
+then restoration, and 80 cover initialization, encoding and restoration using
+the actual 394-byte C initializer. Ordered accesses, all 40,000 pool bytes,
+adjacent globals, unit serials and plain RET agree. The decoder's additional
+EDX preservation is checked because its original caller retains writer status
+in that register. Compiled serial-shift and decoder-mask mutations fail fixture 1;
+a genuine C variant that clobbers EDX is rejected by the register check. A link
+conversion changed to unsigned division also fails on ordered accesses.
+Run `0x0048C770` or `0x0048C7D0`, with `--roundtrip` and optionally
+`--initialize`. Only the already-counted initializer is exact: these sequential
+chains add no exact bytes and do not reconstruct the larger I/O callers.

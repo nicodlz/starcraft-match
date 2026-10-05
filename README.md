@@ -81,6 +81,8 @@ Selected reviewed regions:
 | [0x0048FDB0](docs/functions/0048FDB0.md) | Selector-driven player mask with actual C callee | 352 / 352 | Exact; 5,120 comparisons pass |
 | [0x0048FC70](docs/functions/0048FC70.md) | Eight-record WORD mask accumulation | 319 / 319 | Exact; 1,280 comparisons pass |
 | [0x0042FF80](docs/functions/0042FF80.md) | Generation-marked rectangle query with actual C search | 339 / 338 | Non-exact; 400 comparisons pass |
+| [0x0048C770](docs/functions/0048C770.md) | Complete 2,000-record reference restoration | 86 / 83 | Non-exact; 80 whole-pool comparisons pass |
+| [0x0048C7D0](docs/functions/0048C7D0.md) | Complete 2,000-record reference encoding | 158 / 161 | Non-exact; 80 initialization/encoding/restoration chains pass |
 | [0x0048C590](docs/functions/0048C590.md) | Complete 2,000-record pool initialization | 394 / 394 | Exact; 80 whole-pool comparisons pass |
 | [0x0047DC10](docs/functions/0047DC10.md) | Existing-neighbor node reclassification with both C callees | 321 / 332 | Non-exact; 1,550 comparisons pass |
 | [0x0047DD60](docs/functions/0047DD60.md) | Node reclassification with both actual C callees | 216 / 208 | Non-exact; 1,848 comparisons pass |
@@ -92,13 +94,15 @@ catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Eight reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Ten reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
 [`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
 [`0x00404280`](docs/functions/00404280.md),
 [`0x0047DD60`](docs/functions/0047DD60.md),
-[`0x0042FF80`](docs/functions/0042FF80.md) and
-[`0x0047DC10`](docs/functions/0047DC10.md).
+[`0x0042FF80`](docs/functions/0042FF80.md),
+[`0x0047DC10`](docs/functions/0047DC10.md),
+[`0x0048C770`](docs/functions/0048C770.md) and
+[`0x0048C7D0`](docs/functions/0048C7D0.md).
 Their complete regions and measured compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
