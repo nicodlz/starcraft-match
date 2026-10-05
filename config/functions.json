@@ -31163,5 +31163,202 @@
       "Whole199-byte root and actual85-byte C callee match literally under msvc71-o2-frame retained-component linking. Checked112-byte layout and fullEAX machine-value modeling restore original terminal register and both RET4 paths.480 private whole-record comparisons and480 encoding/restoration chains pass with actual C encoder224/162, ordered accesses, EAX and ECX preservation. Finite mapped synthetic state, not original-process execution.",
       "Public480 restoration comparisons and480 full-record encoding/restoration chains pass with all four C contributions literalexact. Compiled tag narrowing, wrong state condition and inserted1700-bound mutations rejected on accesses; actual snapshot divergences independently confirmed at fixtures40/6/2. EAX modeled machine state, no consumed original return role asserted."
     ]
+  },
+  {
+    "address": "0x0048A690",
+    "size": 113,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048A690",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0064B2E8": {
+          "address": 6599400,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064EED8": {
+          "address": 6614744,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064EEDC": {
+          "address": 6614748,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064DEC4": {
+          "address": 6610628,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064DEAC": {
+          "address": 6610604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064DEBC": {
+          "address": 6610620,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        },
+        "_g_0064B2E8_loop": {
+          "address": 6599400,
+          "kind": "data",
+          "evidence": [
+            "Reviewed complete 113-byte initializer 48A690..48A701; genuine DWORD pool/global data operand. Both pool symbols resolve to the same observed storage; no code binding."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "candidate_source": "src/game/sub_0048A690.c",
+    "schema_version": 1,
+    "name": "sub_0048A690",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004EEEA3",
+        "type": "direct_call",
+        "provenance": "Fresh complete 449-byte 4EEE00..4EEFC1 caller: no arguments or cleanup; continuation calls 48C590, then overwrites EAX."
+      },
+      {
+        "address": "0x004EF031",
+        "type": "direct_call",
+        "provenance": "Fresh complete 289-byte 4EEFD0..4EF0F1 caller: no arguments or cleanup; continuation calls 48C590, then overwrites EAX."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Whole 113-byte 48A690..48A701 through sole RET 48A700; prior RET 48A680 and 15 traps; 15 trailing traps before48A710. Retains internal three-byte alignment instruction 48A6CD.",
+    "calling_convention": "No arguments; plain RET; EBX/ESI/EDI/EBP preserved; no established return value; standard DF-clear entry assumed.",
+    "prototype": "void sub_0048A690(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Clears 100 records of 112 bytes at 64B2E8, resets observed global pointers/count and inserts 99 records before the fixed first record. Two external typed pool views bind to the same genuine data address to preserve distinct compiler lifetimes and memory reloads; no external code or CRT binding.",
+      "Whole 113-byte C contribution matches literally; bounded complete-pool emulator evidence documented separately. No original-process or whole-game execution claim."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "address": "0x0048A560",
+    "size": 147,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_abi_compatible": true,
+    "candidate_source": "src/game/sub_0048A560.c",
+    "candidate_symbol": "_sub_0048A560",
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".release",
+      "bindings": {
+        "_g_0064DEC4": {
+          "address": 6610628,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD data operand in whole 147-byte 48A560..48A5F3."
+          ]
+        },
+        "_g_0064DEAC": {
+          "address": 6610604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD data operand in whole 147-byte 48A560..48A5F3."
+          ]
+        },
+        "_g_0064EED8": {
+          "address": 6614744,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD data operand in whole 147-byte 48A560..48A5F3."
+          ]
+        },
+        "_g_0064EEDC": {
+          "address": 6614748,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD data operand in whole 147-byte 48A560..48A5F3."
+          ]
+        },
+        "_g_0064DEBC": {
+          "address": 6610620,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD data operand in whole 147-byte 48A560..48A5F3."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_compiler_anchor_0048A560@4",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_0048A560",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0048C453",
+        "type": "direct_call",
+        "provenance": "Fresh whole 171-byte 48C3D0..48C47B caller plus 28-byte switch table: MOV EAX,EDI at 48C451; no arguments/cleanup/result consumption."
+      },
+      {
+        "address": "0x0048BD22",
+        "type": "tail_jump",
+        "provenance": "Fresh whole 60-byte 48BCF0..48BD2C dispatcher plus 28-byte table: slot 5 tail-jumps with inherited EAX; no stack arguments."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Whole 147-byte 48A560..48A5F3 through plain RET 48A5E1/48A5F2; previous RET 48A55E and one trap; 13 trailing traps before48A600. Independent direct caller and tail-dispatch corroborate entry.",
+    "calling_convention": "Private EAX node pointer preserved; no stack arguments; plain RET; EBX/ESI/EDI/EBP preserved; no consumed semantic result.",
+    "prototype": "void sub_0048A560(Node *node) /* private EAX input */",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "If DWORD field 12 is nonzero, returns without writes. Otherwise updates matching active global pointers, unlinks node, clears its links, inserts before free global position or installs both free pointers when empty, and decrements DWORD count with wrapping.",
+      "Whole 147-byte C root matches literally. Ordinary excluded C context induces private EAX input; no ABI shim or code binding. 1,600 complete-pool emulator comparisons include ordered accesses, preserved EAX, plain RET and nonvolatiles."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
