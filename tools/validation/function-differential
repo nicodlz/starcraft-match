@@ -395,6 +395,44 @@ def node_neighbor_cases():
     return cases
 
 
+def pool112_list_fixture(rng, number):
+    base = 0x64B2E8
+    data = bytearray(rng.randbytes(11232))
+    for j in range(100):
+        pointers = [rng.choice([0, base + rng.randrange(100) * 112]) for _ in range(2)]
+        struct.pack_into('<II', data, 16 + j * 112, *pointers)
+        state = (0 if number == 0 else 1 if number == 1
+                 else int(j == number - 2) if number < 102
+                 else int(j != number - 102) if number < 202
+                 else rng.choice([0, 1, 0x80000000, 0xFFFFFFFF]))
+        struct.pack_into('<I', data, 16 + j * 112 + 12, state)
+    return [(base - 16, bytes(data)), (0x64DEA8, rng.randbytes(32)),
+            (0x64EED0, rng.randbytes(32))]
+
+
+def pool112_chain_fixture(rng, number):
+    base = 0x64B2E8
+    data = bytearray(rng.randbytes(11232))
+    units = bytearray(rng.randbytes(336 * 2048))
+    for j in range(2048):
+        struct.pack_into('<I', units, j * 336 + 12, 0 if (number + j) % 5 == 0 else 1)
+        units[j * 336 + 77], units[j * 336 + 78] = [
+            (0, 1), (0, 0), (1, 1), (1, 0), (255, 255)][(number + j) % 5]
+    for j in range(100):
+        offset = 16 + j * 112
+        pointers = [rng.choice([0, base + rng.randrange(100) * 112]) for _ in range(2)]
+        struct.pack_into('<II', data, offset, *pointers)
+        sprite = (0 if number == 0 else 0x629D98 if number == 1
+                  else rng.choice([0, 0x629D98 + 36 * rng.randrange(2500)]))
+        struct.pack_into('<I', data, offset + 12, sprite)
+        for field in [20, 92, 100, 104]:
+            struct.pack_into('<I', data, offset + field, rng.choice([
+                0, 0x59CCA8 + 336 * rng.randrange(1700), 0x59CCA8 + 1,
+                0x59CCA8 - 1, 0xFFFFFFFF]))
+    return [(base - 16, bytes(data)), (0x59CB58, bytes(units)),
+            (0x64DEA8, rng.randbytes(32)), (0x64EED0, rng.randbytes(32))]
+
+
 def pool112_release_fixture(rng, number):
     base = 0x64B2E8
     slot = number % 100
@@ -546,7 +584,7 @@ def record112_restore_fixture(rng, number, encode=False):
     return [(base - 16, bytes(data)), (unit_base, bytes(units))], node
 
 
-def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None, pool_size=20004, extra_register_arguments=None, snapshots=(), preserved_registers_by_entry=None):
+def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False, steps=None, pool_size=20004, extra_register_arguments=None, snapshots=(), preserved_registers_by_entry=None, register_arguments_by_step=None):
     from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_EBP,
                                   UC_X86_REG_EDI, UC_X86_REG_EIP, UC_X86_REG_ESI, UC_X86_REG_ECX, UC_X86_REG_EDX,
                                   UC_X86_REG_ESP)
@@ -569,7 +607,14 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
     uc.hook_add(unicorn.UC_HOOK_MEM_READ | unicorn.UC_HOOK_MEM_WRITE, memory_hook)
     register_arguments = {'ESI': UC_X86_REG_ESI, 'EDI': UC_X86_REG_EDI, 'ECX': UC_X86_REG_ECX, 'EBX': UC_X86_REG_EBX, 'EAX': UC_X86_REG_EAX, 'EDX': UC_X86_REG_EDX}
-    for call_entry, call_argument, argument_register in steps or [(entry, argument, None)]:
+    call_access_ranges = [] if register_arguments_by_step is not None else None
+    calls = steps or [(entry, argument, None)]
+    if register_arguments_by_step is not None and len(register_arguments_by_step) != len(calls):
+        raise ValueError('Each scheduled call requires its own register-input mapping')
+    for step_index, (call_entry, call_argument, argument_register) in enumerate(calls):
+        call_registers = (extra_register_arguments if register_arguments_by_step is None
+                          else register_arguments_by_step[step_index])
+        access_start = len(accesses)
         stack_arguments = call_argument if isinstance(call_argument, tuple) else (call_argument,)
         if argument_register and isinstance(call_argument, tuple):
             raise ValueError('Register input requires one scalar argument')
@@ -580,13 +625,13 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
         if argument_register:
             argument_id = register_arguments[argument_register]
             preserved = [(reg, call_argument if reg == argument_id else value) for reg, value in preserved]
-        if extra_register_arguments:
-            preserved = [(reg, extra_register_arguments.get(reg, value)) for reg, value in preserved]
+        if call_registers:
+            preserved = [(reg, call_registers.get(reg, value)) for reg, value in preserved]
         for register, value in preserved:
             uc.reg_write(register, value)
         if argument_register:
             uc.reg_write(argument_id, call_argument)
-        for register, value in (extra_register_arguments or {}).items():
+        for register, value in (call_registers or {}).items():
             uc.reg_write(register, value)
         preserved.extend((register, uc.reg_read(register)) for register in
                          (preserved_registers_by_entry or {}).get(call_entry, ()))
@@ -597,17 +642,35 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
             raise ValueError('Unexpected stack cleanup')
         if any(uc.reg_read(register) != value for register, value in preserved):
             raise ValueError('Reviewed register preservation failed')
+        if call_access_ranges is not None:
+            call_access_ranges.append((access_start, len(accesses)))
     return dict(eax=None if void_result else uc.reg_read(UC_X86_REG_EAX),
                 buffers=bytes(uc.mem_read(0x006BB900, 0x3540)),
                 cursors=bytes(uc.mem_read(0x006BEE64, 0x200)),
                 path_pool=bytes(uc.mem_read(0x006F0000, pool_size)) if void_result else None,
                 state_snapshots=[bytes(uc.mem_read(address, size)) for address, size in snapshots],
-                accesses=accesses)
+                accesses=accesses, call_access_ranges=call_access_ranges)
+
+
+def load_exact_record_component(address, expected, original, binary):
+    subprocess.run([str(ROOT / 'tools/decomp'), 'match', address, '--require-exact',
+                    '--binary', str(ROOT / binary)], cwd=ROOT, check=True)
+    build = json.loads((ROOT / 'analysis/matches' / (address + '.json')).read_text())['build']
+    image = (ROOT / 'build' / address / 'linked/candidate.exe').read_bytes()
+    entry, sections = read_pe(image)
+    if (entry != int(address, 0) or len(sections) != len(expected)
+            or {item['address']: item['size'] for item in sections} != expected):
+        raise ValueError('Record component must retain exactly its whole C contributions')
+    code = [(item['address'], image[item['raw_pointer']:item['raw_pointer'] + item['size']])
+            for item in sections]
+    if any(data != original.region(start, expected[start]) for start, data in code):
+        raise ValueError('Whole record C contribution differs from pinned original')
+    return code, build
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0', '0x0042FF80', '0x0047DC10', '0x0048A560', '0x0048A690', '0x0048C590', '0x0048C770', '0x0048C7D0', '0x00479E60', '0x00479EC0', '0x0048A9A0', '0x0048A8D0'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350', '0x00432810', '0x00404410', '0x00404280', '0x00414290', '0x0047DD60', '0x0048FC70', '0x0048FDB0', '0x0042FF80', '0x0047DC10', '0x0048A560', '0x0048A690', '0x0048A720', '0x0048C590', '0x0048C770', '0x0048C7D0', '0x00479E60', '0x00479EC0', '0x0048A9A0', '0x0048A8D0'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -622,6 +685,7 @@ def main():
     shared_encode = address == 0x00479EC0
     record112_encode = address == 0x0048A9A0
     record112_decode = address == 0x0048A8D0
+    pool112_lists = address == 0x0048A720
     pool112_release = address == 0x0048A560
     pool112_init = address == 0x0048A690
     pool20_init = address == 0x0048C590
@@ -643,20 +707,23 @@ def main():
     node44_decode = address == 0x00432810
     node44_pack = address == 0x00404350
     node44_record = address == 0x004328E0
-    linked_single = pool112_release or pool112_init or shared_decode or shared_encode or pool20_pack or pool20_decode or pool20_init or player_mark or neighbors or node44_record or state_record or node_pack or node_restore
+    linked_single = pool112_lists or pool112_release or pool112_init or shared_decode or shared_encode or pool20_pack or pool20_decode or pool20_init or player_mark or neighbors or node44_record or state_record or node_pack or node_restore
     pool_void = pool112_init or shared_decode or shared_encode or record112_encode or pool20_pack or pool20_decode or pool20_init or node_update or node44_init or node44_restore or node44_decode or node44_pack or node44_record or state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     void_result = (pool_void or player_mark or player_select) and not (record112_encode and args.roundtrip)
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
     isolated = node44_init or state_init or node_init or path_restore or path_decode or path_init
-    if args.initialize and not (pool20_pack or path_pack or node_pack or state_pack or node44_pack):
+    if args.initialize and not (pool112_lists or pool20_pack or path_pack or node_pack or state_pack or node44_pack):
         raise ValueError('Initialization chain requires a reviewed pool packer')
-    if args.roundtrip and not (record112_encode or pool20_pack or path_pack or node_pack or node44_pack):
+    if args.roundtrip and not (pool112_lists or record112_encode or pool20_pack or path_pack or node_pack or node44_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 147)] if pool112_release else [(address, 113)] if pool112_init else [(address, 199), (0x00479E60, 85)] if record112_decode else [(address, 85)] if shared_decode else [(address, 162)] if shared_encode else [(address, 224), (0x00479EC0, 162)] if record112_encode else [(address, 158)] if pool20_pack else [(address, 86)] if pool20_decode else [(address, 394)] if pool20_init else [(address, 321), (0x00414290, 431), (0x0047D2C0, 57)] if node_update else [(address, 339), (0x00469B00, 83)] if generation_query else [(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 420)] if pool112_lists else [(address, 147)] if pool112_release else [(address, 113)] if pool112_init else [(address, 199), (0x00479E60, 85)] if record112_decode else [(address, 85)] if shared_decode else [(address, 162)] if shared_encode else [(address, 224), (0x00479EC0, 162)] if record112_encode else [(address, 158)] if pool20_pack else [(address, 86)] if pool20_decode else [(address, 394)] if pool20_init else [(address, 321), (0x00414290, 431), (0x0047D2C0, 57)] if node_update else [(address, 339), (0x00469B00, 83)] if generation_query else [(address, 352), (0x0048FC70, 319)] if player_select else [(address, 319)] if player_mark else [(address, 216), (0x00414290, 431), (0x0047D5F0, 99)] if node_move else [(address, 431)] if neighbors else [(address, 198)] if node44_init else [(address, 92), (0x00432810, 196), (0x00437290, 73)] if node44_restore else [(address, 196), (0x00437290, 73)] if node44_decode else [(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
-        if record112_encode:
+        if pool112_lists:
+            regions.extend([(0x0048A9A0, 224), (0x00479EC0, 162),
+                            (0x0048A8D0, 199), (0x00479E60, 85)])
+        elif record112_encode:
             regions.extend([(0x0048A8D0, 199), (0x00479E60, 85)])
         elif pool20_pack:
             regions.append((0x0048C770, 86))
@@ -665,7 +732,7 @@ def main():
         else:
             regions.append((0x004041F0, 140) if node_pack else (0x00403780, 864))
     if args.initialize:
-        regions.append((0x0048C590, 394) if pool20_pack else (0x00404280, 198) if node44_pack else (0x00404550, 205) if state_pack else (0x00403DB0, 155) if node_pack else (0x00403650, 127))
+        regions.append((0x0048A690, 113) if pool112_lists else (0x0048C590, 394) if pool20_pack else (0x00404280, 198) if node44_pack else (0x00404550, 205) if state_pack else (0x00403DB0, 155) if node_pack else (0x00403650, 127))
     default_out = f'analysis/differential-{args.address}' + ('-initialize' if args.initialize else '') + ('-roundtrip' if args.roundtrip else '') + '.json'
     out = (ROOT / (args.out or default_out)).resolve()
     if not any(out.is_relative_to(ROOT / directory) for directory in ['analysis', 'build', '.local']):
@@ -724,7 +791,14 @@ def main():
             if dict(candidate_code)[callee] != original.region(callee, callee_size):
                 raise ValueError('Whole compiled dependency differs from pinned original')
     restoration_build = None
-    if args.roundtrip:
+    packing_build = None
+    if pool112_lists and args.roundtrip:
+        packed, packing_build = load_exact_record_component('0x0048A9A0',
+            {0x0048A9A0: 224, 0x00479EC0: 162}, original, args.binary)
+        restored, restoration_build = load_exact_record_component('0x0048A8D0',
+            {0x0048A8D0: 199, 0x00479E60: 85}, original, args.binary)
+        candidate_code.extend(packed + restored)
+    if args.roundtrip and not pool112_lists:
         restore_address = '0x0048A8D0' if record112_encode else '0x0048C770' if pool20_pack else '0x00404410' if node44_pack else '0x004041F0' if node_pack else '0x00403780'
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', restore_address, '--binary', str(ROOT / args.binary)],
                        cwd=ROOT, check=True)
@@ -761,7 +835,7 @@ def main():
             candidate_code.append((0x00403780, (ROOT / 'build/0x00403780/candidate.bin').read_bytes()))
     initialization_build = None
     if args.initialize:
-        init_address = '0x0048C590' if pool20_pack else '0x00404280' if node44_pack else '0x00404550' if state_pack else '0x00403DB0' if node_pack else '0x00403650'
+        init_address = '0x0048A690' if pool112_lists else '0x0048C590' if pool20_pack else '0x00404280' if node44_pack else '0x00404550' if state_pack else '0x00403DB0' if node_pack else '0x00403650'
         subprocess.run([str(ROOT / 'tools/decomp'), 'match', init_address] +
                        (['--require-exact'] if catalog[int(init_address, 0)]['match']['exact'] else []) +
                        ['--binary', str(ROOT / args.binary)],
@@ -851,6 +925,9 @@ def main():
     if pool112_init or pool20_init or pool20_pack or pool20_decode:
         rng = random.Random(1161)
         cases = [(i,) for i in range(80)]
+    if pool112_lists:
+        rng = random.Random(1161)
+        cases = [(i,) for i in range(80 if args.roundtrip else 260)]
     if pool112_release:
         rng = random.Random(1161)
         cases = [(i,) for i in range(1600)]
@@ -865,7 +942,28 @@ def main():
         extra_register_arguments = None
         snapshots = ()
         preserved_registers_by_entry = None
-        if record112_decode or (record112_encode and args.roundtrip):
+        register_arguments_by_step = None
+        if pool112_lists:
+            argument = ()
+            steps = None
+            snapshots = [(0x64B2D8, 11232), (0x64DEA8, 32), (0x64EED0, 32)]
+            if args.roundtrip:
+                from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX
+                writes = pool112_chain_fixture(rng, *case)
+                snapshots.append((0x59CB58, 336 * 2048))
+                flag = [0, 1, 2, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF][case[0] % 6]
+                steps = [(0x0048A9A0, (flag,), None)] * 100
+                steps += [(0x0048A8D0, (flag,), None)] * 100
+                steps.append((address, (), None))
+                register_arguments_by_step = [{UC_X86_REG_EAX: 0x64B2E8 + j * 112}
+                                              for j in range(100)]
+                register_arguments_by_step += [{UC_X86_REG_ECX: 0x64B2E8 + j * 112}
+                                              for j in range(100)]
+                register_arguments_by_step.append({})
+                preserved_registers_by_entry = {0x0048A8D0: (UC_X86_REG_ECX,)}
+            else:
+                writes = pool112_list_fixture(rng, *case)
+        elif record112_decode or (record112_encode and args.roundtrip):
             from unicorn.x86_const import UC_X86_REG_EAX, UC_X86_REG_ECX
             writes, node = record112_restore_fixture(rng, *case, encode=record112_encode)
             snapshots = [(0x64B2D8, 11232), (0x59CB58, 336 * 2048)]
@@ -1014,14 +1112,31 @@ def main():
             writes = fixture(rng, *case)
             argument = RECT
             steps = None
-        if args.initialize:
+        if args.initialize and pool112_lists:
+            steps = steps or [(address, argument, None)]
+            steps.insert(0, (0x0048A690, (), None))
+            if register_arguments_by_step is not None:
+                register_arguments_by_step.insert(0, {})
+        elif args.initialize:
             steps = steps or [(address, argument, None)]
             steps.insert(0, (0x0048C590 if pool20_pack else 0x00404280 if node44_pack else 0x00404550 if state_pack else 0x00403DB0 if node_pack else 0x00403650, argument, None if pool20_pack else 'ESI' if state_pack else 'ECX'))
-        if args.roundtrip:
+        if args.roundtrip and not pool112_lists:
             steps = steps or [(address, argument, None)]
             steps.append((0x0048A8D0, argument, None) if record112_encode else (0x0048C770, argument, None) if pool20_pack else (0x00404410, argument, 'ESI') if node44_pack else (0x004041F0, argument, 'EDX') if node_pack else (0x00403780, argument, None))
-        reference = execute(original_code, writes, unicorn, address, argument, void_result, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry)
-        candidate = execute(candidate_code, writes, unicorn, address, argument, void_result, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry)
+        reference = execute(original_code, writes, unicorn, address, argument, void_result, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry, register_arguments_by_step)
+        candidate = execute(candidate_code, writes, unicorn, address, argument, void_result, steps, pool_size, extra_register_arguments, snapshots, preserved_registers_by_entry, register_arguments_by_step)
+        if pool112_lists and args.roundtrip:
+            first_record_call = int(args.initialize)
+            for result in [reference, candidate]:
+                for batch in range(2):
+                    for slot in range(100):
+                        call = first_record_call + batch * 100 + slot
+                        start, end = result['call_access_ranges'][call]
+                        expected_field = 0x64B2E8 + slot * 112 + 100
+                        if not any(kind == unicorn.UC_MEM_WRITE and target == expected_field
+                                   and width == 4 for kind, target, width, _
+                                   in result['accesses'][start:end]):
+                            raise ValueError(f'Scheduled record call {call} did not write record {slot}')
         if reference != candidate:
             differing = [key for key in reference if reference[key] != candidate[key]]
             raise ValueError(f'Differential mismatch in fixture {number}: {differing}; inputs={case}')
@@ -1032,11 +1147,11 @@ def main():
                            for a, code in candidate_code],
                   exact_byte_match=dict(candidate_code)[address] == dict(original_code)[address],
                   all_regions_exact=all(dict(original_code)[a] == code for a, code in candidate_code),
-                  compiled_dependency_exact=None if isolated or linked_single else True, build=build,
-                  roundtrip=args.roundtrip, restoration_build=restoration_build,
+                  compiled_dependency_exact=True if pool112_lists and args.roundtrip else None if isolated or linked_single else True, build=build,
+                  roundtrip=args.roundtrip, restoration_build=restoration_build, packing_build=packing_build,
                   initialize=args.initialize, initialization_build=initialization_build,
-                  checks=([] if void_result else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
-                          'mutable buffer/cursor snapshots'] + (['complete 100-record pool and adjacent globals', 'private EAX input preserved, zero stack arguments and plain RET'] if pool112_release else []) + (['complete 11,200-byte pool, guards and adjacent globals', 'zero arguments and plain RET'] if pool112_init else []) + (['complete 40,000-byte pool and adjacent globals', 'zero arguments and plain RET'] if pool20_init or pool20_pack or pool20_decode else []) + (['complete 112-byte records, pool guards and unit arena'] if shared_decode or shared_encode or record112_encode or record112_decode else []) + (['masked 2,048-record indexed arena including unchecked indices', 'decoder ECX preservation and full EAX machine value'] if record112_decode or (record112_encode and args.roundtrip) else []) + (['ECX input and ECX/EDX preservation'] if shared_decode else []) + (['preserved private EDI input'] if shared_encode else []) + (['private EAX input, full DWORD flag and RET4'] if record112_encode else []) + (['ECX input, full DWORD flag and RET4'] if record112_decode else []) + (['unit arena including serial BYTEs'] if pool20_pack or pool20_decode else []) + (['decoder preserves caller EDX'] if pool20_decode or (pool20_pack and args.roundtrip) else []) + (['head/hash/counter/node/grid/marker snapshots', 'two stack DWORDs and RET8'] if node_update else []) + (['generation/mark/unit snapshots', 'explicit private EAX input'] if generation_query else []) + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void and not (shared_decode or shared_encode or record112_encode or pool112_init or pool20_init or pool20_pack or pool20_decode) else []) + [
+                  checks=([] if void_result else ['full EAX machine value'] if pool112_lists else ['EAX result']) + ['ESP cleanup', 'EBX/ESI/EDI/EBP preservation',
+                          'mutable buffer/cursor snapshots'] + (['complete 100-record pool, guards and adjacent globals', 'full EAX machine value, zero arguments and plain RET'] if pool112_lists else []) + (['100 actual C record encodings followed by 100 actual C record restorations', 'per-call EAX/ECX inputs and decoder ECX preservation', 'each scheduled record call writes its own reviewed DWORD field100'] if pool112_lists and args.roundtrip else []) + (['complete 100-record pool and adjacent globals', 'private EAX input preserved, zero stack arguments and plain RET'] if pool112_release else []) + (['complete 11,200-byte pool, guards and adjacent globals', 'zero arguments and plain RET'] if pool112_init else []) + (['complete 40,000-byte pool and adjacent globals', 'zero arguments and plain RET'] if pool20_init or pool20_pack or pool20_decode else []) + (['complete 112-byte records, pool guards and unit arena'] if shared_decode or shared_encode or record112_encode or record112_decode else []) + (['masked 2,048-record indexed arena including unchecked indices', 'decoder ECX preservation and full EAX machine value'] if record112_decode or (record112_encode and args.roundtrip) else []) + (['ECX input and ECX/EDX preservation'] if shared_decode else []) + (['preserved private EDI input'] if shared_encode else []) + (['private EAX input, full DWORD flag and RET4'] if record112_encode else []) + (['ECX input, full DWORD flag and RET4'] if record112_decode else []) + (['unit arena including serial BYTEs'] if pool20_pack or pool20_decode else []) + (['decoder preserves caller EDX'] if pool20_decode or (pool20_pack and args.roundtrip) else []) + (['head/hash/counter/node/grid/marker snapshots', 'two stack DWORDs and RET8'] if node_update else []) + (['generation/mark/unit snapshots', 'explicit private EAX input'] if generation_query else []) + (['eight player records, selector table and WORD mask', 'zero arguments and plain RET'] if player_select else []) + (['eight complete player records and WORD mask', 'explicit EAX input'] if player_mark else []) + (['head/hash/counter/node/marker snapshots', 'one stack DWORD plus preserved EBX input'] if node_move else []) + ([f'complete {pool_size:,}-byte pool'] if pool_void and not (shared_decode or shared_encode or record112_encode or pool112_init or pool20_init or pool20_pack or pool20_decode) else []) + [
                           'ordered data read/write addresses, widths and values'],
                   limitations=['Synthetic mapped states; not original-process or full-game execution',
                                'Private stack temporaries, flags and volatile registers without a reviewed preservation contract excluded from equivalence',

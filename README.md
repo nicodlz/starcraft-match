@@ -87,6 +87,7 @@ Selected reviewed regions:
 | [0x0048A8D0](docs/functions/0048A8D0.md) | 112-byte record restoration with actual C callee | 199 / 199 | Exact; 480 complete encoding/restoration chains pass |
 | [0x0048C770](docs/functions/0048C770.md) | Complete 2,000-record reference restoration | 86 / 83 | Non-exact; 80 whole-pool comparisons pass |
 | [0x0048C7D0](docs/functions/0048C7D0.md) | Complete 2,000-record reference encoding | 158 / 161 | Non-exact; 80 initialization/encoding/restoration chains pass |
+| [0x0048A720](docs/functions/0048A720.md) | Complete 100-record list reconstruction | 420 / 420 | Non-exact; 260 pool comparisons and 80 full chains pass |
 | [0x0048A560](docs/functions/0048A560.md) | Active-to-free record transfer | 147 / 147 | Exact; 1,600 whole-pool comparisons pass |
 | [0x0048A690](docs/functions/0048A690.md) | Complete 100-record pool initialization | 113 / 113 | Exact; 80 whole-pool comparisons pass |
 | [0x0048C590](docs/functions/0048C590.md) | Complete 2,000-record pool initialization | 394 / 394 | Exact; 80 whole-pool comparisons pass |
@@ -100,15 +101,16 @@ catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Ten reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Eleven reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
 [`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
 [`0x00404280`](docs/functions/00404280.md),
 [`0x0047DD60`](docs/functions/0047DD60.md),
 [`0x0042FF80`](docs/functions/0042FF80.md),
 [`0x0047DC10`](docs/functions/0047DC10.md),
-[`0x0048C770`](docs/functions/0048C770.md) and
-[`0x0048C7D0`](docs/functions/0048C7D0.md).
+[`0x0048C770`](docs/functions/0048C770.md),
+[`0x0048C7D0`](docs/functions/0048C7D0.md) and
+[`0x0048A720`](docs/functions/0048A720.md).
 Their complete regions and measured compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded

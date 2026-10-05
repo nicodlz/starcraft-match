@@ -31360,5 +31360,96 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x0048A720",
+    "size": 420,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048A720",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0064B2E8": {
+          "address": 6599400,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        },
+        "_g_0064EED8": {
+          "address": 6614744,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        },
+        "_g_0064EEDC": {
+          "address": 6614748,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        },
+        "_g_0064DEC4": {
+          "address": 6610628,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        },
+        "_g_0064DEAC": {
+          "address": 6610604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        },
+        "_g_0064DEBC": {
+          "address": 6610620,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD pool/global data operand within the complete 420-byte 48A720..48A8C4 region."
+          ]
+        }
+      },
+      "excluded_contexts": []
+    },
+    "candidate_source": "src/game/sub_0048A720.c",
+    "schema_version": 1,
+    "name": "sub_0048A720",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0048AE9D",
+        "type": "direct_call",
+        "provenance": "Fresh whole 108-byte 48AE40..48AEAC caller: follows 100 actual 48A8D0 calls; no arguments or cleanup; EAX overwritten with 1 at 48AEA2."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "source_reconstructed",
+    "provenance": "Complete 420-byte 48A720..48A8C4 through sole plain RET 48A8C3; previous RET 48A710 followed by 15 traps, and 12 trailing traps before 48A8D0. All branches remain inside the region.",
+    "calling_convention": "No arguments; plain RET; EBX/ESI/EDI/EBP preserved. EAX machine value is 100 if no active walking follows, otherwise the pool end; caller ignores it.",
+    "prototype": "u32 sub_0048A720(void) /* observed machine EAX only; no consumed semantic result */",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Scans 100 112-byte records in two five-record groups: zero DWORD field12 records and nonzero field12 records. Preserves free first-node links; active first-node links are cleared. Inserts selected later records before the last selected position, preserving global comparisons and link reloads; counts nonzero records without validating membership or pointers.",
+      "Candidate emits 420 bytes but does not match literally. Fixed observed signed pool-end bound prevents a second induction variable; scan register allocation/centering and pointer formation still differ. 260 bounded complete-pool comparisons cover every first-free and first-active position, ordered accesses, full EAX machine value, plain RET and nonvolatiles. Finite emulation is separate from an exact function match."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

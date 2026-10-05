@@ -30,7 +30,7 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 523 source candidates: 510 confirmed exact, 10 reviewed
+map entries. There are currently 524 source candidates: 510 confirmed exact, 11 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
 The exact count includes **76 static data initializers / 836 bytes** and **434 other
@@ -84,7 +84,11 @@ encoding/restoration chain retains all four actual C contributions and passes
 
 The same 112-byte record pool now has a **113-byte exact initializer**, passing
 80 complete 100-record pool comparisons with guards and adjacent globals. Its
-list reconstruction and whole-pool I/O remain outside the exact total.
+list reconstruction remains non-exact at 420 / 420 bytes and passes 260 whole-pool
+comparisons. Another 80 full 100-record encoding/reference-restoration/list-rebuild
+chains pass, plus 80 initialized chains; the emulator schedules actual whole C
+record components and verifies each per-call record write. Whole-pool I/O remains
+outside this reconstructed chain and the exact total.
 
 Its active-to-free record transfer contributes **147 exact bytes**, passing
 1,600 comparisons across all 100 record positions, nonzero field 12 early exits,
