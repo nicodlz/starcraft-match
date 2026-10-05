@@ -23,6 +23,7 @@ The pinned specimen remains SHA-256
 | [sub_00403CB0](functions/00403CB0.md), related list/unit restoration | 248 / 248 | Exact | 80 passed |
 | [sub_00403650](functions/00403650.md), pool initialization | 127 / 127 | Exact | 80 + 80 lifecycle |
 | [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
+| [sub_00404280](functions/00404280.md), typed 1,000-record pool initialization | 198 / 198 | Non-exact | 80 + 80 initialization/encoding/restoration |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
 
 The rectangle query contributes **599 exact bytes** through the separate
@@ -203,3 +204,13 @@ induction and compiler allocation despite identical restored pools. The next byt
 experiments should resolve these specific compiler/source layouts, preserve the
 compiled search ABI, and add reviewed caller/callee dependencies. Enlarging these
 connected components takes priority over collecting unrelated trivial leaves.
+
+The typed 44-byte record pool now has 80 standalone initialization comparisons
+and 80 complete initialization/encoding/restoration comparisons over 44,004 bytes.
+The chain contains six reviewed regions totaling 1,009 original bytes; five
+regions totaling 811 bytes match exactly, while the 198-byte initializer remains
+non-exact. Its compiler-only write barrier preserves the observed memory-access
+order. A compiled 997-middle-record mutation fails fixture 0 in both memory and
+access order. Run the chain with `0x00404350 --initialize --roundtrip`; its
+`all_regions_exact` remains false. No complete initialization or save caller is
+claimed from these sequential component executions.

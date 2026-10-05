@@ -29746,5 +29746,46 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404280",
+    "size": 198,
+    "name": "sub_00404280",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432620",
+        "type": "direct_call",
+        "provenance": "Independently reviewed full133-byte caller432610..432695 loadsECX0069F468 at43261B and CALLs404280 at432620; no stack arguments or cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Hand-reviewed complete198-byte region404280..404346 including7 loop-alignment bytes. PrecedingRET40427B followed4 traps; soleRET404345 followed10 traps before404350. Independent fullcaller establishesECX input.",
+    "calling_convention": "One ECX pool pointer, no stack argument, plainRET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void __fastcall sub_00404280(Node *nodes)",
+    "candidate_source": "src/game/sub_00404280.c",
+    "candidate_symbol": "@sub_00404280@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Exactly1000 records44 bytes and a headDWORD at44000. First/last endpoints and998 middle records link neighbors; flag/type bytes, unit/state references and five typed reference DWORDs clear in observed widths. Padding bytes14/15 remain untouched.",
+      "Compiler-only write barrier after the next-link store retains observed memory access order; it emits no fence or call. Whole198-byte candidate remains non-exact due to zero-preparation instruction ordering. 80 standalone and80 initialization/encoding/restoration emulator cases pass;997-middle-record C mutation fails fixture0. Generic semantic/CFG metrics null."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
