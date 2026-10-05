@@ -31587,5 +31587,72 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x00402D10",
+    "size": 660,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00402D10.c",
+    "candidate_symbol": "_sub_00402D10@4",
+    "candidate_abi_compatible": true,
+    "boundary_verified": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original unsigned336-byte conversion subtracts firstunit address0059CCA8. Genuine external BYTE view produces original MOV/SUB; no code dependency bound."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_pack_00402D10",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_link_00402D10",
+          "section": ".link"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_00402D10",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "references": [
+      {
+        "address": "0x00462BFB",
+        "type": "direct_call",
+        "provenance": "Fresh complete628-byte462BF0..462E64 caller pushes0067D400 at462BF6; CALL462BFB; no cleanup or consumed result. Later writes32004 bytes through unmatched4C3450 and restores via402FB0."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "provenance": "Whole660-byte402D10..402FA4 throughRET4 at402F8E/402FA1; precedingRET402D0E andone trap;12trailingtraps before402FB0. Originalallbranchesinside; fresh whole628-byte callerreview.",
+    "calling_convention": "One stack DWORD pointer, RET4; EBX/ESI/EDI/EBP preserved; no consumed semantic return.",
+    "prototype": "void __stdcall sub_00402D10(U8 *block)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Clears partial fields of the linked list at block+32000 using BYTE8, DWORD12, fiveWORDs16..24 andDWORD28, preserving bytes9..11 and26..27. Then encodes1000 contiguous32-byte records, fiveperbatch200batches: unitDWORD12 thenlinkDWORD0 and4; final headDWORD32000 last. No cycle/membership/bounds checks added.",
+      "Unit conversion uses unsigned DWORD difference from59CCA8 dividedby336 plusone; id>1700 rejects without serialread, otherwise fullBYTE165 shifted11. Nonzero links/head use logicalshift5 ofwrappedDWORD difference plusone, including misalignment/wrapping.",
+      "External unitbase view retains original MOV/SUB and register allocation; explicit zero-first link helper retains branchlayout. Four compiler _WriteBarrier intrinsics retain last-prev store before next-unit load, without emitting instructions; no inline assembly, original-byte injection, padding, normalization or patches.",
+      "Final public candidate independently recompiles to660 literalexact whole bytes withmsvc71-o2-frame; soledata binding59CCA8 andtwo inventoried/excluded ordinary C helper contributions.80 whole32004-byte pool comparisons and independent oracle; mutated199batches failsfixture0, widenedfirstclear failsfixture1. Finite emulation is not original-process execution or higherI/O reconstruction."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

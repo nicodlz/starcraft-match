@@ -13,9 +13,9 @@ The map count must not be labeled a verified total number of functions in the ga
 A Ghidra census with reviewed split/merged boundaries and library classification
 remains outstanding.
 
-**510 verified exact functions / 4,201 community entries ≈ 12.14% by listed-function
+**511 verified exact functions / 4,201 community entries ≈ 12.16% by listed-function
 count.** This is not a code-size, effort or completion percentage. The matches total
-38,873 original bytes and were deliberately selected for low complexity. More complex
+39,533 original bytes and were deliberately selected for low complexity. More complex
 routines, dependencies and linking will have very different costs.
 
 Reproduce the community count without storing the map in the public repository:
@@ -30,16 +30,16 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 526 source candidates: 510 confirmed exact, 13 reviewed
+map entries. There are currently 527 source candidates: 511 confirmed exact, 13 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
-The exact count includes **76 static data initializers / 836 bytes** and **434 other
-reviewed functions / 38,037 bytes**. The initializer destinations have unknown semantics;
+The exact count includes **76 static data initializers / 836 bytes** and **435 other
+reviewed functions / 38,697 bytes**. The initializer destinations have unknown semantics;
 identical copy patterns at distinct referenced entries do not demonstrate 76 distinct
 gameplay systems. The [numeric milestone report](hundred-functions-2026-10-02.md)
 separates the categories and explains the bounded selection.
 
-By measured method, the exact aggregate consists of **389 isolated zero-relocation COFF functions / 24,232 bytes** and **112 standard-linked external-only C functions / 12,461 bytes**, plus **eight compiled-component functions / 1,581 bytes**. The actual 126-byte, 450-byte and 263-byte dependencies are counted once among the external-only functions; the shared 73-byte path decoder is counted once among isolated functions. The restoration root also retains the 196-byte component decoder, counted once among component functions. The 196-byte decoder includes its reviewed 36-byte compiler switch table and one-byte alignment. A fourth method, [native MSVC LTCG](native-ltcg.md), adds one complete 599-byte query with its existing 83-byte C search dependency counted once among isolated functions. All four methods retain complete compiler contributions; no compiler context or auxiliary zero placement space is counted.
+By measured method, the exact aggregate consists of **389 isolated zero-relocation COFF functions / 24,232 bytes** and **113 standard-linked external-only C functions / 13,121 bytes**, plus **eight compiled-component functions / 1,581 bytes**. The actual 126-byte, 450-byte and 263-byte dependencies are counted once among the external-only functions; the shared 73-byte path decoder is counted once among isolated functions. The restoration root also retains the 196-byte component decoder, counted once among component functions. The 196-byte decoder includes its reviewed 36-byte compiler switch table and one-byte alignment. A fourth method, [native MSVC LTCG](native-ltcg.md), adds one complete 599-byte query with its existing 83-byte C search dependency counted once among isolated functions. All four methods retain complete compiler contributions; no compiler context or auxiliary zero placement space is counted.
 
 The 2026-10-05 integration adds 18 isolated functions / 1,953 bytes from the
 [seventh historical lot](historical-seventh-2026-10-02.md) and
@@ -100,3 +100,9 @@ against actual C contributions and an independent matrix/mask oracle. The
 366-byte peer mask routine passes another 11,232 comparisons, including dirty
 upper flag bytes. The existing 115-byte matrix callee remains literally exact;
 these two new reviewed mismatches add no exact functions or bytes.
+
+The 1,000-record detail-pool encoder contributes **660 exact bytes**, passing
+80 complete guarded-pool comparisons and an independent final-state oracle.
+It retains the observed partial clear widths and unsigned wrapped references;
+its restoration routine and whole-pool I/O remain outside this exact match.
+See [the reviewed function note](functions/00402D10.md).
