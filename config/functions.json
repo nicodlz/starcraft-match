@@ -31654,5 +31654,72 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "address": "0x00402FB0",
+    "size": 117,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00402FB0.c",
+    "candidate_symbol": "@sub_00402FB0@8",
+    "candidate_abi_compatible": true,
+    "boundary_verified": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Observed 336-byte unit stride and LEA0059CB58 for nonzero packed words whose masked index is zero; genuine first-unit view0059CCA8 minus one stride."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_unpack_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_unpack_link",
+          "section": ".link"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_00402FB0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "references": [
+      {
+        "address": "0x00462C1A",
+        "type": "direct_call",
+        "provenance": "Fresh complete 628-byte caller [00462BF0,00462E64) sets EDX=0067D400 at00462C12, calls at00462C1A without stack arguments or cleanup, then overwrites EAX at00462C1F."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "provenance": "Complete 117-byte body [00402FB0,00403025) with RET at00403016/00403024; 12 traps follow preceding encoder RET4, 11 traps follow this body before00403030. All branches remain inside.",
+    "calling_convention": "EDX block pointer; ECX ignored; no stack arguments, plain RET; EDX and EBX/ESI/EDI/EBP preserved; no consumed semantic return.",
+    "prototype": "void __fastcall sub_00402FB0(U32 ignored_ecx, U8 *block)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Restores exactly 1,000 contiguous 32-byte records: unit DWORD12, next DWORD0, previous DWORD4; then head DWORD32000. Unit null test examines the whole DWORD, before masking 7FF. Nonzero low index zero decodes to0059CB58. Links use wrapped DWORD (value*32-32+base) without bounds checks.",
+      "Pointer-valued link helper retains original SHL plus LEA displacement; integer-valued arithmetic helpers reassociate the constant and emit 126 bytes. Synthetic ignored ECX parameter expresses the observed EDX input using ordinary C fastcall; no stack parameter or ABI shim is emitted.",
+      "Fresh public source independently matches all117 bytes with msvc71-o2. Strict external-only linker retains the complete root and inventories/excludes its two ordinary C helpers; no extra helper is counted. Full machine EAX is the restored head, without a semantic return claim.",
+      "80 complete guarded pool comparisons and independent final-state oracle; 80 additional encoding/restoration chains retain both actual C contributions, all777 bytes exact. Finite mapped-state emulation is not original-process, file I/O, full-program or playable-game execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
