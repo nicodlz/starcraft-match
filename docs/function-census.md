@@ -13,9 +13,9 @@ The map count must not be labeled a verified total number of functions in the ga
 A Ghidra census with reviewed split/merged boundaries and library classification
 remains outstanding.
 
-**502 verified exact functions / 4,201 community entries ≈ 11.95% by listed-function
+**503 verified exact functions / 4,201 community entries ≈ 11.97% by listed-function
 count.** This is not a code-size, effort or completion percentage. The matches total
-37,197 original bytes and were deliberately selected for low complexity. More complex
+37,549 original bytes and were deliberately selected for low complexity. More complex
 routines, dependencies and linking will have very different costs.
 
 Reproduce the community count without storing the map in the public repository:
@@ -30,16 +30,16 @@ the denominator. Obtain the public text from the pinned reference above and keep
 local research inputs under `.local/`. No community map or game binary is bundled.
 
 `decomp status` counts the local catalog/discovery records, not the 4,201 external
-map entries. There are currently 511 source candidates: 502 confirmed exact, 6 reviewed
+map entries. There are currently 512 source candidates: 503 confirmed exact, 6 reviewed
 mismatches and 3 uncorroborated regions, plus a PE-entry seed without a source candidate.
 
-The exact count includes **76 static data initializers / 836 bytes** and **426 other
-reviewed functions / 36,361 bytes**. The initializer destinations have unknown semantics;
+The exact count includes **76 static data initializers / 836 bytes** and **427 other
+reviewed functions / 36,713 bytes**. The initializer destinations have unknown semantics;
 identical copy patterns at distinct referenced entries do not demonstrate 76 distinct
 gameplay systems. The [numeric milestone report](hundred-functions-2026-10-02.md)
 separates the categories and explains the bounded selection.
 
-By measured method, the exact aggregate consists of **389 isolated zero-relocation COFF functions / 24,232 bytes** and **107 standard-linked external-only C functions / 11,560 bytes**, plus **five compiled-component functions / 806 bytes**. The actual 126-byte, 450-byte and 263-byte dependencies are counted once among the external-only functions; the shared 73-byte path decoder is counted once among isolated functions. The restoration root also retains the 196-byte component decoder, counted once among component functions. The 196-byte decoder includes its reviewed 36-byte compiler switch table and one-byte alignment. A fourth method, [native MSVC LTCG](native-ltcg.md), adds one complete 599-byte query with its existing 83-byte C search dependency counted once among isolated functions. All four methods retain complete compiler contributions; no compiler context or auxiliary zero placement space is counted.
+By measured method, the exact aggregate consists of **389 isolated zero-relocation COFF functions / 24,232 bytes** and **107 standard-linked external-only C functions / 11,560 bytes**, plus **six compiled-component functions / 1,158 bytes**. The actual 126-byte, 450-byte and 263-byte dependencies are counted once among the external-only functions; the shared 73-byte path decoder is counted once among isolated functions. The restoration root also retains the 196-byte component decoder, counted once among component functions. The 196-byte decoder includes its reviewed 36-byte compiler switch table and one-byte alignment. A fourth method, [native MSVC LTCG](native-ltcg.md), adds one complete 599-byte query with its existing 83-byte C search dependency counted once among isolated functions. All four methods retain complete compiler contributions; no compiler context or auxiliary zero placement space is counted.
 
 The 2026-10-05 integration adds 18 isolated functions / 1,953 bytes from the
 [seventh historical lot](historical-seventh-2026-10-02.md) and

@@ -30113,5 +30113,126 @@
       "Eight explicitly ordered36-byte records: BYTE4 equals2 and zero-extendedBYTE6 equals fullEAX input; then readDWORD0, shift1 with target SHL behavior and OR narrowedWORD into57F1DA. FullDWORD accesses retained. Source shift relies on pinned i386 compiler behavior outside ISO C shift-count range; actual emitted wholefunction is compared without normalization.",
       "Fresh msvc71-o2 external-only standard-linked319-byte wholeC contribution exact. Optional Unicorn2.1.4 passes1280 comparisons covering all256 selection masks, out-of-BYTE input, WORD masks and target shift count boundaries. ActualC changing1u to2u rejectedfixture5 on mask snapshot/accesses. No established EAX return; genericsemantic/CFG metrics null."
     ]
+  },
+  {
+    "address": "0x0048FDB0",
+    "size": 352,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048FDB0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".select",
+      "bindings": {
+        "_g_0057EEE4": {
+          "address": 5762788,
+          "kind": "data",
+          "evidence": [
+            "Reviewed data operands."
+          ]
+        },
+        "_g_0057F1DA": {
+          "address": 5763546,
+          "kind": "data",
+          "evidence": [
+            "Reviewed WORD mask operand."
+          ]
+        },
+        "_g_0057F0B4": {
+          "address": 5763252,
+          "kind": "data",
+          "evidence": [
+            "Reviewed whole352-byte original data operand."
+          ]
+        },
+        "_g_00596875": {
+          "address": 5859445,
+          "kind": "data",
+          "evidence": [
+            "Reviewed whole352-byte original data operand."
+          ]
+        },
+        "_g_00512684": {
+          "address": 5318276,
+          "kind": "data",
+          "evidence": [
+            "Reviewed whole352-byte original data operand."
+          ]
+        },
+        "_g_0058D634": {
+          "address": 5822004,
+          "kind": "data",
+          "evidence": [
+            "Reviewed whole352-byte original data operand."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "@compiler_anchor_0048FC70@4",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_0048FC70@4",
+          "section": ".mark",
+          "address": 4783216,
+          "size": 319,
+          "evidence": [
+            "Reviewed directCALL48FDEA with EAX BYTEinput; actual public whole319-byte C callee."
+          ]
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048FDB0.c",
+    "schema_version": 1,
+    "name": "sub_0048FDB0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "status": "exact_match",
+    "calling_convention": "No arguments, plainRET, EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void sub_0048FDB0(void)",
+    "references": [
+      {
+        "address": "0x004EE1E9",
+        "type": "direct_call",
+        "provenance": "Fresh aligned139-byte caller4EE180..4EE20B hasCALL48FDB0 at4EE1E9 without arguments or cleanup and then testsglobalBYTE596865; no return consumed."
+      },
+      {
+        "address": "0x004C2900",
+        "type": "direct_call",
+        "provenance": "Fresh aligned105-byte caller4C28A0..4C2909: CALL48FDB0 at4C2900 without arguments; nextinstructions POPEBP thenRET4 belong to caller. No return consumed."
+      }
+    ],
+    "calls": [
+      {
+        "to": "0x0048FC70",
+        "from": "0x0048FDEA"
+      }
+    ],
+    "strings": [],
+    "provenance": "Reviewed whole352-byte48FDB0..48FF10 through bothRET48FDFD/48FF0F, all internalbranches. Previous reviewed319-byte48FC70 endswithRET48FDAE, singletrap48FDAF beforeentry; next48FF10 adjacent. Two independentwholealignedcallers corroborate zeroarguments/plainRET.",
+    "known_structures": [
+      "src/game/sub_0048FC70.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x0048FC70"
+    ],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Resets WORD mask57F1DA. If BYTE57F0B4 and BYTE596875 are nonzero, scans8 selector flags at58D634+12*DWORD512684, invoking actual319-byte C group accumulator with corresponding BYTE player+6. Otherwise explicitly ORs selected fullDWORD player IDs into narrowedWORD mask. DWORD indexwrap, signed loop-pointer comparison and targetSHL count behavior retained.",
+      "Fresh msvc71-o2 ordinary retained-component compilation matches352-byte root and319-byte actualCcallee literally (671 total). Optional Unicorn2.1.4 passes5120 cases with all256 flagmasks, bothflagbranches, five normal/wrapping indices, fullrecord/table/mask snapshots, plainRET and orderedaccesses. ActualC omittinglast selector rejectedfixture0 on access trace whilecomplete319-bytecallee remains exact. No established return; genericmetrics null."
+    ]
   }
 ]

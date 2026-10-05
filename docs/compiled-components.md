@@ -241,3 +241,12 @@ Record and WORD-mask snapshots and ordered accesses agree. A compiled shifted-bi
 mutation fails fixture5. Counts outside0..31 are checked as compiled target-machine
 behavior, not portable ISO C shift semantics. Run `0x0048FC70`; its whole region
 is exact and has no retained game dependency.
+
+Its 352-byte selector-driven caller also matches while retaining the actual319-byte
+C accumulator, giving 671 complete exact component bytes. The caller passes5,120
+comparisons covering both branches, all256 selector masks, zero/nonzero control
+flags, normal and wrapping indices, and complete record/table/mask snapshots.
+Zero arguments and plain RET are represented with an empty argument tuple.
+A source omitting the final selector fails fixture0 on ordered accesses while
+the whole C callee still matches. Run `0x0048FDB0`; both regions are exact and
+the already-counted callee adds no duplicate exact bytes.
