@@ -6,7 +6,10 @@ The pinned specimen remains SHA-256
 
 | Reviewed region | Original / compiled bytes | Literal result | Emulated fixtures |
 | --- | ---: | --- | ---: |
-| [sub_004308A0](functions/004308A0.md), rectangle query | 599 / 598 | Non-exact | 380 passed |
+| [sub_00403DB0](functions/00403DB0.md), related list initialization | 155 / 155 | Exact | 80 + 80 lifecycle |
+| [sub_00403E50](functions/00403E50.md), 1,000-node list encoder | 915 / 915 | Exact | 80 + 80 chained |
+| [sub_004041F0](functions/004041F0.md), related list restorer | 140 / 140 | Exact | 80 + 80 chained |
+| [sub_004308A0](functions/004308A0.md), rectangle query | 599 / 599 | Non-exact | 380 passed |
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
 | [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
@@ -19,7 +22,8 @@ The pinned specimen remains SHA-256
 
 The query and restoration candidates cover **1,463 reviewed original bytes** but contribute
 **zero new exact functions or bytes**. Their catalog expectations remain exploratory.
-The query's length difference is not a measure of byte similarity. Neither fixture
+Equal query lengths do not establish byte equality; its remaining 22-byte
+instruction-ordering block is still a whole-function mismatch. Neither fixture
 counts nor a source compilation result are exact-function evidence.
 
 The new packing component contributes **two exact functions / 292 bytes**. Its
@@ -93,6 +97,11 @@ source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --initialize --roundtrip
 .local/components-venv/bin/python tools/validation/function-differential 0x00404620
 .local/components-venv/bin/python tools/validation/function-differential 0x00403CB0
+.local/components-venv/bin/python tools/validation/function-differential 0x00403E50
+.local/components-venv/bin/python tools/validation/function-differential 0x004041F0
+.local/components-venv/bin/python tools/validation/function-differential 0x00403E50 --roundtrip
+.local/components-venv/bin/python tools/validation/function-differential 0x00403DB0
+.local/components-venv/bin/python tools/validation/function-differential 0x00403E50 --initialize --roundtrip
 ```
 
 The deterministic seed is 1161. Query fixtures include empty tables, tied coordinates,
@@ -109,6 +118,16 @@ The 100-record component adds 80 comparisons over a separate 46,004-byte pool,
 with free-list lengths 0..100, unit serial BYTE values, wrapping subtraction and
 unaligned heads. Its EBX argument is checked for preservation like the other
 nonvolatile registers, and the complete compiled child must match before execution.
+The related 1,000-node list contributes 915-byte encoding and 140-byte restoration
+functions, each independently linked with two external data symbols. They pass 80
+comparisons each and 80 sequential encoding/restoration comparisons over 24,004
+bytes. Both whole C contributions are exact. This chain is not a retained callee
+component or a reconstruction of the original file-writing caller. The related
+155-byte initializer passes 80 full-pool cases and 80 initialization/encoding/
+restoration comparisons, also with all three C regions exact. A compiled mutation
+initializing 997 middle nodes is detected in fixture 0. The compiler-only
+barrier in the explicit five-record encoder emits no hardware fence or external call.
+Mutations omitting the final five nodes or narrowing the decode mask fail fixture 0.
 The related 248-byte record restoration adds 80 complete 460-byte comparisons
 with an explicitly assigned EAX input, null and wrapping heads, and masked unit
 indices including zero under a nonzero serial. Its 115-byte pool caller remains

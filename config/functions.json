@@ -28381,7 +28381,8 @@
     ],
     "notes": [
       "Real C dependency retained at its reviewed address; no external code bindings or original callee bytes inserted.",
-      "Original-process execution and whole-program linking remain unestablished."
+      "Original-process execution and whole-program linking remain unestablished.",
+      "Fresh recorded-profile compilation produces599bytes; only22-byte initialization block004308C0..004308D6 differs by instruction order. First32 and last545bytes identical; no span counted separately. Actual83-byte C dependency remains exact,380 emulator comparisons pass. Whole query remains exploratory/non-exact; generic metrics null."
     ],
     "linking": {
       "schema_version": 1,
@@ -28458,6 +28459,13 @@
           "evidence": [
             "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
             "DWORD marking-table stores at 004309F7, 00430A04, 00430A6E and 00430AC5"
+          ]
+        },
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Pinned three null-checked indexed unit conversions use LEA0059CB58 after336-byte indexing.0059CCA8 is the first record; compiler one-based indexing supplies DIR32 addend -336."
           ]
         }
       },
@@ -29024,6 +29032,210 @@
     "notes": [
       "Header DWORD pairs8/12 and16/20 restore bases006B5448 and0069F468; nonzero heads use unsigned one-based24/44-byte indexing. Unit DWORDs44,48,52,56,40,36 restore0059CB58+(id&2047)*336 ornull; serial bits ignored, no added range checks.",
       "Fresh recorded-profile whole-contribution linking matches248bytes with only external data bindings. Optional Unicorn2.1.4 runner passes80 complete460-byte record comparisons, ordered accesses, nonvolatile registers and stack cleanup. No original Windows execution; generic semantic and CFG measurements remain unavailable."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403E50",
+    "size": 915,
+    "name": "sub_00403E50",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432DAB",
+        "type": "direct_call",
+        "provenance": "Complete caller432DA0..433107 reviewed independently: PUSH006B5448 at432DA6, CALL403E50 at432DAB, no caller cleanup, EAX overwritten432DB9 before use."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed complete contiguous915-byte body403E50..4041E3, including three internal alignment bytes403E8D..403E90 omitted by Ghidra912-byte body count. Previous403E4A RET then5 traps; bothRET4 exits4041C5/4041E0 included,13 traps before4041F0.",
+    "calling_convention": "One stack pool pointer, RET4, EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void __stdcall sub_00403E50(Node *nodes)",
+    "candidate_source": "src/game/sub_00403E50.c",
+    "candidate_symbol": "_sub_00403E50@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Five complete original unit encoders subtract0059CCA8 before unsigned336-byte indexing,1700bound andBYTE165 serial."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Five original nonnull state references subtract006AA090 before unsigned460-byte indexing. Same observed100-record pool passed to404620/4046D0 in reviewed caller432DA0."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_clear_node",
+          "section": ".clear"
+        },
+        {
+          "symbol": "_encode_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_encode_state",
+          "section": ".state"
+        },
+        {
+          "symbol": "_encode_link",
+          "section": ".link"
+        }
+      ]
+    },
+    "notes": [
+      "Exactly1000 nodes24bytes plus headDWORD at24000; clears only free-node payload in observed BYTE/DWORD order, then encodes unit/state references, next/previous links and head with unsigned arithmetic.",
+      "Fresh recorded-profile standard external-only link retains entire915-byte compiler contribution. Explicit five-record C loop and compiler-only ReadWriteBarrier preserve ordering without emitting a fence, assembly or byte patches. Generic semantic/CFG metrics null.",
+      "Optional Unicorn2.1.4 passes80 complete24004-byte pool comparisons per function and80 encoded/restored chain comparisons with both complete C regions exact. Ordered access widths/values, ABI and snapshots agree; mutations fail fixture0. Independent sequential functions, not retained-callee component; no original Windows execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004041F0",
+    "size": 140,
+    "name": "sub_004041F0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432DCB",
+        "type": "direct_call",
+        "provenance": "Complete caller432DA0..433107 reviewed: MOV EDX,006B5448 at432DC3; CALL4041F0 at432DCB, no stack arguments/cleanup. EAX and EDX not consumed afterward before overwrite."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed whole140-byte region4041F0..40427C, priorRET4 at4041E0 ends4041E3 followed13 traps; bothRET exits40426D/40427B included,4 traps before404280. Entire independently reviewed caller corroborates private EDX ABI.",
+    "calling_convention": "Private EDX pool pointer, no stack arguments, plainRET; EBX/ESI/EDI/EBP preserved, no established return value.",
+    "prototype": "static void __fastcall sub_004041F0(Node *nodes /* EDX */)",
+    "candidate_source": "src/game/sub_004041F0.c",
+    "candidate_symbol": "@sub_004041F0@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original masked336-byte indexing followed byLEA0059CB58; first-record0059CCA8 binding supplies DIR32addend-336."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Original nonnull460-byte indexing followed byLEA006A9EC4; first-state006AA090 binding supplies DIR32addend-460."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_decode_unit",
+          "section": ".uunit"
+        },
+        {
+          "symbol": "_decode_state",
+          "section": ".state"
+        },
+        {
+          "symbol": "_decode_link",
+          "section": ".link"
+        },
+        {
+          "symbol": "_compiler_anchor_004041F0@4",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "notes": [
+      "Exactly1000 nodes24bytes plus headDWORD at24000; unit references mask2047, state and links decode nonzero one-based460/24-byte indices with wrapping arithmetic and no added checks. Flags/value unchanged.",
+      "Fresh whole compiler contribution with two external data bindings matches140bytes. Standard C anchor induces privateEDX convention; excluded helpers are not counted. Generic semantic/CFG metrics null.",
+      "Optional Unicorn2.1.4 passes80 complete24004-byte pool comparisons per function and80 encoded/restored chain comparisons with both complete C regions exact. Ordered access widths/values, ABI and snapshots agree; mutations fail fixture0. Independent sequential functions, not retained-callee component; no original Windows execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403DB0",
+    "size": 155,
+    "name": "sub_00403DB0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432616",
+        "type": "direct_call",
+        "provenance": "Independently reviewed complete133-byte caller432610..432695 setsECX006B5448 at432611 thenCALL403DB0 at432616; no stack arguments or cleanup. Subsequent initializer calls overwriteEAX before reading it."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Reviewed entire155-byte region403DB0..403E4B; precedingRET403DA7 followed8 traps, soleRET403E4A followed5 traps before403E50. Entire independently reviewed caller confirms ECX contract.",
+    "calling_convention": "One ECX pool pointer, no stack arguments, plainRET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void __fastcall sub_00403DB0(Node *nodes)",
+    "candidate_source": "src/game/sub_00403DB0.c",
+    "candidate_symbol": "@sub_00403DB0@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Exactly1000 nodes24bytes plus headDWORD at24000. First/last endpoints and998 middle nodes form a null-terminated doubly linked free list; payload clears BYTE/DWORD fields in observed order, then head=base.",
+      "Fresh recorded-profile isolated whole155-byte COFF contribution haszero relocations and exact bytes. Previous-DWORD cursor reproduces observed access widths and loop layout. Generic semantic/CFG metrics null.",
+      "Optional Unicorn2.1.4 passes80 complete24004-byte pool comparisons and80 initialization/encoding/restoration chain comparisons, all three complete C regions exact. Ordered accesses, snapshots and ABI agree;997-middle-node mutation detected in fixture0. Independent sequential functions, not original-process execution."
     ],
     "match": {
       "exact": true,

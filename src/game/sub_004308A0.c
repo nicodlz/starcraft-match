@@ -11,7 +11,7 @@ extern u32 g_0066FF78[], g_006769B8[], g_006BD3D0[], g_006BEE70[];
 extern u8 *g_006BB938[];
 typedef struct Unit {u8 prefix[12]; short *sprite; u8 gap[84]; u16 type; u8 tail[234];} Unit;
 typedef char sc_observed_unit_size[(sizeof(Unit) == 336) ? 1 : -1];
-extern Unit g_0059CB58[];
+extern Unit g_0059CCA8[];
 #define USED g_006BEE64
 #define DEPTH g_006BEE6C
 #define WIDTH g_006BEE68
@@ -22,7 +22,7 @@ extern Unit g_0059CB58[];
 #pragma code_seg(".unused")
 static __forceinline Unit *unit_at(u32 index) {
     if (!index) return 0;
-    return (Unit *)((int)index * 336 + 0x0059CB58);
+    return &g_0059CCA8[index - 1];
 }
 #pragma code_seg(".query")
 u8 **__stdcall sub_004308A0(u16 *rect)
