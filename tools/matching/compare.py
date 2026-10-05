@@ -13,7 +13,7 @@ def disassemble(data, base=0):
     with tempfile.TemporaryDirectory() as tmp:
         p = Path(tmp) / 'region.bin'
         p.write_bytes(data)
-        out = subprocess.check_output(['objdump', '-D', '-b', 'binary', '-m', 'i386', '-M', 'intel',
+        out = subprocess.check_output(['objdump', '-D', '-z', '-b', 'binary', '-m', 'i386', '-M', 'intel',
                                        '--insn-width=16', f'--adjust-vma={base}', str(p)], text=True)
     instructions = []
     for line in out.splitlines():

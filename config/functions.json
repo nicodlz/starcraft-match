@@ -29519,5 +29519,239 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00432810",
+    "size": 196,
+    "name": "sub_00432810",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00404420",
+        "type": "direct_call",
+        "provenance": "Whole92-byte caller00404410..0040446C sets EBX=ESI at00404412 then CALL00432810 at00404420; no stack arguments/cleanup; EAX overwritten00404425 beforeuse; loop1000 records44bytes."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00432863",
+        "to": "0x00437290"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Whole196-byte contribution00432810..004328D4 reviewed:159 instruction bytes through RET004328AE, NOP004328AF, nine-entry DWORD jump table004328B0..004328D4; all targets internal. Previous RET00432800 plus15traps,12traps before004328E0. Full92-byte caller corroborates EBX input.",
+    "calling_convention": "Private EBX record pointer; no stack arguments; plain RET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00432810(Node *node /* EBX */)",
+    "candidate_source": "src/game/sub_00432810.c",
+    "candidate_symbol": "@sub_00432810@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [
+      "src/game/sub_00437290.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x00437290"
+    ],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".decode",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA0059CB58 after masked336-byte indexing; first-record0059CCA8 binding carries compiler addend -336."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA006A9EC4 after460-byte indexing twice; first-record006AA090 binding carries compiler addend -460."
+          ]
+        },
+        "_g_0067D400": {
+          "address": 6804480,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA0067D3E0 after32-byte indexing; first-record0067D400 binding carries compiler addend -32."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_decode_unit",
+          "section": ".unitdec"
+        },
+        {
+          "symbol": "_decode_state",
+          "section": ".sdec"
+        },
+        {
+          "symbol": "_decode32",
+          "section": ".objdec"
+        },
+        {
+          "symbol": "_compiler_anchor_00432810@4",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00437290@4",
+          "section": ".callee",
+          "address": 4420240,
+          "size": 73,
+          "evidence": [
+            "Existing independently reviewed exact73-byte path decoder with ECX identifier ABI. CALL00432863 follows MOVECX,[ESI] at00432861. Actual public C source included and retained."
+          ]
+        }
+      ]
+    },
+    "notes": [
+      "196-byte reviewed whole compiler contribution includes159bytes instructions, oneNOP and36-byte nine-entry switch table. Unit16 restores masked2047 one-based336-byte index; state20 restores460-byte index. Five objects24..40: type0 unchanged,1 actualC path decoder,2 one-based32-byte pointer,3 state pointer,other typeszero.",
+      "Fresh strict recorded-profile component matches196bytes including the complete nine-entry compiler table; retained actualC73-byte path decoder also exact.15 relocations:four external DIR32,one realcallee REL32 andten same-contribution static-label DIR32.80 full44-byte record comparisons pass;1023 unit-mask mutation rejected fixture0. Generic semantic/CFG metrics null."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404410",
+    "size": 92,
+    "name": "sub_00404410",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432DF7",
+        "type": "direct_call",
+        "provenance": "Whole871-byte caller00432DA0..00433107 loadsESI0069F468 at00432DF2 thenCALL00404410 at00432DF7; no stack args/cleanup."
+      },
+      {
+        "address": "0x00432C4B",
+        "type": "direct_call",
+        "provenance": "Additional direct-call observation in pinned executable; wholecaller not independently reviewed for this ABI claim."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x00404420",
+        "to": "0x00432810"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Whole92-byte contribution00404410..0040446C reviewed: prior0040440A RET plusfive traps, both0040445D/0040446B RET exits included, four traps before00404470. Whole871-byte caller corroborates private ESI pool ABI.",
+    "calling_convention": "Private ESI pool pointer; no stack arguments; plain RET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00404410(Node *nodes /* ESI */)",
+    "candidate_source": "src/game/sub_00404410.c",
+    "candidate_symbol": "@sub_00404410@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [
+      "src/game/sub_00432810.c",
+      "src/game/sub_00437290.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x00432810",
+      "0x00437290"
+    ],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".unpack",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA0059CB58 after masked336-byte indexing; first-record0059CCA8 binding carries compiler addend -336."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA006A9EC4 after460-byte indexing twice; first-record006AA090 binding carries compiler addend -460."
+          ]
+        },
+        "_g_0067D400": {
+          "address": 6804480,
+          "kind": "data",
+          "evidence": [
+            "Original decoder LEA0067D3E0 after32-byte indexing; first-record0067D400 binding carries compiler addend -32."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_decode_unit",
+          "section": ".unitdec"
+        },
+        {
+          "symbol": "_decode_state",
+          "section": ".sdec"
+        },
+        {
+          "symbol": "_decode32",
+          "section": ".objdec"
+        },
+        {
+          "symbol": "_decode_link",
+          "section": ".ulink"
+        },
+        {
+          "symbol": "_compiler_anchor_00404410@4",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "@sub_00432810@4",
+          "section": ".decode",
+          "address": 4401168,
+          "size": 196,
+          "evidence": [
+            "Independently reviewed whole196-byte decoder includes its nine-entry compiler table. CALL00404420 uses EBX walking44-byte records. ActualC decoder and its own actual73-byte dependency retained."
+          ]
+        },
+        {
+          "symbol": "@sub_00437290@4",
+          "section": ".callee",
+          "address": 4420240,
+          "size": 73,
+          "evidence": [
+            "Existing independently reviewed exact73-byte path decoder with ECX identifier ABI. CALL00432863 follows MOVECX,[ESI] at00432861. Actual public C source included and retained."
+          ]
+        }
+      ]
+    },
+    "notes": [
+      "1000 records44bytes followedbyheadDWORD44000; actual recorddecoder calledwithEBX on eachrecord; next/previous/head decode nullor one-based44-byte relativepool pointers; no rangechecksadded.",
+      "Fresh strict whole92-byte root match retains actual196-byte recorddecoder with its compiler table and actual73-byte pathdecoder.80 full44004-byte restoration comparisons plus80 encode-restore chains pass;999-record mutation rejected fixture0. Generic semantic/CFG metrics null."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

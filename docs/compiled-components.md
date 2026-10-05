@@ -6,6 +6,8 @@ The pinned specimen remains SHA-256
 
 | Reviewed region | Original / compiled bytes | Literal result | Emulated fixtures |
 | --- | ---: | --- | ---: |
+| [sub_00404410](functions/00404410.md), typed 1,000-record pool restorer | 92 / 92 | Exact with both C dependencies | 80 + 80 chained |
+| [sub_00432810](functions/00432810.md), typed record decoder with complete switch table | 196 / 196 | Exact with actual C path decoder | 80 passed |
 | [sub_00404350](functions/00404350.md), typed 1,000-record pool encoder | 187 / 187 | Exact with actual C callee | 80 passed |
 | [sub_004328E0](functions/004328E0.md), five-type record encoder | 263 / 263 | Exact, counted once | 80 passed |
 | [sub_00403DB0](functions/00403DB0.md), related list initialization | 155 / 155 | Exact | 80 + 80 lifecycle |
@@ -59,14 +61,23 @@ without volatile qualifiers. It has one external data symbol and no code binding
 A further **450-byte serialization component** retains the 187-byte caller and
 263-byte typed record encoder. Its five external data bindings preserve unchecked
 BYTE owner selectors and signed WORD limits. Both functions pass 80 comparisons;
-1699-unit-limit and 999-record mutations are detected. Its paired initializer and
-restorer are not included in the exact chain.
+1699-unit-limit and 999-record mutations are detected. Its paired
+initializer is not included in the exact chain. The restoration chain adds a
+92-byte root and a 196-byte record decoder retaining its actual 73-byte C path
+decoder. It passes 80 full-pool comparisons and 80 encoding/restoration chains.
 
 The query binds nine external **data** declarations to observed addresses. The
 packing component has one external data binding and no external code binding.
 These components do not reconstruct a complete program or initialized game data.
-Uncounted compiler contexts remain outside each image. Jump tables, retained
-data contributions and arbitrary runtime dependencies are still unsupported.
+Uncounted compiler contexts remain outside each image. Compiler-emitted static
+labels and tables inside the same complete function contribution support DIR32
+references only when symbol offsets plus signed addends remain within that
+contribution. Cross-contribution interior references and label REL32 relocations
+remain rejected. Every linked relocation and unchanged nonrelocation byte is
+checked. Synthetic independently compiled C label fixtures test successful linking
+and rejection of escaping offsets, relative labels and references across sections.
+Separately emitted tables/data contributions and arbitrary runtime dependencies
+remain unsupported.
 
 ```sh
 source .local/tools/activate.sh  # Host-local paths, when installed
@@ -90,6 +101,11 @@ build; the linked query calls its compiled C dependency. Globals, tables, object
 records and stack arguments are independently generated synthetic fixture state.
 No original game process, imports, assets or whole-game initialization are executed.
 
+The full integration regression passes **3,140 bounded comparisons across 21
+execution modes**, including individual records, complete pools and chained
+initialization/encoding/restoration. Overlapping function coverage is counted as
+separate execution comparisons, not additional exact functions.
+
 Unicorn 2.1.4 was used locally. It is optional and is not a dependency of portable
 `make` or `make proof`. Install it in a private environment if reproducing these tests:
 
@@ -97,6 +113,9 @@ Unicorn 2.1.4 was used locally. It is optional and is not a dependency of portab
 python3 -m venv .local/components-venv
 .local/components-venv/bin/pip install unicorn==2.1.4
 source .local/tools/activate.sh
+.local/components-venv/bin/python tools/validation/function-differential 0x00404410
+.local/components-venv/bin/python tools/validation/function-differential 0x00432810
+.local/components-venv/bin/python tools/validation/function-differential 0x00404350 --roundtrip
 .local/components-venv/bin/python tools/validation/function-differential 0x00404350
 .local/components-venv/bin/python tools/validation/function-differential 0x004328E0
 .local/components-venv/bin/python tools/validation/function-differential 0x004308A0

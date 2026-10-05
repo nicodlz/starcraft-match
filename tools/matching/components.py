@@ -102,14 +102,25 @@ def _audit_component(obj, record):
         for offset, kind, symbol in section.relocations:
             if kind not in (6, 20):
                 raise LinkError('Unsupported component relocation')
+            addend = struct.unpack_from('<i', section.payload, offset)[0]
             if symbol.section > 0:
-                if symbol.name not in functions:
+                if (symbol.section == section.index and symbol.storage == 3
+                        and symbol.type == 0):
+                    # Compiler-authored labels/tables stay inside this complete
+                    # contribution. They cannot replace another function entry.
+                    if (kind != 6 or not 0 <= symbol.value < section.size
+                            or not 0 <= symbol.value + addend < section.size):
+                        raise LinkError('Invalid local contribution reference')
+                    address = functions[name][1]['address'] + symbol.value
+                elif symbol.name not in functions:
                     raise LinkError('Reference to unretained/context function')
-                target, item = functions[symbol.name]
-                if symbol.section != target.index or symbol.value or not symbol.type & 0x20:
-                    raise LinkError('Internal reference must name a whole compiled function entry')
-                address = item['address']
-                edges[name].add(symbol.name)
+                else:
+                    target, item = functions[symbol.name]
+                    if (symbol.section != target.index or symbol.value or addend
+                            or not symbol.type & 0x20):
+                        raise LinkError('Internal reference must name a whole compiled function entry')
+                    address = item['address']
+                    edges[name].add(symbol.name)
             else:
                 if (symbol.section != 0 or symbol.storage != 2 or kind != 6
                         or symbol.name not in bindings):
@@ -117,7 +128,7 @@ def _audit_component(obj, record):
                 address = bindings[symbol.name]['address']
                 used_bindings.add(symbol.name)
             relocs.append(dict(offset=offset, type=kind, symbol=symbol.name,
-                               address=address, addend=struct.unpack_from('<i', section.payload, offset)[0]))
+                               address=address, addend=addend))
         relocations[name] = relocs
     if set(bindings) != used_bindings:
         raise LinkError('Data bindings must exactly cover external relocations')

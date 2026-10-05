@@ -1,16 +1,16 @@
 # Validation ladder
 
 **A — machine-code match.** Literal comparison includes every byte in a complete
-reviewed function, including internal compiler alignment; only reviewed padding
-outside that function is excluded. The default isolated extractor rejects relocations.
+reviewed function, including internal compiler alignment and reviewed embedded
+branch tables; only reviewed padding outside that function is excluded. The default isolated extractor rejects relocations.
 Explicit external-only and compiled-component profiles use ordinary linking, audit
 all relocations and retain complete compiler contributions. Instruction normalization
 never establishes exact equality. Similarity and CFG metrics remain null.
 
-The current proof set has **496 functions / 35,533 bytes**. `make proof` freshly
+The current proof set has **498 functions / 35,821 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
-proprietary input is read locally and never bundled with that checkout. Two new
+proprietary input is read locally and never bundled with that checkout. Two
 larger candidates remain non-exact and add no bytes to this proof set.
 
 **B — differential function testing.** A bounded emulator experiment now compares

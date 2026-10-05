@@ -80,6 +80,10 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(diff['differences'])
         self.assertIsNone(diff['instruction_similarity'])
         self.assertIsNone(diff['cfg_similarity'])
+        zero_region = bytes(32) + b'\xc3'
+        zeros = compare(zero_region, zero_region, 0x401000)
+        self.assertTrue(zeros['exact_byte_match'])
+        self.assertEqual(sum(len(i['bytes']) for i in zeros['original_disassembly']), len(zero_region))
 
     @unittest.skipUnless(shutil.which('clang'), 'clang missing')
     def test_coff_compile_reproducible_and_relocations_rejected(self):

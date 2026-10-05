@@ -31,6 +31,12 @@ class ComponentTests(unittest.TestCase):
         cls.data = cls.obj.read_bytes()
         cls.parsed = read_coff(cls.data)
         cls.linker = Path(shutil.which('ld'))
+        cls.label_source = cls.root / 'labels.c'
+        cls.label_source.write_bytes((Path(__file__).parent / 'fixtures/linked_component_labels.c').read_bytes())
+        cls.label_obj = cls.root / 'labels.obj'
+        subprocess.run(['clang', *cls.flags, '-c', str(cls.label_source), '-o', str(cls.label_obj)], check=True)
+        cls.label_data = cls.label_obj.read_bytes()
+        cls.label_parsed = read_coff(cls.label_data)
 
     def record(self):
         helper = unique_function(self.parsed, '_helper@4')
@@ -70,6 +76,55 @@ class ComponentTests(unittest.TestCase):
         _, a = link_component_candidate(self.obj, self.record(), self.root / 'first')
         _, b = link_component_candidate(self.obj, self.record(), self.root / 'second')
         self.assertEqual(a['linked_image_sha256'], b['linked_image_sha256'])
+
+    def label_record(self, data=None):
+        record = self.record()
+        record['candidate']['object_sha256'] = hashlib.sha256(data or self.label_data).hexdigest()
+        record['retained_functions'][0]['size'] = unique_function(self.label_parsed, '_helper@4').size
+        record['compiler_provenance']['source_sha256'] = hashlib.sha256(self.label_source.read_bytes()).hexdigest()
+        return record
+
+    def test_compiled_local_label_keeps_complete_contribution(self):
+        code, manifest = link_component_candidate(self.label_obj, self.label_record(), self.root / 'labels')
+        section = unique_function(self.label_parsed, '_component@4')
+        offset, kind, symbol = next(r for r in section.relocations if r[2].section == section.index)
+        self.assertEqual(kind, 6)
+        addend = struct.unpack_from('<I', section.payload, offset)[0]
+        self.assertEqual(struct.unpack_from('<I', code, offset)[0], 0x423000 + symbol.value + addend)
+        self.assertEqual(len(code), section.size)
+        self.assertEqual(len(manifest['contributions']), 2)
+        occupied = {i for off, _, _ in section.relocations for i in range(off, off + 4)}
+        self.assertTrue(all(a == b for i, (a, b) in enumerate(zip(section.payload, code)) if i not in occupied))
+
+    def test_local_label_escape_relative_and_cross_section_rejected(self):
+        section = unique_function(self.label_parsed, '_component@4')
+        local_index, local = next((i, r) for i, r in enumerate(section.relocations)
+                                 if r[2].section == section.index)
+        offset, _, _ = local
+        header = 20 + (section.index - 1) * 40
+        payload = struct.unpack_from('<I', self.label_data, header + 20)[0]
+        relocations = struct.unpack_from('<I', self.label_data, header + 24)[0]
+        for addend in [-1, section.size]:
+            data = bytearray(self.label_data)
+            struct.pack_into('<i', data, payload + offset, addend)
+            with self.assertRaisesRegex(LinkError, 'local contribution'):
+                audit_component(read_coff(bytes(data)), self.label_record(bytes(data)))
+        data = bytearray(self.label_data)
+        struct.pack_into('<H', data, relocations + local_index * 10 + 8, 20)
+        with self.assertRaisesRegex(LinkError, 'local contribution'):
+            audit_component(read_coff(bytes(data)), self.label_record(bytes(data)))
+        helper_section = unique_function(self.label_parsed, '_helper@4')
+        helper_symbol = next(s for s in self.label_parsed.symbols.values()
+                             if s.name == helper_section.name and s.section == helper_section.index)
+        data = bytearray(self.label_data)
+        struct.pack_into('<I', data, relocations + local_index * 10 + 4, helper_symbol.index)
+        with self.assertRaisesRegex(LinkError, 'unretained/context'):
+            audit_component(read_coff(bytes(data)), self.label_record(bytes(data)))
+        call_offset, _, _ = next(r for r in section.relocations if r[1] == 20)
+        data = bytearray(self.label_data)
+        struct.pack_into('<i', data, payload + call_offset, 1)
+        with self.assertRaisesRegex(LinkError, 'whole compiled function entry'):
+            audit_component(read_coff(bytes(data)), self.label_record(bytes(data)))
 
     def test_external_code_and_defined_symbol_rebinding_rejected(self):
         for name in ['_helper@4', '_missing_code']:
