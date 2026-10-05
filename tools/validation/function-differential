@@ -142,6 +142,47 @@ def node24_pool_fixture(rng, free_count, serial):
     return writes
 
 
+def node44_fixture(rng, limit, free_count, serial, records=1000):
+    pool = 0x006F0000
+    writes = [(0x006D5BFC, struct.pack('<I', 0x006E0000)),
+              (0x006E0000, struct.pack('<h', limit))]
+    for selector in range(256):
+        writes.append((0x0069A604 + selector * 4,
+                       struct.pack('<I', 0x00700000 + (selector % 8) * 0x18000)))
+    free = rng.sample(range(records), free_count)
+    successors = {slot: pool + free[i + 1] * 44 if i + 1 < len(free) else 0
+                  for i, slot in enumerate(free)}
+    for slot in range(records):
+        unit_id = rng.choice([0, 1, 2, 1700, 1701])
+        unit = 0x0059CCA8 + (unit_id - 1) * 336 if unit_id else 0
+        if unit:
+            writes.append((unit + 165, struct.pack('<B', serial)))
+        data = bytearray(rng.randbytes(44))
+        struct.pack_into('<II', data, 0, successors.get(slot, rng.choice([0, pool, pool + (records - 1) * 44])),
+                         rng.choice([0, pool, pool + (records - 1) * 44]))
+        struct.pack_into('<II', data, 16, unit,
+                         rng.choice([0, 0x006AA090, 0x006AA090 + 99 * 460, 0xFFFFFFFF]))
+        for index in range(5):
+            kind = rng.choice([0, 1, 2, 3, 4, 255])
+            data[9 + index] = kind
+            if kind == 1:
+                selector = rng.choice([0, 1, 7, 8, 255])
+                pointer = 0x00700000 + (selector % 8) * 0x18000 + rng.choice([0, 1, 2499, 2500, 3000]) * 52
+                writes.append((pointer + 4, struct.pack('<B', selector)))
+                if rng.randrange(4) == 0:
+                    pointer = 0
+            elif kind == 2:
+                pointer = rng.choice([0, 0x0067D400, 0x0067D420, 0xFFFFFFFF])
+            elif kind == 3:
+                pointer = rng.choice([0, 0x006AA090, 0x006AA090 + 99 * 460, 0xFFFFFFFF])
+            else:
+                pointer = rng.getrandbits(32)
+            struct.pack_into('<I', data, 24 + index * 4, pointer)
+        writes.append((pool + slot * 44, bytes(data)))
+    writes.append((pool + records * 44, struct.pack('<I', pool + free[0] * 44 if free else 0)))
+    return writes
+
+
 def node24_restore_fixture(rng, head, serial):
     writes = []
     for slot in range(1000):
@@ -213,7 +254,7 @@ def execute(code, writes, unicorn, entry=ENTRY, argument=RECT, void_result=False
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550'])
+    parser.add_argument('address', nargs='?', default='0x004308A0', choices=['0x004308A0', '0x00403780', '0x004036D0', '0x00437290', '0x00403650', '0x00404620', '0x00403CB0', '0x00403E50', '0x004041F0', '0x00403DB0', '0x00404550', '0x004328E0', '0x00404350'])
     parser.add_argument('--binary', default='original/StarCraft.exe')
     parser.add_argument('--out')
     parser.add_argument('--candidate-image', help='Explicit private image override for regression experiments; skips rebuilding')
@@ -229,8 +270,10 @@ def main():
     node_pack = address == 0x00403E50
     node_init = address == 0x00403DB0
     node_restore = address == 0x004041F0
-    linked_single = state_record or node_pack or node_restore
-    pool_void = state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
+    node44_pack = address == 0x00404350
+    node44_record = address == 0x004328E0
+    linked_single = node44_record or state_record or node_pack or node_restore
+    pool_void = node44_pack or node44_record or state_init or node_init or node_restore or node_pack or state_record or path_restore or path_pack or address == 0x00403650 or state_pack
     path_decode = address == 0x00437290
     path_init = address == 0x00403650
     isolated = state_init or node_init or path_restore or path_decode or path_init
@@ -238,7 +281,7 @@ def main():
         raise ValueError('Initialization chain requires a reviewed pool packer')
     if args.roundtrip and not (path_pack or node_pack):
         raise ValueError('Roundtrip requires the linked pool packer')
-    regions = ([(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
+    regions = ([(address, 187), (0x004328E0, 263)] if node44_pack else [(address, 263)] if node44_record else [(address, 205)] if state_init else [(address, 155)] if node_init else [(address, 140)] if node_restore else [(address, 915)] if node_pack else [(address, 248)] if state_record else [(address, 165), (0x00403AE0, 450)] if state_pack else [(address, 166), (0x00438240, 126)] if path_pack else
                [(address, 864)] if path_restore else [(address, 73)] if path_decode else [(address, 127)] if path_init else [(ENTRY, 599), (CALLEE, 83)])
     if args.roundtrip:
         regions.append((0x004041F0, 140) if node_pack else (0x00403780, 864))
@@ -351,9 +394,25 @@ def main():
         cases = [(head, serial) for head in [0, 1, 2, 999, 1000, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFF, 12345, 0x10000000]
                  for serial in [0, 1, 7, 15, 31, 127, 128, 255]]
         rng = random.Random(1161)
-    pool_size = 24004 if node_pack or node_restore or node_init else 460 if state_record else 46004 if state_pack or state_init else 20004
+    if node44_pack:
+        cases = [(limit, free_count) for limit in [0, 1, 2, 2499, 2500, 32767, -1, -32768]
+                 for free_count in [0, 1, 2, 8, 31, 99, 500, 998, 999, 1000]]
+        rng = random.Random(1161)
+    if node44_record:
+        cases = [(limit, serial) for limit in [0, 1, 2, 2499, 2500, 32767, -1, -32768]
+                 for serial in [0, 1, 7, 15, 31, 127, 128, 254, 255, 63]]
+        rng = random.Random(1161)
+    pool_size = 44004 if node44_pack else 44 if node44_record else 24004 if node_pack or node_restore or node_init else 460 if state_record else 46004 if state_pack or state_init else 20004
     for number, case in enumerate(cases):
-        if state_init:
+        if node44_pack:
+            writes = node44_fixture(rng, case[0], case[1], rng.choice([0, 1, 7, 15, 31, 127, 128, 255]))
+            argument = 0x006F0000
+            steps = [(address, argument, 'EDI')]
+        elif node44_record:
+            writes = node44_fixture(rng, case[0], 0, case[1], records=1)
+            argument = 0x006F0000
+            steps = None
+        elif state_init:
             writes = state_pool_fixture(rng, *case)
             argument = 0x006F0000
             steps = [(address, argument, 'ESI')]

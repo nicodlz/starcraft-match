@@ -6,6 +6,8 @@ The pinned specimen remains SHA-256
 
 | Reviewed region | Original / compiled bytes | Literal result | Emulated fixtures |
 | --- | ---: | --- | ---: |
+| [sub_00404350](functions/00404350.md), typed 1,000-record pool encoder | 187 / 187 | Exact with actual C callee | 80 passed |
+| [sub_004328E0](functions/004328E0.md), five-type record encoder | 263 / 263 | Exact, counted once | 80 passed |
 | [sub_00403DB0](functions/00403DB0.md), related list initialization | 155 / 155 | Exact | 80 + 80 lifecycle |
 | [sub_00403E50](functions/00403E50.md), 1,000-node list encoder | 915 / 915 | Exact | 80 + 80 chained |
 | [sub_004041F0](functions/004041F0.md), related list restorer | 140 / 140 | Exact | 80 + 80 chained |
@@ -54,6 +56,12 @@ The second serialization component retains the complete 450-byte list/unit encod
 and its 165-byte caller. A paired Header C view reproduces the observed ordering
 without volatile qualifiers. It has one external data symbol and no code binding.
 
+A further **450-byte serialization component** retains the 187-byte caller and
+263-byte typed record encoder. Its five external data bindings preserve unchecked
+BYTE owner selectors and signed WORD limits. Both functions pass 80 comparisons;
+1699-unit-limit and 999-record mutations are detected. Its paired initializer and
+restorer are not included in the exact chain.
+
 The query binds nine external **data** declarations to observed addresses. The
 packing component has one external data binding and no external code binding.
 These components do not reconstruct a complete program or initialized game data.
@@ -89,6 +97,8 @@ Unicorn 2.1.4 was used locally. It is optional and is not a dependency of portab
 python3 -m venv .local/components-venv
 .local/components-venv/bin/pip install unicorn==2.1.4
 source .local/tools/activate.sh
+.local/components-venv/bin/python tools/validation/function-differential 0x00404350
+.local/components-venv/bin/python tools/validation/function-differential 0x004328E0
 .local/components-venv/bin/python tools/validation/function-differential 0x004308A0
 .local/components-venv/bin/python tools/validation/function-differential 0x00403780
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0

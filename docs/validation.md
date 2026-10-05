@@ -7,7 +7,7 @@ Explicit external-only and compiled-component profiles use ordinary linking, aud
 all relocations and retain complete compiler contributions. Instruction normalization
 never establishes exact equality. Similarity and CFG metrics remain null.
 
-The current proof set has **494 functions / 35,083 bytes**. `make proof` freshly
+The current proof set has **496 functions / 35,533 bytes**. `make proof` freshly
 recompiles all exact expectations. A local real-binary regression test deliberately
 changes a candidate in a private source-only checkout to confirm rejection. The
 proprietary input is read locally and never bundled with that checkout. Two new

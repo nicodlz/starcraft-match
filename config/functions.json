@@ -29285,5 +29285,239 @@
       "semantic": null,
       "cfg": null
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x004328E0",
+    "size": 263,
+    "name": "sub_004328E0",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00404396",
+        "type": "direct_call",
+        "provenance": "Whole187-byte caller00404350..0040440B pushes ESI at00404395, calls at00404396, reads next at0040439B without caller cleanup;1000 records of44bytes."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Whole263-byte region004328E0..004329E7 reviewed:12 traps004328D4..DF after prior function jump table, sole RET4 at004329E4, all internal branches and2-byte loop alignment included. Whole187-byte caller corroborates stack ABI.",
+    "calling_convention": "stdcall one stack record pointer; RET4; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void __stdcall sub_004328E0(Node *node)",
+    "candidate_source": "src/game/sub_004328E0.c",
+    "candidate_symbol": "_sub_004328E0@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original unsigned unit subtraction0059CCA8."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Original state subtraction006AA090 twice."
+          ]
+        },
+        "_g_0067D400": {
+          "address": 6804480,
+          "kind": "data",
+          "evidence": [
+            "Original32-byte reference subtraction0067D400."
+          ]
+        },
+        "_g_0069A604": {
+          "address": 6923780,
+          "kind": "data",
+          "evidence": [
+            "Original DWORD owner-base table at0069A604 with unchecked BYTE index."
+          ]
+        },
+        "_g_006D5BFC": {
+          "address": 7166972,
+          "kind": "data",
+          "evidence": [
+            "Original pointer at006D5BFC dereferenced as signed16 bound."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_encode_state",
+          "section": ".state"
+        },
+        {
+          "symbol": "_encode32",
+          "section": ".link32"
+        },
+        {
+          "symbol": "_encode_object",
+          "section": ".object"
+        }
+      ]
+    },
+    "notes": [
+      "Unit reference offset16 uses serial byte165 and unsigned one-based336-byte index bounded1700; state offset20 unsigned one-based460-byte index. Five references offset24..40 dispatch on bytes9..13:1 encodes52-byte object by owner BYTE4, signed16 limit and2500 multiplier;2 encodes32-byte pool reference;3 encodes460-byte state;other types unchanged. No selector bounds check added.",
+      "Fresh recorded-profile strict whole263-byte match with six DIR32 relocations resolving five data symbols. Optional Unicorn2.1.4 passes80 complete44-byte record comparisons, ordered accesses and stdcall ABI checks;1699 unit-limit mutation rejected fixture1. Generic semantic/CFG metrics remain null."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00404350",
+    "size": 187,
+    "name": "sub_00404350",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432DD5",
+        "type": "direct_call",
+        "provenance": "Whole871-byte caller00432DA0..00433107: MOVEDI0069F468 at00432DD0 then CALL00404350 at00432DD5; no stack arguments or caller cleanup."
+      }
+    ],
+    "calls": [
+      {
+        "to": "0x004328E0",
+        "from": "0x00404396"
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Whole187-byte region00404350..0040440B reviewed: previous RET00404345 plus ten traps; returns004043F2/0040440A both included, five traps before00404410. Whole871-byte caller corroborates private EDI pool argument.",
+    "calling_convention": "Private EDI pool pointer; no stack arguments; plain RET; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "static void __fastcall sub_00404350(Node *nodes /* EDI */)",
+    "candidate_source": "src/game/sub_00404350.c",
+    "candidate_symbol": "@sub_00404350@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "known_structures": [
+      "src/game/sub_004328E0.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x004328E0"
+    ],
+    "match_expectation": "exact",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".pack",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Original unsigned unit subtraction0059CCA8."
+          ]
+        },
+        "_g_006AA090": {
+          "address": 6987920,
+          "kind": "data",
+          "evidence": [
+            "Original state subtraction006AA090 twice."
+          ]
+        },
+        "_g_0067D400": {
+          "address": 6804480,
+          "kind": "data",
+          "evidence": [
+            "Original32-byte reference subtraction0067D400."
+          ]
+        },
+        "_g_0069A604": {
+          "address": 6923780,
+          "kind": "data",
+          "evidence": [
+            "Original DWORD owner-base table at0069A604 with unchecked BYTE index."
+          ]
+        },
+        "_g_006D5BFC": {
+          "address": 7166972,
+          "kind": "data",
+          "evidence": [
+            "Original pointer at006D5BFC dereferenced as signed16 bound."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_encode_unit",
+          "section": ".unit"
+        },
+        {
+          "symbol": "_encode_state",
+          "section": ".state"
+        },
+        {
+          "symbol": "_encode32",
+          "section": ".link32"
+        },
+        {
+          "symbol": "_encode_object",
+          "section": ".object"
+        },
+        {
+          "symbol": "_clear_node",
+          "section": ".clear"
+        },
+        {
+          "symbol": "_encode_link",
+          "section": ".ulink"
+        },
+        {
+          "symbol": "_compiler_anchor_00404350@4",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "_sub_004328E0@4",
+          "section": ".pool",
+          "address": 4401376,
+          "size": 263,
+          "evidence": [
+            "Whole263-byte record encoder and stdcall ABI reviewed; CALL00404396 follows PUSHESI00404395. Actual C body retained at its reviewed address."
+          ]
+        }
+      ]
+    },
+    "notes": [
+      "1000 records44bytes plus headDWORD44000; clears free-chain fields with observed BYTE/DWORD widths, invokes actual stdcall C record encoder on every record, and encodes next/previous/head using unsigned(pointer-base)/44+1 orzero.",
+      "Fresh strict recorded-profile build matches187-byte root and retained263-byte actual C dependency. Optional Unicorn2.1.4 passes80 complete44004-byte pool comparisons, ordered access widths/values and private EDI ABI;999-record mutation rejected fixture0. Generic semantic/CFG metrics remain null."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

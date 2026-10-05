@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![494 exact functions](https://img.shields.io/badge/verified-494%20exact%20functions-287d67)
+![496 exact functions](https://img.shields.io/badge/verified-496%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,47 +26,40 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**494 whole functions match exactly, totaling 35,083 original bytes.** The independent
+**496 whole functions match exactly, totaling 35,533 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 list operations, AI state updates and image-state callbacks.
 
 The aggregate separates **389 isolated COFF matches / 24,232 bytes** from
-**103 matches / 10,520 bytes** using the reviewed
+**104 matches / 10,783 bytes** using the reviewed
 [external-only standard linker](docs/standard-linking.md), plus
-**two compiled-component matches / 331 bytes** with their actual C dependencies
-(counted once among the 103 external-only matches).
-Of the 494 functions, 76 are static data initializers totaling 836 bytes;
+**three compiled-component matches / 518 bytes** with their actual C dependencies
+(counted once among the 104 external-only matches).
+Of the 496 functions, 76 are static data initializers totaling 836 bytes;
 their destination semantics remain unknown. The count does not establish a
 representative whole-game match rate. See the [function census](docs/function-census.md)
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
 Detailed research reports remain under [docs/](docs/).
 
-A complete **292-byte packing component** now matches exactly: the 1,000-entry
-pool serializer and its compiled unit/path encoder. It passes 80 whole-pool emulator
-comparisons and 80 chained packing/restoration comparisons. Its related 73-byte
-path-reference decoder also matches exactly and passes 1,240 emulator comparisons.
-The 127-byte initializer is exact too, extending the reconstructed pool lifecycle;
-80 comparisons cover initialization followed by packing and restoration.
-A second **615-byte component** serializes a 100-record pool and retains its exact
-450-byte list/unit encoder; 80 comparisons cover its complete 46,004-byte state.
-Its exact 205-byte initializer extends this to initialization followed by encoding
-across 80 further cases.
-Its related 248-byte record restoration is exact and passes 80 record comparisons.
+Three serialization components retain their actual C dependencies: **292 bytes**
+for a 1,000-entry path pool, **615 bytes** for a 100-record state pool, and
+**450 bytes** for a 1,000-record pool with five typed references per record.
+A related 24-byte-node pool has **1,210 exact bytes** across initialization,
+encoding and restoration. Bounded emulator comparisons check complete pools,
+ordered memory accesses and observed calling conventions; see
+[compiled components](docs/compiled-components.md) for fixture counts and limits.
 
-Work toward larger components also includes a 599-byte rectangle query linked with its
-actual compiled C search dependency and an 864-byte pathfinding reference-restoration
-routine. Both candidates remain non-exact; together they pass 460 bounded
-original/C emulator fixtures. See [compiled components](docs/compiled-components.md).
-
-A related 1,000-node list has **1,210 exact bytes** across initialization, encoding
-and restoration. Each function passes 80 pool comparisons; 80 more cover encoding
-then restoration, and another 80 cover all three stages.
+Two larger candidates remain non-exact: a **599-byte rectangle query** with its
+actual C search dependency, and an **864-byte path reference restorer**. Together
+they pass 460 bounded emulator fixtures, which remain separate from exact evidence.
 
 Selected reviewed regions:
 
 | Address | Reviewed operation | Original / compiled | Result |
 | --- | --- | ---: | --- |
+| [0x00404350](docs/functions/00404350.md) | Typed 1,000-record pool serialization | 187 / 187 | Exact with C callee |
+| [0x004328E0](docs/functions/004328E0.md) | Five-type record encoder | 263 / 263 | Exact |
 | [0x00403DB0](docs/functions/00403DB0.md) | Related 1,000-node initialization | 155 / 155 | Exact |
 | [0x00403E50](docs/functions/00403E50.md) | 1,000-node serialization | 915 / 915 | Exact |
 | [0x004041F0](docs/functions/004041F0.md) | Related 1,000-node restoration | 140 / 140 | Exact |
@@ -93,8 +86,8 @@ compiler/ABI differences remain documented separately from exact expectations.
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 494 matches are
-about **11.76% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 496 matches are
+about **11.81% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -144,7 +137,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 494 exact matches
+make proof                    # Recompile and require all 496 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
