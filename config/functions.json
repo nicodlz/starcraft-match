@@ -30392,5 +30392,245 @@
       "Appends zero-terminated336-byte-stride record pointers to fixedbuffer, records nesting cursor, advances nonzero DWORD generation with wrap0to1, uses actual83-byte C search on Ypairs plus inline unsignedbounds/signeddoubled-coordinate Xsearch, tests recordboundDWORDs324/328 and deduplicates through generation marks. IDs/index/cursor arithmetic unchecked; signedWORD rectangle inputs preserved.",
       "Fresh msvc71-o2-frame retained-component build produces338-byte root vs339original, non-exact in register allocation and indexed record-field access. Actual83-byteCcallee remains exact. 400 boundedUnicorn2.1.4 comparisons pass fullEAX/privateEAXinput, plainRET, nonvolatile registers, unit/generation/mark snapshots, buffers/cursors and ordered accesses including conditional countreload. ActualC wrap-to2 mutation rejectedfixture40 on generation/accesses. Metrics null."
     ]
+  },
+  {
+    "address": "0x0047DC10",
+    "size": 321,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_0047DC10.c",
+    "candidate_symbol": "_sub_0047DC10@8",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".update",
+      "bindings": {
+        "_g_006D0F08": {
+          "address": 7147272,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned width load414299 and subsequent comparisons/index multiplication."
+          ]
+        },
+        "_g_006D0C6C": {
+          "address": 7146604,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD unsigned height comparisons and final-row load4143AF."
+          ]
+        },
+        "_g_006D0E84": {
+          "address": 7147140,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD WORD-table base load4142AA; bounds-accepted coordinates perform WORD reads at base+2*(width*y+x)."
+          ]
+        },
+        "_g_00658AE8": {
+          "address": 6654696,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0065EB14": {
+          "address": 6679316,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0057F1D4": {
+          "address": 5763540,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_006D1260": {
+          "address": 7148128,
+          "kind": "data",
+          "evidence": [
+            "Fresh reviewed original complete216-byte node mover global operand."
+          ]
+        },
+        "_g_0057F1D6": {
+          "address": 5763542,
+          "kind": "data",
+          "evidence": [
+            "Observed unsignedWORD height bounds47DC75."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_qualifies",
+          "section": ".test"
+        },
+        {
+          "symbol": "_tile_matches",
+          "section": ".pred"
+        },
+        {
+          "symbol": "_context_0047D2C0",
+          "section": ".anchor"
+        }
+      ],
+      "retained_functions": [
+        {
+          "symbol": "_sub_00414290@8",
+          "section": ".near",
+          "address": 4276880,
+          "size": 431,
+          "evidence": [
+            "Reviewed directCALL47DCCA pushes ECX thenEDX, fullDWORD x/y; public whole431-byte count retained with RET8."
+          ]
+        },
+        {
+          "symbol": "@sub_0047D2C0@8",
+          "section": ".lookup",
+          "address": 4707008,
+          "size": 57,
+          "evidence": [
+            "Reviewed directCALL47DCC1 suppliesECX=y/EDX=x; public whole57-byte lookup retained, with observedECX/EDX preservation needed by subsequent count call."
+          ]
+        }
+      ]
+    },
+    "schema_version": 1,
+    "name": "sub_0047DC10",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x0047E3FF",
+        "type": "direct_call",
+        "provenance": "Fresh complete313-byte caller47E2D0..47E409: MOVEDX,[EBP+12], MOVEAX,[EBP+8], PUSHEDX/PUSHEAX47E3FD/E3FE, CALL47DC1047E3FF; no caller cleanup or result use."
+      }
+    ],
+    "calls": [
+      {
+        "from": "0x0047DCC1",
+        "to": "0x0047D2C0"
+      },
+      {
+        "from": "0x0047DCCA",
+        "to": "0x00414290"
+      }
+    ],
+    "strings": [],
+    "status": "assembly_partial_match",
+    "provenance": "Reviewed whole321-byte47DC10..47DD51 through soleRET8 at47DD4E; priorRET47DC01 then14 traps; following15 traps before47DD60. All branches remain inside complete region. Independent whole caller corroborates entry.",
+    "calling_convention": "Two fullDWORD stack coordinates; RET8; EBX/ESI/EDI/EBP preserved; no established return value.",
+    "prototype": "void __stdcall sub_0047DC10(unsigned int x,unsigned int y)",
+    "known_structures": [
+      "src/game/sub_00414290.c",
+      "src/game/sub_0047D2C0.c"
+    ],
+    "known_calls": [],
+    "dependencies": [
+      "0x00414290",
+      "0x0047D2C0"
+    ],
+    "match_expectation": "exploratory",
+    "notes": [
+      "Eight signedBYTE offsets use unsigned wrapping coordinates and WORD outer bounds. Accepted gridWORD predicate and upper markerBYTE select existing hashed20-byte nodes; fullDWORD neighbor count compared before BYTE narrowing, then unchecked ordinal-indexed heads and wrappingWORD counters updated. No missing-node guard or inferred array bound added.",
+      "Fresh whole332-byte C root remains non-exact against321 original bytes. Both actual C callees,431-byte neighbor counter and57-byte lookup, match literally. 1550 bounded Unicorn comparisons pass on ABI, snapshots and ordered accesses. Metrics remain null; no original-process execution or universal semantic claim."
+    ],
+    "match": {
+      "exact": false,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "address": "0x0048C590",
+    "size": 394,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_0048C590",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".pool",
+      "bindings": {
+        "_g_006416A0": {
+          "address": 6559392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed g_006416A0 data operand within complete394-byte original initializer; DWORD widths and accesses independently inspected."
+          ]
+        },
+        "_g_0064B2E0": {
+          "address": 6599392,
+          "kind": "data",
+          "evidence": [
+            "Reviewed g_0064B2E0 data operand within complete394-byte original initializer; DWORD widths and accesses independently inspected."
+          ]
+        },
+        "_g_0064B2E4": {
+          "address": 6599396,
+          "kind": "data",
+          "evidence": [
+            "Reviewed g_0064B2E4 data operand within complete394-byte original initializer; DWORD widths and accesses independently inspected."
+          ]
+        },
+        "_g_00641698": {
+          "address": 6559384,
+          "kind": "data",
+          "evidence": [
+            "Reviewed g_00641698 data operand within complete394-byte original initializer; DWORD widths and accesses independently inspected."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_insert",
+          "section": ".insert"
+        }
+      ]
+    },
+    "candidate_source": "src/game/sub_0048C590.c",
+    "schema_version": 1,
+    "name": "sub_0048C590",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004EEEA8",
+        "type": "direct_call",
+        "provenance": "Fresh complete449-byte caller4EEE00..4EEFC1; CALL4EEEA8 uses no arguments/cleanup and overwrites EAX with WORD global at4EEEAD."
+      },
+      {
+        "address": "0x004EF036",
+        "type": "direct_call",
+        "provenance": "Fresh complete289-byte caller4EEFD0..4EF0F1; CALL4EF036 uses no arguments/cleanup and overwrites EAX with DWORD global at4EF03B."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "provenance": "Reviewed whole394-byte48C590..48C71A through soleRET48C719; priorRET8 at48C586 ends48C589 thenseven traps; six trailing traps before48C720. Both independently reviewed whole callers corroborate aligned entry.",
+    "calling_convention": "No arguments; plain RET; EBX/ESI/EDI/EBP preserved; no established return value; standard DF-clear entry assumed.",
+    "prototype": "void sub_0048C590(void)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Clears40000 bytes with compiler-inlined memset then links2000 twenty-byte records in400 five-record iterations through observed DWORD next/previous fields and two global pointers. The first pointer remains the first record; the second changes only when both pointers were equal. No extra empty-path link writes added. A separate DWORD scalar is zeroed at end.",
+      "Complete394-byte external-only C contribution matches literally. DWORD integer cursor avoids forming pointers beyond the declared array during induction.80 bounded Unicorn whole-pool comparisons pass including adjacent globals, preserved registers, plain RET and ordered accesses; compiled399-batch mutation rejected fixture0. No original-process or universal semantic claim."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]

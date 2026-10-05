@@ -258,3 +258,19 @@ recompiles to338 bytes and remains non-exact. A source changing wrapped generati
 replacement1 to2 fails fixture40 on snapshots/accesses. The private EAX input,
 full pointer result, plain RET and conditional count reload are checked explicitly.
 Run `0x0042FF80`; `all_regions_exact` remains false and no new exact bytes are counted.
+
+The neighboring existing-node updater retains the complete 431-byte count and
+57-byte hash lookup C functions. Its 321-byte original root recompiles to 332 bytes
+and remains non-exact. All 1,550 comparisons pass across neighbor predicate/marker
+masks, grid edges, zero dimensions, unsigned coordinate wrapping, initial ordinals,
+and wrapping WORD counters. Full head/hash/node/grid/marker snapshots and ordered
+accesses agree; two stack DWORDs, RET8 and preserved registers are checked.
+A compiled wrong-marker-bit mutation is rejected on snapshots and accesses.
+Run `0x0047DC10`; the 488 already-counted dependency bytes add no new exact bytes.
+
+A separate 2,000-record initializer matches its whole 394-byte external-only C
+contribution and passes 80 complete-pool comparisons. The 40,000-byte pool and
+adjacent pointer/scalar globals, plain RET, preserved registers and ordered data
+accesses agree. A compiled 399-batch mutation is rejected in fixture 0, detecting
+five missing records. Run `0x0048C590`; all regions are exact. The inlined C helper
+and memset do not add separate function counts or external game-code bindings.

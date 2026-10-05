@@ -12,4 +12,7 @@ static __declspec(noinline) u8 *__fastcall sub_0047D2C0(u32 a, u32 b)
     return node;
 }
 
+#ifdef SC_NODE_LOOKUP_COMPONENT
+#pragma code_seg(".anchor")
+#endif
 u8 *context_0047D2C0(u32 a,u32 b) { return sub_0047D2C0(a,b); }
