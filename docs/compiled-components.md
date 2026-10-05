@@ -10,6 +10,8 @@ The pinned specimen remains SHA-256
 | [sub_00469B00](functions/00469B00.md), compiled dependency of the query | 83 / 83 | Exact, already counted | Included in query fixtures |
 | [sub_004036D0](functions/004036D0.md), pool packing caller | 166 / 166 | Exact, new | 80 + 80 chained |
 | [sub_00438240](functions/00438240.md), compiled unit/path encoder | 126 / 126 | Exact, new, counted once | Included in packing fixtures |
+| [sub_00403650](functions/00403650.md), pool initialization | 127 / 127 | Exact | 80 + 80 lifecycle |
+| [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
 | [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
 
 The query and restoration candidates cover **1,463 reviewed original bytes** but contribute
@@ -79,6 +81,9 @@ source .local/tools/activate.sh
 .local/components-venv/bin/python tools/validation/function-differential 0x00403780
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0
 .local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --roundtrip
+.local/components-venv/bin/python tools/validation/function-differential 0x00437290
+.local/components-venv/bin/python tools/validation/function-differential 0x00403650
+.local/components-venv/bin/python tools/validation/function-differential 0x004036D0 --initialize --roundtrip
 ```
 
 The deterministic seed is 1161. Query fixtures include empty tables, tied coordinates,
@@ -91,6 +96,13 @@ An additional 80 comparisons execute packing then restoration in each emulator.
 `all_regions_exact` remains false for that chain because restoration is non-exact;
 its build and code hash are recorded separately. The roundtrip checks original/C
 results, not identity of arbitrary input before and after serialization.
+The initializer adds 80 complete-pool comparisons and 80 lifecycle comparisons
+(initialization, packing, restoration). Its independent build is recorded for the
+chain. Initialization replaces the initial free list with all 1,000 entries;
+`all_regions_exact` remains false while restoration differs.
+The decoder adds 1,240 comparisons covering BYTE quotient narrowing, wrapped
+DWORD inputs, signed limits and absent bases. Its ECX input is assigned explicitly;
+ECX remains volatile, while EBX/ESI/EDI/EBP are checked for preservation.
 The runner compares return values when established, nonvolatile registers, stack
 cleanup, mutable memory snapshots and ordered data-access addresses, widths and
 values. Private stack temporaries, volatile registers and flags are outside equivalence.

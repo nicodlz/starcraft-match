@@ -28707,5 +28707,87 @@
         }
       ]
     }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00437290",
+    "size": 73,
+    "name": "sub_00437290",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00432863",
+        "type": "direct_call",
+        "provenance": "Pinned caller switch arm at 00432861 loads ECX from [ESI], calls decoder, stores full EAX at 00432868; no stack arguments or cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Independent pinned-PE complete region and caller audit: preceding RET00437289 with six trap bytes, returns004372D5/D8, seven traps before004372E0. Direct caller independently corroborates entry. Pure C reconstruction.",
+    "calling_convention": "ECX encoded DWORD; full EAX decoded pointer or zero; plain RET; preserves EBX/ESI/EDI/EBP.",
+    "prototype": "unsigned int __fastcall sub_00437290(unsigned int id)",
+    "candidate_source": "src/game/sub_00437290.c",
+    "candidate_symbol": "@sub_00437290@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Unsigned division by2500 then BYTE quotient narrowing precedes selector<8; subtraction uses narrowed selector, not full quotient. Null base/index and index above signed WORD converted to unsigned return zero. Accepted base+index*52-52 wraps at32 bits.",
+      "Fresh public-path recorded-profile build matches all73 original bytes with zero relocations. Optional Unicorn2.1.4 runner passes1240 synthetic original/C comparisons including ECX input, EAX output, stack/nonvolatile preservation and ordered data accesses. Finite fixtures only; semantic/CFG metrics stay null."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00403650",
+    "size": 127,
+    "name": "sub_00403650",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00437B46",
+        "type": "direct_call",
+        "provenance": "Pinned initialization branch of00437A70: MOVECX6957E0 at00437B35, CALL00403650 at00437B46, EAX overwritten00437B4B, no stack arguments/cleanup."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "provenance": "Pinned whole127-byte region and caller audited independently. PriorRET0040364D then two traps; soleRET004036CE then one trap before004036D0. Pure C construction.",
+    "calling_convention": "ECX pool pointer; no established return value; plain RET; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "void __fastcall sub_00403650(Entry *entries)",
+    "candidate_source": "src/game/sub_00403650.c",
+    "candidate_symbol": "@sub_00403650@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "notes": [
+      "Exactly1000 entries of20bytes initialized as a doubly linked free list; head DWORD at20000 receives pool pointer. Null next/previous at final/first entry respectively. BYTE8, DWORD12/16, WORD10, BYTE9 cleared in original observed widths/order.",
+      "Fresh public-path msvc71-o2 build matches all127 bytes with zero relocations. Source last-pointer arithmetic preserves scheduling of final links and register restoration. Optional emulator checks complete20004-byte pool and ordered widths/accesses; no original-process execution."
+    ],
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    }
   }
 ]
