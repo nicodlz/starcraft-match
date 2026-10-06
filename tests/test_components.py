@@ -10,7 +10,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
-from matching.components import audit_component, link_component_candidate
+from matching.components import audit_component, link_component_candidate, link_leaf_candidate
 from matching.linking import LinkError, read_coff, unique_function
 
 
@@ -37,6 +37,69 @@ class ComponentTests(unittest.TestCase):
         subprocess.run(['clang', *cls.flags, '-c', str(cls.label_source), '-o', str(cls.label_obj)], check=True)
         cls.label_data = cls.label_obj.read_bytes()
         cls.label_parsed = read_coff(cls.label_data)
+        cls.leaf_source = cls.root / 'leaf.c'
+        cls.leaf_source.write_bytes((Path(__file__).parent / 'fixtures/linked_leaf.c').read_bytes())
+        cls.leaf_obj = cls.root / 'leaf.obj'
+        subprocess.run(['clang', *cls.flags, '-c', str(cls.leaf_source), '-o', str(cls.leaf_obj)], check=True)
+        cls.leaf_data = cls.leaf_obj.read_bytes()
+        cls.leaf_parsed = read_coff(cls.leaf_data)
+
+    def leaf_record(self, data=None):
+        r = self.record()
+        r['candidate'].update(symbol='_leaf@4', object_sha256=hashlib.sha256(data or self.leaf_data).hexdigest())
+        r['retained_functions'] = []
+        r['compiler_provenance']['source_sha256'] = hashlib.sha256(self.leaf_source.read_bytes()).hexdigest()
+        return r
+
+    def test_leaf_links_complete_local_reference_and_excludes_context(self):
+        code, m = link_leaf_candidate(self.leaf_obj, self.leaf_record(), self.root / 'leaf-linked')
+        section = unique_function(self.leaf_parsed, '_leaf@4')
+        self.assertEqual(len(code), section.size)
+        self.assertEqual(m['category'], 'leaf-standard-linked-C-contribution-v1')
+        self.assertEqual(len(m['contributions']), 1)
+        self.assertEqual(len(m['excluded_contexts']), 1)
+        occupied = set()
+        for offset, kind, symbol in section.relocations:
+            addend = struct.unpack_from('<i', section.payload, offset)[0]
+            address = 0x423000 + symbol.value if symbol.section else 0x512000
+            self.assertEqual(kind, 6)
+            self.assertEqual(struct.unpack_from('<I', code, offset)[0], (address + addend) & 0xffffffff)
+            occupied.update(range(offset, offset + 4))
+        self.assertTrue(all(a == b for i, (a, b) in enumerate(zip(section.payload, code)) if i not in occupied))
+
+    def test_leaf_does_not_relax_component_dependency_requirement(self):
+        with self.assertRaisesRegex(LinkError, 'compiled dependency'):
+            audit_component(self.leaf_parsed, self.leaf_record())
+        with self.assertRaisesRegex(LinkError, 'cannot retain dependencies'):
+            audit_component(self.parsed, self.record(), leaf=True)
+
+    def test_leaf_rejects_external_code_and_excluded_callee(self):
+        r = self.leaf_record()
+        r['bindings']['_missing_code'] = dict(address=0x400000, kind='code', evidence=['Synthetic'])
+        with self.assertRaisesRegex(LinkError, 'code must be compiled'):
+            audit_component(self.leaf_parsed, r, leaf=True)
+        r = self.record()
+        r['retained_functions'] = []
+        r['excluded_contexts'].append(dict(symbol='_helper@4', section='.helper'))
+        with self.assertRaisesRegex(LinkError, 'unretained/context'):
+            audit_component(self.parsed, r, leaf=True)
+
+    def test_leaf_local_reference_cannot_escape_or_be_relative(self):
+        section = unique_function(self.leaf_parsed, '_leaf@4')
+        index, (offset, _, _) = next((i, r) for i, r in enumerate(section.relocations)
+                                    if r[2].section == section.index)
+        header = 20 + (section.index - 1) * 40
+        payload = struct.unpack_from('<I', self.leaf_data, header + 20)[0]
+        relocs = struct.unpack_from('<I', self.leaf_data, header + 24)[0]
+        for addend in [-1, section.size]:
+            data = bytearray(self.leaf_data)
+            struct.pack_into('<i', data, payload + offset, addend)
+            with self.assertRaisesRegex(LinkError, 'local contribution'):
+                audit_component(read_coff(bytes(data)), self.leaf_record(bytes(data)), leaf=True)
+        data = bytearray(self.leaf_data)
+        struct.pack_into('<H', data, relocs + index * 10 + 8, 20)
+        with self.assertRaisesRegex(LinkError, 'local contribution'):
+            audit_component(read_coff(bytes(data)), self.leaf_record(bytes(data)), leaf=True)
 
     def record(self):
         helper = unique_function(self.parsed, '_helper@4')

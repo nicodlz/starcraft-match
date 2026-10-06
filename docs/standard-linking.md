@@ -68,3 +68,26 @@ Retained synthetic helpers and jump-table contributions are separate private
 experiments. They are not supported by this public external-only adapter and
 contribute no functions or bytes to the counts above. Cross-session addresses stay
 reserved; this lot remains isolated from the other coordinator's active catalog.
+
+## Whole leaf contributions
+
+The separate `gnu-i386pe-leaf-v1` profile handles one whole C contribution with
+compiler-owned local labels or tables and no compiled dependencies. It reports
+`standard-linked-c-leaf`, separately from external-only and compiled-component
+matches. The existing component profile still requires an actual C dependency.
+
+It reuses the component audits for unique whole sections, excluded C contexts,
+exact data-binding coverage, whole object provenance, PE extent and every
+relocation result. Local DIR32 references must name compiler-owned labels in the
+same contribution, and both symbol and addend must stay inside that complete
+section. Cross-section/context calls, external code bindings, escaping local
+references, unsupported relocations and changed nonrelocation bytes are rejected.
+The leaf profile rejects dependencies and requires at least one owned local
+reference. Synthetic tests exercise the accepted whole contribution and rejected
+escape, relative-reference, external-code and excluded-callee cases.
+
+The reviewed examples retain their entire original compiler-owned tables:
+[sub_0041F610](functions/0041F610.md), [sub_00491870](functions/00491870.md) and
+[sub_00476000](functions/00476000.md). Original bytes do not generate the placement
+script or tables. The standard linker resolves the genuine compiler object's
+references; no object/image patches, truncation or padding insertion is used.

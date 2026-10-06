@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from analysis.pe import PE, hx
 from matching.compare import coff_function, compare
 from matching.linking import link_external_candidate
-from matching.components import link_component_candidate
+from matching.components import link_component_candidate, link_leaf_candidate
 from matching.ltcg import link_ltcg_candidate
 
 
@@ -144,7 +144,7 @@ def linker_state(r):
     required = dict(emulation='i386pe', image_base='0x00400000', section_alignment=16,
                     file_alignment=16, timestamps=False, base_relocations=False,
                     mode=config.get('mode'))
-    if config.get('mode') not in ('external-only-whole-contribution-v1', 'compiled-component-v1'):
+    if config.get('mode') not in ('external-only-whole-contribution-v1', 'compiled-component-v1', 'whole-c-leaf-v1'):
         raise ValueError('Unsupported standard linker mode')
     if any(config.get(k) != v for k, v in required.items()):
         raise ValueError('Unsupported standard linker configuration')
@@ -153,7 +153,7 @@ def linker_state(r):
         raise OSError('Standard linker unavailable: ' + config['executable'])
     executable = str(Path(executable).resolve())
     version = subprocess.check_output([executable, '--version'], text=True).splitlines()[0]
-    adapter = 'components.py' if config['mode'] == 'compiled-component-v1' else 'linking.py'
+    adapter = 'components.py' if config['mode'] in ('compiled-component-v1', 'whole-c-leaf-v1') else 'linking.py'
     return dict(config=config, executable=executable, sha256=file_digest(executable),
                 version=version, emulation='i386pe',
                 adapter_sha256=file_digest(ROOT/'tools/matching'/adapter),
@@ -161,6 +161,8 @@ def linker_state(r):
 
 
 def linked_method(state):
+    if state['config']['mode'] == 'whole-c-leaf-v1':
+        return 'standard-linked-c-leaf'
     if state['config']['mode'] == 'native-msvc71-ltcg-component-v1':
         return 'native-msvc71-ltcg-c-component'
     return ('standard-linked-c-component' if state['config']['mode'] == 'compiled-component-v1'
@@ -180,7 +182,7 @@ def linking_record(r, build_manifest, state):
             compiler_identity_sha256=json_digest(build_manifest['compiler_identity']),
             compiler_profile_sha256=json_digest(build_manifest['compiler_profile_config'])),
         linker={k: state[k] for k in ('sha256', 'version', 'emulation')})
-    if state['config']['mode'] in ('compiled-component-v1', 'native-msvc71-ltcg-component-v1'):
+    if state['config']['mode'] in ('compiled-component-v1', 'native-msvc71-ltcg-component-v1', 'whole-c-leaf-v1'):
         record['retained_functions'] = spec['retained_functions']
     if state['config']['mode'] == 'native-msvc71-ltcg-component-v1':
         record['candidate']['size'] = r['size']
@@ -227,11 +229,13 @@ def report_is_fresh(r, report):
                 return False
             category = ('component-standard-linked-C-contribution-v1' if mode == 'standard-linked-c-component'
                         else 'external-standard-linked-C-contribution-v1')
+            if mode == 'standard-linked-c-leaf':
+                category = 'leaf-standard-linked-C-contribution-v1'
             if mode == 'native-msvc71-ltcg-c-component':
                 category = 'native-msvc71-ltcg-C-contribution-v1'
             if m['record_sha256'] != b['linking_record_sha256'] or m['category'] != category:
                 return False
-            if mode in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component'):
+            if mode in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component', 'standard-linked-c-leaf'):
                 expected_contributions = {r['candidate_symbol']: (r['linking']['section'], int(r['address'], 0), m['whole_input_size'])}
                 expected_contributions.update({h['symbol']: (h['section'], h['address'], h['size'])
                                                for h in r['linking']['retained_functions']})
@@ -314,6 +318,8 @@ def build(r):
     if linked:
         record = linking_record(r, manifest, linked)
         adapter = link_component_candidate if linked['config']['mode'] == 'compiled-component-v1' else link_external_candidate
+        if linked['config']['mode'] == 'whole-c-leaf-v1':
+            adapter = link_leaf_candidate
         if linked['config']['mode'] == 'native-msvc71-ltcg-component-v1':
             adapter = link_ltcg_candidate
         data, evidence = adapter(obj, record, out/'linked', linker=linked['executable'])
@@ -357,7 +363,7 @@ def match(args):
         raise ValueError('Matching requires reviewed boundaries tied to this binary hash')
     data, manifest = build(r)
     dependencies = []
-    if manifest['match_method'] in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component'):
+    if manifest['match_method'] in ('standard-linked-c-component', 'native-msvc71-ltcg-c-component', 'standard-linked-c-leaf'):
         catalog = {entry['address']: entry for entry in read(ROOT/'config/functions.json')}
         for helper in r['linking']['retained_functions']:
             key = hx(helper['address'])

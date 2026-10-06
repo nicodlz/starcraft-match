@@ -10,16 +10,16 @@ from .linking import (LinkError, digest, read_coff, read_pe, safe_section,
                       safe_symbol, unique_function)
 
 
-def audit_component(obj, record):
+def audit_component(obj, record, *, leaf=False):
     try:
-        return _audit_component(obj, record)
+        return _audit_component(obj, record, leaf=leaf)
     except LinkError:
         raise
     except (KeyError, TypeError, AttributeError, IndexError):
         raise LinkError('Malformed component linking metadata') from None
 
 
-def _audit_component(obj, record):
+def _audit_component(obj, record, *, leaf=False):
     if record['schema_version'] != 1:
         raise LinkError('Unsupported component record version')
     provenance = record['compiler_provenance']
@@ -33,8 +33,10 @@ def _audit_component(obj, record):
     if candidate['object_sha256'] != digest(obj.payload):
         raise LinkError('Input object provenance changed')
     retained = record['retained_functions']
-    if not isinstance(retained, list) or not retained:
+    if not isinstance(retained, list) or (not leaf and not retained):
         raise LinkError('Component needs a compiled dependency')
+    if leaf and retained:
+        raise LinkError('Leaf contribution cannot retain dependencies')
     functions = {}
     names = set()
     spans = []
@@ -132,6 +134,11 @@ def _audit_component(obj, record):
         relocations[name] = relocs
     if set(bindings) != used_bindings:
         raise LinkError('Data bindings must exactly cover external relocations')
+    if leaf and not any(symbol.section == section.index and symbol.storage == 3
+                        and symbol.type == 0
+                        for section, _ in functions.values()
+                        for _, _, symbol in section.relocations):
+        raise LinkError('Leaf profile requires compiler-owned local references')
     reached = set()
     pending = [candidate['symbol']]
     while pending:
@@ -144,9 +151,13 @@ def _audit_component(obj, record):
     return functions, excluded, relocations
 
 
-def link_component_candidate(object_path, record, out_dir, linker='ld'):
+def link_leaf_candidate(object_path, record, out_dir, linker='ld'):
+    return link_component_candidate(object_path, record, out_dir, linker, leaf=True)
+
+
+def link_component_candidate(object_path, record, out_dir, linker='ld', *, leaf=False):
     obj = read_coff(pathlib.Path(object_path).read_bytes())
-    functions, excluded, relocations = audit_component(obj, record)
+    functions, excluded, relocations = audit_component(obj, record, leaf=leaf)
     executable = shutil.which(linker)
     if not executable:
         raise LinkError('Standard linker unavailable')
@@ -207,7 +218,9 @@ def link_component_candidate(object_path, record, out_dir, linker='ld'):
         raise LinkError('Component input/linker changed during linking')
     selected, _ = functions[record['candidate']['symbol']]
     code = linked[record['candidate']['symbol']]
-    manifest = dict(schema_version=1, category='component-standard-linked-C-contribution-v1',
+    category = ('leaf-standard-linked-C-contribution-v1' if leaf
+                else 'component-standard-linked-C-contribution-v1')
+    manifest = dict(schema_version=1, category=category,
                     record_sha256=digest(json.dumps(record, sort_keys=True, separators=(',', ':')).encode()),
                     object_sha256=digest(obj.payload), selected_section_name=selected.name,
                     whole_input_size=selected.size, linked_size=len(code), address=address,

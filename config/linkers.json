@@ -31,5 +31,15 @@
     "timestamps": true,
     "base_relocations": false,
     "mode": "native-msvc71-ltcg-component-v1"
+  },
+  "gnu-i386pe-leaf-v1": {
+    "executable": "ld",
+    "emulation": "i386pe",
+    "image_base": "0x00400000",
+    "section_alignment": 16,
+    "file_alignment": 16,
+    "timestamps": false,
+    "base_relocations": false,
+    "mode": "whole-c-leaf-v1"
   }
 }
