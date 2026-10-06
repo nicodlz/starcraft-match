@@ -30653,19 +30653,15 @@
             "Reviewed pool base comparison and one-based reference conversion."
           ]
         },
-        "_g_0064B2E0": {
-          "address": 6599392,
+        "_g_0059CCA8": {
+          "address": 5885096,
           "kind": "data",
           "evidence": [
-            "Reviewed one-past-pool address for descending traversal."
+            "Reviewed unit336-byte stride and firstbase minusone addressing."
           ]
         }
       },
       "excluded_contexts": [
-        {
-          "symbol": "_unpack_unit",
-          "section": ".unit"
-        },
         {
           "symbol": "_unpack_link",
           "section": ".link"
@@ -30677,16 +30673,16 @@
     "name": "sub_0048C770",
     "proposed_names": [],
     "confidence": 0.99,
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "prototype": "void sub_0048C770(void)",
     "calls": [],
     "strings": [],
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -30707,8 +30703,8 @@
     "provenance": "Complete 86-byte [0048C770,0048C7C6), sole RET at 0048C7C5; preceding RET at 0048C764 plus 11 traps; ten following traps before 0048C7D0. All branches internal; whole caller independently reviewed against pinned executable.",
     "notes": [
       "Decodes whole nonzero unit DWORD as low-11-bit index*336+0059CB58, including nonzero values with zero low bits. Node references use full DWORD index*20+0064168C with wrap and no range check. Stores all three fields including zero values; other payload fields and adjacent globals untouched.",
-      "Measured 83-byte C contribution vs86 original, non-exact. Actual generated code naturally preserves EDX. Finite whole-pool and lifecycle comparisons are separate from exact matching.",
-      "80 standalone comparisons for each conversion, 80 encoding/restoration chains, and 80 initialization/encoding/restoration chains pass with complete pool, unit arena, adjacent globals and ordered accesses. Decoder EDX preservation checked; serial-shift, decoder-mask and compiler register-preservation regressions rejected. No new exact bytes."
+      "Complete86-byte C-derived contribution matches literally using msvc71-o2 and strict external-only linker. DWORD index10000 decremented by5 preserves the original base induction; one reused temporary and last-link helper retain destructive ECX LEAs and EDX preservation. Only real pool6416A0 and unit59CCA8 data are externally bound; ordinary link helper is inventoried and excluded.",
+      "80 fresh standalone whole-pool comparisons pass with ordered accesses and EDX preservation. Actual C unit-mask, masked-low-index null-test and half-pool traversal mutations fail fixtures1,1 and0 respectively; a same-size C variant differing only in last-link LEAs fails the EDX preservation gate. No original-process execution or full game linkage."
     ]
   },
   {
@@ -30729,13 +30725,6 @@
           "kind": "data",
           "evidence": [
             "Reviewed pool base comparison and one-based reference conversion."
-          ]
-        },
-        "_g_0064B2E0": {
-          "address": 6599392,
-          "kind": "data",
-          "evidence": [
-            "Reviewed one-past-pool address for descending traversal."
           ]
         },
         "_g_0059CCA8": {
@@ -30762,16 +30751,16 @@
     "name": "sub_0048C7D0",
     "proposed_names": [],
     "confidence": 0.99,
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "prototype": "void sub_0048C7D0(void)",
     "calls": [],
     "strings": [],
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -30787,8 +30776,8 @@
     "provenance": "Complete 158-byte [0048C7D0,0048C86E), sole RET at 0048C86D; preceding reviewed decoder RET at 0048C7C5 plus ten traps; two trailing traps before 0048C870. All branches internal; whole caller independently reviewed against pinned executable.",
     "notes": [
       "Encodes unit references using unsigned difference from 0059CCA8 divided by336 plus1, rejects IDs above1700, reads BYTE serial at+165 only for accepted references, and retains full serial<<11 DWORD. Link conversion uses signed wrapped difference from006416A0 divided by20 truncating toward zero plus1; zero input remainszero.",
-      "Measured 161-byte C contribution vs158 original, non-exact in four-byte cursor rebasing and final address comparison. Finite whole-pool and lifecycle comparisons are separate from exact matching.",
-      "80 standalone comparisons for each conversion, 80 encoding/restoration chains, and 80 initialization/encoding/restoration chains pass with complete pool, unit arena, adjacent globals and ordered accesses. Decoder EDX preservation checked; serial-shift, decoder-mask and compiler register-preservation regressions rejected. No new exact bytes."
+      "Measured complete158-byte C contribution versus158 original, literalexact. Direct global DWORD index10000 decrement5 generates observed absolutecursor without four-byte rebasing; only poolbase andunitbase externaldata bound.",
+      "80 fresh standalone, 80 encoding/restoration and 80 initialized-chain comparisons pass with the exact encoder and restorer. Both complete C contributions total244 exactbytes; initialization adds the already-counted394-byte C function. Actual C serial-shift mutation failsfixture1; no full I/O caller or original-process execution is inferred."
     ]
   },
   {
@@ -31487,7 +31476,7 @@
     "name": "sub_0045A9B0",
     "proposed_names": [],
     "confidence": 0.99,
-    "status": "source_reconstructed",
+    "status": "exact_match",
     "references": [
       {
         "address": "0x004C404D",
@@ -31503,13 +31492,13 @@
     "known_structures": [],
     "known_calls": [],
     "dependencies": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "notes": [
-      "Selects eight36-byte records with BYTE2 equal group1..4 and BYTE0 equal2. Every nonself selected peer sets/clears its bit in owner fullDWORD mask. Only lowBYTE enable is used; preserves uppermaskbits and ordered repeated reads/writes. Derived byteview57EEE4 is fourbytesbeforeactualfirstrecord57EEE8, not an authenticated array base.",
-      "366 original /366 compiled remains nonexact: inductioncentering, peer pointers, flag-register choices and branch displacements.11232 finite original/C emulator comparisons plus independent mask oracle; dirtyEDXupperbits and fullDWORD stackflags included. Wideflagmutation failsfixture27. No exact score or original-process execution inferred."
+      "Whole 366-byte function matches literally with msvc71-o2-frame and strict external-only linking. Direct BYTE-view indexing retains original unrolled-loop pointer centering; signed 1 shifted by bounded peer indices 0..7 retains flag allocation without overflow.",
+      "Actual group BYTE in DL and low stack flag BYTE, RET4 and preserved nonvolatiles retained. Repeated full DWORD mask accesses and nonself-before-peer-read order are unchanged. 11,232 original/C comparisons and independent mask oracle pass; compiled wide-flag mutation fails fixture27 with flag00000100."
     ],
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -31579,7 +31568,7 @@
     "notes": [
       "Clears144-byte12x12matrix; initializes8diagonalbytes and neutral last row/column; selected type1 relationships;12selfDWORD masks and type3/7 rows/columns. Four group flags conditionally update8-player relations throughactual115/366-byteC callees. Mode15 overrides11x11 live-record relationships and ORs same-groupmaskbits, retaining remaining row/column and maskbits.",
       "532original /532compiled differs in diagonalunrolling, inductionvariables/registers, groupguardelimination, dummyECXsetup and alignment.4096 finite whole-parent comparisons withactualCcallees and independent matrix/maskoracle; originalhigherI/O/initcallee4EEC30 not reconstructed or executed.",
-      "Compiled12-instead-of11mode mutation failsfixture1 on completeguarded snapshots andordered accesses. Nonexactparent andmask notaddedtoexactcounts; matrixcallee retains115 literalexact bytes."
+      "Compiled 12-instead-of11 mode mutation fails fixture1 on complete guarded snapshots and ordered accesses. The parent remains outside exact counts; its actual C callees retain all115+366 bytes literally exact."
     ],
     "match": {
       "exact": false,

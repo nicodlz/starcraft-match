@@ -2,7 +2,7 @@
 typedef unsigned int u32;
 typedef unsigned char u8;
 extern u8 g_0059CCA8[];
-extern u32 g_006416A0[],g_0064B2E0;
+extern u32 g_006416A0[];
 #pragma code_seg(".unit")
 static u32 pack_unit(u32 pointer) {
  u32 id;
@@ -15,12 +15,12 @@ static u32 pack_unit(u32 pointer) {
 static u32 pack_link(u32 pointer) {if(!pointer)return 0;return (int)(pointer-(u32)g_006416A0)/20+1;}
 #pragma code_seg(".pool")
 void sub_0048C7D0(void) {
- u32 cursor=(u32)&g_0064B2E0;
+ u32 index=10000;
  do {
-  u32 unit=*(u32*)(cursor-4u);
-  cursor-=20u;
-  ((u32*)cursor)[4]=pack_unit(unit);
-  ((u32*)cursor)[0]=pack_link(((u32*)cursor)[0]);
-  ((u32*)cursor)[1]=pack_link(((u32*)cursor)[1]);
- }while(cursor!=(u32)g_006416A0);
+  u32 unit=g_006416A0[index-1];
+  index-=5;
+  g_006416A0[index+4]=pack_unit(unit);
+  g_006416A0[index]=pack_link(g_006416A0[index]);
+  g_006416A0[index+1]=pack_link(g_006416A0[index+1]);
+ }while(index!=0);
 }
