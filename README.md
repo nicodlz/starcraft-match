@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![515 exact functions](https://img.shields.io/badge/verified-515%20exact%20functions-287d67)
+![516 exact functions](https://img.shields.io/badge/verified-516%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,19 +26,19 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**515 whole functions match exactly, totaling 40,260 original bytes.** The independent
+**516 whole functions match exactly, totaling 41,124 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 list operations, AI state updates and image-state callbacks.
 
 The aggregate separates **389 isolated COFF matches / 24,232 bytes** from
-**117 matches / 13,848 bytes** using the reviewed
+**118 matches / 14,712 bytes** using the reviewed
 [external-only standard linker](docs/standard-linking.md), plus
 **eight compiled-component matches / 1,581 bytes** with their actual C dependencies
 (each dependency counted once under its measured method). A separate
 [native MSVC LTCG component](docs/native-ltcg.md) contributes **599 exact bytes**
 for the rectangle query and retains its already-counted 83-byte C search callee.
-Of the 515 functions, 76 are static data initializers totaling 836 bytes;
+Of the 516 functions, 76 are static data initializers totaling 836 bytes;
 their destination semantics remain unknown. The count does not establish a
 representative whole-game match rate. See the [function census](docs/function-census.md)
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
@@ -56,7 +56,8 @@ ordered memory accesses and observed calling conventions; see
 
 The **599-byte rectangle query** now matches with native link-time compilation
 and passes 380 bounded emulator comparisons. The **864-byte path reference
-restorer** remains non-exact and passes 80 comparisons.
+restorer** also matches exactly. Its initialization/encoding/restoration chain
+retains **1,283 exact C bytes** and passes 80 complete-pool comparisons.
 
 Selected reviewed regions:
 
@@ -98,16 +99,16 @@ Selected reviewed regions:
 | [0x0047DC10](docs/functions/0047DC10.md) | Existing-neighbor node reclassification with both C callees | 321 / 332 | Non-exact; 1,550 comparisons pass |
 | [0x0047DD60](docs/functions/0047DD60.md) | Node reclassification with both actual C callees | 216 / 208 | Non-exact; 1,848 comparisons pass |
 | [0x00404280](docs/functions/00404280.md) | Typed 1,000-record pool initialization | 198 / 198 | Non-exact |
-| [0x00403780](docs/functions/00403780.md) | 1,000-entry reference restoration | 864 / 788 | Non-exact |
+| [0x00403780](docs/functions/00403780.md) | 1,000-entry reference restoration | 864 / 864 | Exact; 80 standalone and 80 initialized-chain comparisons pass |
 
 Operation descriptions summarize reviewed instructions. Community names in the
 catalog are annotations, not authenticated original symbols. Exact means
 literal equality across the entire reviewed function, excluding inspected padding,
 with the observed ABI represented in the candidate.
 
-Ten reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
+Nine reviewed functions remain unmatched: [`0x00401120`](docs/functions/00401120.md),
 [`0x00446D40`](docs/functions/00446D40.md),
-[`0x0047B210`](docs/functions/0047B210.md), [`0x00403780`](docs/functions/00403780.md),
+[`0x0047B210`](docs/functions/0047B210.md),
 [`0x00404280`](docs/functions/00404280.md),
 [`0x0047DD60`](docs/functions/0047DD60.md),
 [`0x0042FF80`](docs/functions/0042FF80.md),
@@ -118,8 +119,8 @@ Their complete regions and measured compiler/ABI differences remain documented s
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 515 matches are
-about **12.26% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 516 matches are
+about **12.28% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -169,7 +170,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 515 exact matches
+make proof                    # Recompile and require all 516 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```

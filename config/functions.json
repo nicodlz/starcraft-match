@@ -28507,7 +28507,7 @@
     "confidence": 1,
     "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
     "boundary_verified": true,
-    "status": "assembly_partial_match",
+    "status": "exact_match",
     "references": [
       {
         "from": "0x00439265",
@@ -28531,9 +28531,9 @@
     "prototype": "void __stdcall sub_00403780(Entry *entries)",
     "dependencies": [],
     "known_structures": [],
-    "match_expectation": "exploratory",
+    "match_expectation": "exact",
     "match": {
-      "exact": false,
+      "exact": true,
       "score": null,
       "semantic": null,
       "cfg": null
@@ -28548,8 +28548,36 @@
     "notes": [
       "The signed WORD limit is converted to unsigned exactly as in the original comparison.",
       "The pool quotient is narrowed to BYTE before subtracting pool*2500; no modern validation added.",
-      "Complete zero-relocation C contribution remains non-exact; no padding/normalization to claim a match."
-    ]
+      "Complete 864-byte C contribution matches with five reviewed unit-arena data relocations; excluded compiler helper contexts are inventoried and uncounted."
+    ],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".restore",
+      "bindings": {
+        "_g_0059CCA8": {
+          "address": 5885096,
+          "kind": "data",
+          "evidence": [
+            "Reviewed one-based unit base at 0059CCA8; restoration address = base + ((id & 7FF)-1)*336."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_decode_unit",
+          "section": ".uunit"
+        },
+        {
+          "symbol": "_decode_path",
+          "section": ".hlist"
+        },
+        {
+          "symbol": "_decode_link",
+          "section": ".helpers"
+        }
+      ]
+    }
   },
   {
     "schema_version": 1,
@@ -31423,7 +31451,7 @@
     "calls": [],
     "strings": [],
     "status": "source_reconstructed",
-    "provenance": "Complete 420-byte 48A720..48A8C4 through sole plain RET 48A8C3; previous RET 48A710 followed by 15 traps, and 12 trailing traps before 48A8D0. All branches remain inside the region.",
+    "provenance": "Complete 420-byte 48A720..48A8C4 through both plain RET exits 48A849 and 48A8C3; previous RET 48A710 followed by 15 traps, and 12 trailing traps before 48A8D0. All branches remain inside the region.",
     "calling_convention": "No arguments; plain RET; EBX/ESI/EDI/EBP preserved. EAX machine value is 100 if no active walking follows, otherwise the pool end; caller ignores it.",
     "prototype": "u32 sub_0048A720(void) /* observed machine EAX only; no consumed semantic result */",
     "known_structures": [],

@@ -25,16 +25,16 @@ The pinned specimen remains SHA-256
 | [sub_00403650](functions/00403650.md), pool initialization | 127 / 127 | Exact | 80 + 80 lifecycle |
 | [sub_00437290](functions/00437290.md), related path decoder | 73 / 73 | Exact | 1,240 passed |
 | [sub_00404280](functions/00404280.md), typed 1,000-record pool initialization | 198 / 198 | Non-exact | 80 + 80 initialization/encoding/restoration |
-| [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 788 | Non-exact | 80 passed |
+| [sub_00403780](functions/00403780.md), 1,000-entry reference restoration | 864 / 864 | Exact, external-only | 80 passed |
 
 The rectangle query contributes **599 exact bytes** through the separate
 [native MSVC LTCG method](native-ltcg.md), with its 83-byte C callee counted once.
-The 864-byte path restoration remains exploratory and contributes no exact bytes.
+The 864-byte path restoration matches through reviewed external-only linking.
 Fixture counts and source compilation remain distinct from byte equality.
 
 The new packing component contributes **two exact functions / 292 bytes**. Its
 caller and callee both retain their complete original regions, with an actual C
-call between them. The existing restoration candidate is still non-exact.
+call between them. The restoration candidate also matches, completing the 1,283-byte initializer/packing/encoder/restoration chain.
 
 ## Actual C dependencies
 
@@ -144,8 +144,8 @@ and nonzero upper global bits. Restoration fixtures include 80 complete pools wi
 Packing fixtures cover shuffled free lists of 0..1,000 entries, unit serial bytes,
 out-of-range unit pointers, unchecked BYTE pool selectors 8/255 and signed limits.
 An additional 80 comparisons execute packing then restoration in each emulator.
-`all_regions_exact` remains false for that chain because restoration is non-exact;
-its build and code hash are recorded separately. The roundtrip checks original/C
+`all_regions_exact` is true for that chain; each complete C region is independently
+compared with the pinned executable and its build/code hash recorded. The roundtrip checks original/C
 results, not identity of arbitrary input before and after serialization.
 The 100-record component adds 80 comparisons over a separate 46,004-byte pool,
 with free-list lengths 0..100, unit serial BYTE values, wrapping subtraction and
