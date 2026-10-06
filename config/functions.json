@@ -33930,5 +33930,208 @@
     ],
     "calling_convention": "Private EAX object pointer, AL result only; plain RET, EBX/ESI/EDI/EBP preserved; upper EAX unspecified.",
     "prototype": "unsigned char sub_004E5EA0(Unit *unit) /* private EAX input */"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00410070",
+    "size": 6,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_00410070.c",
+    "candidate_symbol": "_sub_00410070@16",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "match_expectation": "exact",
+    "name": "sub_00410070",
+    "status": "exact_match",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "references": [],
+    "calls": [],
+    "dependencies": [],
+    "notes": [],
+    "provenance": "Coordinator independently reviews complete pinned entry and caller ABI, then recompiles public pure C source. See per-function note; imported DLL bodies remain outside proof.",
+    "calling_convention": "Four DWORD stack arguments, stdcall16 imported-callee cleanup; transparent full EAX forwarding, preserved nonvolatiles.",
+    "prototype": "unsigned int __stdcall sub_00410070(unsigned int a,unsigned int b,unsigned int c,unsigned int d)"
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0041006A",
+    "size": 6,
+    "name": "sub_0041006A",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_0041006A.c",
+    "candidate_symbol": "_sub_0041006A@16",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "calls": [],
+    "references": [
+      {
+        "address": "0x00470DC9",
+        "type": "direct_call",
+        "provenance": "Complete caller freshly reviewed: four DWORD args, no caller cleanup, EAX pointer bits consumed."
+      },
+      {
+        "address": "0x00471034",
+        "type": "direct_call",
+        "provenance": "Complete caller freshly reviewed: four DWORD args, no caller cleanup, EAX pointer bits consumed."
+      },
+      {
+        "address": "0x00457CD2",
+        "type": "direct_call",
+        "provenance": "Complete caller freshly reviewed: four DWORD args, no caller cleanup, EAX pointer bits consumed."
+      },
+      {
+        "address": "0x004CB15B",
+        "type": "direct_call",
+        "provenance": "Complete caller freshly reviewed: four DWORD args, no caller cleanup, EAX pointer bits consumed."
+      },
+      {
+        "address": "0x00436A9D",
+        "type": "direct_call",
+        "provenance": "Complete caller freshly reviewed: four DWORD args, no caller cleanup, EAX pointer bits consumed."
+      }
+    ],
+    "dependencies": [],
+    "known_structures": [],
+    "calling_convention": "stdcall16 four DWORD stack args, EAX pointer return, exact tail transfer to current DWORD IAT import target.",
+    "provenance": "Coordinator independently reviews complete pinned entry and caller ABI, then recompiles public pure C source. See per-function note; imported DLL bodies remain outside proof.",
+    "notes": [
+      "Typed DATA function-pointer dereference at reviewed import slot004FE568; never code-as-data/original instructions. Whole zero-relocation compiler contribution compared through ordinary isolated COFF; no linked-image placement claim."
+    ],
+    "status": "exact_match",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_calls": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00475840",
+    "size": 35,
+    "name": "sub_00475840",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_00475840.c",
+    "candidate_symbol": "_sub_00475840@4",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "calls": [],
+    "references": [],
+    "dependencies": [],
+    "known_structures": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".kind",
+      "bindings": {
+        "_g_006616E0": {
+          "address": 6690528,
+          "kind": "data",
+          "evidence": [
+            "Original BYTE type lookup indexed by two WORD object IDs."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_00475840@8",
+          "section": ".kctx"
+        }
+      ]
+    },
+    "status": "exact_match",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_calls": [],
+    "notes": [],
+    "provenance": "Coordinator independently reviews complete pinned entry and caller ABI, then recompiles public pure C source. See per-function note; imported DLL bodies remain outside proof.",
+    "calling_convention": "Private ECX object pointer, AL category result only; plain RET, nonvolatiles preserved; upper EAX unspecified.",
+    "prototype": "unsigned char sub_00475840(unsigned char *object) /* actual ECX input */"
+  },
+  {
+    "address": "0x004C30D0",
+    "size": 93,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004C30D0.c",
+    "candidate_symbol": "_sub_004C30D0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".root",
+      "bindings": {},
+      "retained_functions": [
+        {
+          "symbol": "_sub_00410070@16",
+          "section": ".free",
+          "address": 4259952,
+          "size": 6,
+          "evidence": [
+            "Unchanged project-authored real C global noinline stdcall4 IAT tail wrapper; whole six-byte function. Absolute IAT DWORD4FE564 is external data, no original code binding."
+          ]
+        }
+      ]
+    },
+    "calling_convention": "No input arguments, plain RET, nonvolatiles untouched. EAX third API return incidentally retained; all four observed callers discard it.",
+    "notes": [
+      "Whole root93 and unchanged genuine C global noinline helper6 fresh strict linked exact; no assembly, postbuild patches or code bindings.",
+      "RootDWORD pointer reads immediately before each call; three DWORD null resets only after final call. IAT DWORD read once by each actual C tail wrapper.",
+      "1024 original/two-C/oracle fixtures, including853 external-model mutation fixtures, fullEAX/nonvolatiles/plainRET/order/width checks. Conditional on explicit external Storm403 fixture model; not actual Storm execution."
+    ],
+    "schema_version": 1,
+    "name": "sub_004C30D0",
+    "status": "exact_match",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "references": [],
+    "calls": [
+      {
+        "address": "0x00410070",
+        "type": "direct_call",
+        "provenance": "Three fullstdcall16 calls to retained actual six-byte C wrapper; final result forwarded."
+      }
+    ],
+    "dependencies": [
+      "0x00410070"
+    ],
+    "provenance": "Coordinator independently reviews complete pinned entry and caller ABI, then recompiles public pure C source. See per-function note; imported DLL bodies remain outside proof."
   }
 ]

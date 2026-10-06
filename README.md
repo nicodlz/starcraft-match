@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![548 exact functions](https://img.shields.io/badge/verified-548%20exact%20functions-287d67)
+![552 exact functions](https://img.shields.io/badge/verified-552%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,15 +26,15 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**548 whole functions match exactly, totaling 47,373 original bytes.** The independent
+**552 whole functions match exactly, totaling 47,513 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 list operations, AI state updates and image-state callbacks.
 
-The aggregate separates **393 isolated COFF matches / 24,764 bytes** from
-**139 matches / 18,655 bytes** using the reviewed
+The aggregate separates **395 isolated COFF matches / 24,776 bytes** from
+**140 matches / 18,690 bytes** using the reviewed
 [external-only standard linker](docs/standard-linking.md), plus
-**nine compiled-component matches / 1,639 bytes** with their actual C dependencies
+**ten compiled-component matches / 1,732 bytes** with their actual C dependencies
 (each dependency counted once under its measured method). A separate
 [native MSVC LTCG component](docs/native-ltcg.md) contributes **599 exact bytes**
 for the rectangle query and retains its already-counted 83-byte C search callee.
@@ -42,7 +42,7 @@ for the rectangle query and retains its already-counted 83-byte C search callee.
 [local-table linker](docs/standard-linking.md#whole-leaf-contributions), retaining
 all compiler-owned switch tables and alignment (1,054 instruction bytes / 662 table
 and alignment bytes).
-Of the 548 functions, 76 are static data initializers totaling 836 bytes;
+Of the 552 functions, 76 are static data initializers totaling 836 bytes;
 their destination semantics remain unknown. The count does not establish a
 representative whole-game match rate. See the [function census](docs/function-census.md)
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
@@ -143,8 +143,8 @@ Their complete regions and measured compiler/ABI differences remain documented s
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 548 matches are
-about **13.04% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 552 matches are
+about **13.14% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -194,7 +194,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 548 exact matches
+make proof                    # Recompile and require all 552 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
