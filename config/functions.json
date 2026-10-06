@@ -33499,5 +33499,436 @@
     ],
     "strings": [],
     "known_calls": []
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00472260",
+    "size": 95,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_00472260.c",
+    "candidate_symbol": "_sub_00472260@12",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".parse",
+      "bindings": {
+        "_sub_0040A069": {
+          "address": 4235369,
+          "kind": "code",
+          "evidence": [
+            "Reviewed original34-byte cdecl1 TLS/locale lowercase wrapper; same external code contract as public4DBC60."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_00472260@12",
+          "section": ".context"
+        }
+      ]
+    },
+    "name": "sub_00472260",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x004725A4",
+        "type": "direct_call",
+        "provenance": "Fresh whole original caller private-register input/return review, private disassembly evidence."
+      }
+    ],
+    "calls": [
+      {
+        "address": "0x0040A069",
+        "type": "direct_call",
+        "provenance": "Reviewed full34-byte cdecl signedBYTE conversion wrapper, originalTLS/locale body excluded; oracleASCIIcallback only."
+      }
+    ],
+    "strings": [],
+    "status": "exact_match",
+    "calling_convention": "Private EAXfallback DWORD, ECXtextpointer, EDIoutputDWORDpointer preserved; plainRET; ESI/EBX/EBP preserved; EAXreturned advancedpointer or0.",
+    "prototype": "char *sub_00472260(unsigned int fallback,char *text,unsigned int *output)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Whole C contribution and observed private ABI reviewed; see docs/functions/00472260.md. Emulator checks are bounded synthetic evidence, not original-process execution."
+    ],
+    "provenance": "Coordinator independently reviewed the pinned whole region and direct caller evidence; independent pure C reconstruction, fresh public-source compilation required."
+  },
+  {
+    "schema_version": 1,
+    "address": "0x00485980",
+    "size": 187,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_00485980.c",
+    "candidate_symbol": "_sub_00485980@20",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-leaf-v1",
+      "section": ".strval",
+      "bindings": {},
+      "excluded_contexts": [
+        {
+          "symbol": "_context_00485980@20",
+          "section": ".context"
+        }
+      ],
+      "retained_functions": []
+    },
+    "name": "sub_00485980",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "references": [
+      {
+        "address": "0x00472547",
+        "type": "direct_call",
+        "provenance": "Fresh whole original caller private-register input/return review, private disassembly evidence."
+      }
+    ],
+    "calls": [],
+    "strings": [],
+    "status": "exact_match",
+    "calling_convention": "Private EAXmaximum DWORD, ECXlimit DWORD, EBXallow DWORD preserved; stacktextpointer,flags DWORD; RET8; ESI/EDI/EBP preserved, EAXcount includingNUL or0.",
+    "prototype": "int sub_00485980(char *text,unsigned int maximum,unsigned int limit,unsigned int flags,unsigned int allow)",
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "notes": [
+      "Whole C contribution and observed private ABI reviewed; see docs/functions/00485980.md. Emulator checks are bounded synthetic evidence, not original-process execution."
+    ],
+    "provenance": "Coordinator independently reviewed the pinned whole region and direct caller evidence; independent pure C reconstruction, fresh public-source compilation required."
+  },
+  {
+    "address": "0x00494C10",
+    "size": 66,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_symbol": "_sub_00494C10",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2",
+    "candidate_source": "src/game/sub_00494C10.c",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".angle",
+      "bindings": {
+        "_g_00513528": {
+          "address": 5322024,
+          "kind": "data",
+          "evidence": [
+            "Reviewed DWORD indexed table read, EAX binary-search index0..63"
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_context_angle",
+          "section": ".context"
+        }
+      ]
+    },
+    "name": "sub_00494C10",
+    "status": "exact_match",
+    "match_expectation": "exact",
+    "calls": [],
+    "calling_convention": "MSVC private optimized static C: EAX signed32-bit input, EAX signed32-bit index result, plainRET, zero stack arguments. ECX/EDX clobbered; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "int sub_00494C10(int input) /* actual private EAX input; nominal C prototype differs */",
+    "provenance": "Coordinator independently reviewed the pinned whole region and direct caller evidence; independent pure C reconstruction, fresh public-source compilation required.",
+    "references": [
+      {
+        "address": "0x00495328",
+        "type": "direct_call",
+        "provenance": "Complete79-byte caller00495300..0049534F reviewed; IDIV quotientEAX then direct CALL without pushes or cleanup."
+      },
+      {
+        "address": "0x00476A98",
+        "type": "direct_call",
+        "provenance": "Complete503-byte caller00476A50..00476C47 reviewed; quotientEAX and no stack cleanup."
+      },
+      {
+        "address": "0x00444722",
+        "type": "direct_call",
+        "provenance": "Reserved complete410-byte root reviewed; EAX quotient, plainRET."
+      }
+    ],
+    "schema_version": 1,
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "confidence": 0.99,
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "notes": [
+      "Whole C contribution and observed private ABI reviewed; see docs/functions/00494C10.md. Emulator checks are bounded synthetic evidence, not original-process execution."
+    ]
+  },
+  {
+    "schema_version": 1,
+    "address": "0x0046ED80",
+    "size": 239,
+    "name": "sub_0046ED80",
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "boundary_verified": true,
+    "candidate_source": "src/game/sub_0046ED80.c",
+    "candidate_symbol": "_sub_0046ED80@4",
+    "compiler_profile": "msvc71-o2",
+    "candidate_abi_compatible": true,
+    "match_expectation": "exact",
+    "calls": [],
+    "references": [
+      {
+        "address": "0x0046F44B",
+        "type": "direct_call",
+        "provenance": "Pinned direct E8 and full caller review; AX type, no stack argument or caller cleanup."
+      }
+    ],
+    "dependencies": [],
+    "known_structures": [],
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-leaf-v1",
+      "section": ".class",
+      "bindings": {},
+      "excluded_contexts": [
+        {
+          "symbol": "_context_0046ED80@8",
+          "section": ".cctx"
+        }
+      ],
+      "retained_functions": []
+    },
+    "status": "exact_match",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "proposed_names": [],
+    "confidence": 0.99,
+    "strings": [],
+    "known_calls": [],
+    "notes": [
+      "Whole C contribution and observed private ABI reviewed; see docs/functions/0046ED80.md. Emulator checks are bounded synthetic evidence, not original-process execution."
+    ],
+    "provenance": "Coordinator independently reviewed the pinned whole region and direct caller evidence; independent pure C reconstruction, fresh public-source compilation required.",
+    "calling_convention": "Private low AX WORD input, full EAX boolean result, plain RET; EBX/ESI/EDI/EBP preserved.",
+    "prototype": "unsigned int sub_0046ED80(unsigned short kind) /* observed private AX input */"
+  },
+  {
+    "address": "0x004A8D40",
+    "size": 100,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004A8D40.c",
+    "candidate_symbol": "_sub_004A8D40@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-external-v1",
+      "section": ".helper",
+      "bindings": {
+        "_g_0057EEC0": {
+          "address": 5762752,
+          "kind": "data",
+          "evidence": [
+            "Reviewed independent eight-DWORD maps clear stores."
+          ]
+        },
+        "_g_0057EE7C": {
+          "address": 5762684,
+          "kind": "data",
+          "evidence": [
+            "Reviewed independent eight-DWORD maps clear stores."
+          ]
+        }
+      },
+      "excluded_contexts": [
+        {
+          "symbol": "_compiler_anchor_004A8D40",
+          "section": ".anchor"
+        }
+      ]
+    },
+    "schema_version": 1,
+    "status": "exact_match",
+    "match_expectation": "exact",
+    "proposed_names": [],
+    "confidence": 0.99,
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "calling_convention": "Private ESI full DWORD selected name, no stack arguments/plain RET; EBX/ESI/EDI/EBP preserved, return EAX unused.",
+    "prototype": "void sub_004A8D40(unsigned long selected) /* observed ESI input */",
+    "provenance": "Coordinator independently reviews complete pinned100-byte region and real caller; independently authored C.",
+    "notes": [
+      "Separate eight-DWORD external map objects preserve optimizer alias knowledge and original backwards clear order. Whole C helper also matches within nonexact625/618 root component; caller is outside exact total."
+    ],
+    "name": "sub_004A8D40",
+    "strings": [],
+    "calls": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "references": [
+      {
+        "address": "0x004A9328",
+        "type": "direct_call",
+        "provenance": "Complete reviewed618-byte caller and fresh direct target; ESI captured selection, plain RET."
+      }
+    ]
+  },
+  {
+    "address": "0x00401500",
+    "size": 106,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_00401500.c",
+    "candidate_symbol": "@sub_00401500@4",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "notes": [
+      "Independent clean pureC leaf; originalECXobject/fullEAXBoolean/plainRET, nonvolatiles preserved; whole106bytes, expectedzeroReloc. Standalone fresh rebuild required."
+    ],
+    "schema_version": 1,
+    "name": "sub_00401500",
+    "status": "exact_match",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "provenance": "Coordinator reviews pinned complete region, caller/register contract and independently rebuilds clean public C source.",
+    "calls": [],
+    "references": [
+      {
+        "address": "0x0046D7A0",
+        "type": "direct_call",
+        "provenance": "Whole stream interpreter caller reviewed; ECX object, full EAX boolean, no cleanup."
+      }
+    ],
+    "calling_convention": "ECX object pointer; full EAX boolean0/1; plain RET, EBX/ESI/EDI/EBP preserved; ECX/EDX volatile.",
+    "prototype": "unsigned int __fastcall sub_00401500(Unit *unit)"
+  },
+  {
+    "address": "0x004E5EA0",
+    "size": 58,
+    "boundary_verified": true,
+    "binary_sha256": "ad6b58b27b8948845ccfa69bcfcc1b10d6aa7a27a371ee3e61453925288c6a46",
+    "candidate_source": "src/game/sub_004E5EA0.c",
+    "candidate_symbol": "_sub_004E5EA0",
+    "candidate_abi_compatible": true,
+    "compiler_profile": "msvc71-o2-frame",
+    "linking": {
+      "schema_version": 1,
+      "profile": "gnu-i386pe-component-v1",
+      "section": ".h5ea0",
+      "bindings": {
+        "_g_00662098": {
+          "address": 6693016,
+          "kind": "data",
+          "evidence": [
+            "OriginalBYTEclassificationtable at662098 operand."
+          ]
+        }
+      },
+      "retained_functions": [
+        {
+          "address": 4698848,
+          "size": 85,
+          "symbol": "_sub_0047B2E0",
+          "section": ".b2e0",
+          "candidate_abi_compatible": true,
+          "evidence": [
+            "Actual readonlypublicC85-byte dependency retained; fullWORDkindEAXinput/fullEAXBoolean/plainRET."
+          ]
+        }
+      ],
+      "excluded_contexts": [
+        {
+          "symbol": "_compiler_context_0047B2E0",
+          "section": ".pctx"
+        },
+        {
+          "symbol": "_context5EA0",
+          "section": ".ectx"
+        }
+      ]
+    },
+    "notes": [
+      "Clean pureC58byte helper withactualC85-byte publiccallee; originalEAXobject/ALresult/plainRET. Separateprivatecontexts select ABI honestly. Freshbuild required."
+    ],
+    "schema_version": 1,
+    "name": "sub_004E5EA0",
+    "status": "exact_match",
+    "match_expectation": "exact",
+    "match": {
+      "exact": true,
+      "score": null,
+      "semantic": null,
+      "cfg": null
+    },
+    "confidence": 0.99,
+    "proposed_names": [],
+    "strings": [],
+    "known_structures": [],
+    "known_calls": [],
+    "dependencies": [],
+    "provenance": "Coordinator reviews pinned complete region, caller/register contract and independently rebuilds clean public C source.",
+    "calls": [
+      {
+        "address": "0x0047B2E0",
+        "type": "direct_call",
+        "provenance": "Real public85-byte C dependency retained, actual EAX object input and full EAX boolean result."
+      }
+    ],
+    "references": [
+      {
+        "address": "0x0046D8F3",
+        "type": "direct_call",
+        "provenance": "Whole interpreter caller reviewed; EAX object, caller consumes AL, plain RET."
+      }
+    ],
+    "calling_convention": "Private EAX object pointer, AL result only; plain RET, EBX/ESI/EDI/EBP preserved; upper EAX unspecified.",
+    "prototype": "unsigned char sub_004E5EA0(Unit *unit) /* private EAX input */"
   }
 ]
