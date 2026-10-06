@@ -6,7 +6,7 @@
 
 [![Portable checks](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml/badge.svg)](https://github.com/nicodlz/starcraft-match/actions/workflows/portable.yml)
 ![Target: Windows x86](https://img.shields.io/badge/target-1.16.1%20%7C%20Windows%20x86-315b82)
-![531 exact functions](https://img.shields.io/badge/verified-531%20exact%20functions-287d67)
+![541 exact functions](https://img.shields.io/badge/verified-541%20exact%20functions-287d67)
 [![License: MIT](https://img.shields.io/badge/original%20contributions-MIT-6a5b91)](LICENSE)
 
 [Getting started](#getting-started) · [Progress](#current-progress) · [Contributing](CONTRIBUTING.md) · [Contributing with AI](docs/contributing-with-ai.md) · [Evidence](docs/prior-art.md)
@@ -26,13 +26,13 @@ link a complete program. Faithful 1.16.1 reconstruction comes before any modern 
 
 ## Current progress
 
-**531 whole functions match exactly, totaling 45,063 original bytes.** The independent
+**541 whole functions match exactly, totaling 46,522 original bytes.** The independent
 candidates are pure C; no original-byte arrays, copied assembly or post-build patches
 are used to obtain these results. They include global accessors, trigger callbacks,
 list operations, AI state updates and image-state callbacks.
 
-The aggregate separates **391 isolated COFF matches / 24,584 bytes** from
-**127 matches / 17,009 bytes** using the reviewed
+The aggregate separates **392 isolated COFF matches / 24,658 bytes** from
+**136 matches / 18,394 bytes** using the reviewed
 [external-only standard linker](docs/standard-linking.md), plus
 **eight compiled-component matches / 1,581 bytes** with their actual C dependencies
 (each dependency counted once under its measured method). A separate
@@ -42,7 +42,7 @@ for the rectangle query and retains its already-counted 83-byte C search callee.
 [local-table linker](docs/standard-linking.md#whole-leaf-contributions), retaining
 all compiler-owned switch tables and alignment (913 instruction bytes / 377 table
 and alignment bytes).
-Of the 531 functions, 76 are static data initializers totaling 836 bytes;
+Of the 541 functions, 76 are static data initializers totaling 836 bytes;
 their destination semantics remain unknown. The count does not establish a
 representative whole-game match rate. See the [function census](docs/function-census.md)
 for the full breakdown and [per-function notes](docs/functions/) for reviewed evidence.
@@ -67,6 +67,11 @@ Selected reviewed regions:
 
 | Address | Reviewed operation | Original / compiled | Result |
 | --- | --- | ---: | --- |
+| [0x004AA620](docs/functions/004AA620.md) | Two-pass record compaction and backup rebuild | 602 / 602 | Exact; 144 conditional-service oracle comparisons pass |
+| [0x00408AE0](docs/functions/00408AE0.md) | 43 live-field calls with cdecl service ABI | 400 / 400 | Exact; 512 conditional-service comparisons pass |
+| [0x00495240](docs/functions/00495240.md) | Signed-coordinate update with packed snapshots | 74 / 74 | Exact; 800 comparisons pass |
+| [0x0047EA60](docs/functions/0047EA60.md) | Masked BYTE copy with source/destination overlap | 74 / 74 | Exact; 756 comparisons pass |
+| [0x004DC550](docs/functions/004DC550.md) | Bounded modular DWORD draw with counter aliases | 92 / 92 | Exact; 256 comparisons pass |
 | [0x0041CF60](docs/functions/0041CF60.md) | Signed WORD rectangle adjustment | 302 / 302 | Exact; 1,024 oracle comparisons pass |
 | [0x0041F610](docs/functions/0041F610.md) | BYTE dispatch, complete jump table | 400 / 400 | Exact; 1,024 comparisons pass |
 | [0x00491870](docs/functions/00491870.md) | Type/player selection, both dispatch tables | 439 / 439 | Exact; 82,464 comparisons pass |
@@ -138,8 +143,8 @@ Their complete regions and measured compiler/ABI differences remain documented s
 Three further regions compile
 but lack independent entry corroboration; they remain exploratory and are excluded
 from the exact-function count. The total number of game functions is **not measured**.
-The public BWAPI map lists **4,201 distinct function entries**; our 531 matches are
-about **12.64% of that community list by function count**, not by code size or effort.
+The public BWAPI map lists **4,201 distinct function entries**; our 541 matches are
+about **12.88% of that community list by function count**, not by code size or effort.
 The map is not a verified exhaustive census. See [function counts](docs/function-census.md).
 This small sample demonstrates the workflow, not large-scale reconstruction success.
 
@@ -189,7 +194,7 @@ and [`config/target.json`](config/target.json). A clone does not contain the exe
 
 ```sh
 ./tools/decomp analyze
-make proof                    # Recompile and require all 531 exact matches
+make proof                    # Recompile and require all 541 exact matches
 ./tools/decomp match 0x00498150 --require-exact
 ./tools/decomp task 0x00498150 --out analysis/tasks/00498150.json
 ```
